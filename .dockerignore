@@ -1,0 +1,8 @@
+.dockerignore
+.git/
+.gitignore
+docker-compose.*
+Dockerfile
+gin-bin
+Makefile
+migrations/

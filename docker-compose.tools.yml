@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  migrate:
+    build:
+      context: ./migrations
+    entrypoint: migrate -database 'postgres://crick:crickIsChic@db:5432/crick?sslmode=disable&x-migrations-table=migrations' -source 'file:///migrations'
+    volumes:
+      - ./migrations:/migrations
+    depends_on:
+      - db
