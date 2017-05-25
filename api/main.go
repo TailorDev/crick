@@ -29,11 +29,12 @@ func App(db *sql.DB) *httprouter.Router {
 		logger: logger,
 	}
 
-	router.GET("/users/me", h.UsersGetMe)
+	router.GET("/users/me", authMiddleware(h.UsersGetMe))
 
 	return router
 }
 
+// applyMiddlewares applies the common middlewares to the whole app
 func applyMiddlewares(app http.Handler) http.Handler {
 	return app
 }
