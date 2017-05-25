@@ -7,6 +7,10 @@ dev: ## start the API with Docker
 	@echo "\033[92mYou can browse the application at: http://127.0.0.1:8000\033[0m"
 .PHONY: dev
 
+logs: ## show the API logs
+	@docker-compose -p crick logs -f api
+.PHONY: logs
+
 migrate-up: ## apply database migrations
 	$(RUN_MIGRATE) up
 .PHONY: migrate-up
