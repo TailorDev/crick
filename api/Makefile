@@ -1,9 +1,9 @@
-RUN_MIGRATE=docker-compose -f docker-compose.yml -f docker-compose.tools.yml run --rm migrate
+RUN_MIGRATE=docker-compose -p crick -f docker-compose.yml -f docker-compose.tools.yml run --rm migrate
 
 default: help
 
-dev: ## start the application with Docker
-	@docker-compose up -d
+dev: ## start the API with Docker
+	@docker-compose -p crick up -d
 	@echo "\033[92mYou can browse the application at: http://127.0.0.1:8000\033[0m"
 .PHONY: dev
 
