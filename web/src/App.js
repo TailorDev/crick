@@ -15,7 +15,7 @@ class App extends Component {
     this.webAuth = new auth0.WebAuth({
       domain:       process.env.REACT_APP_AUTH0_DOMAIN,
       clientID:     process.env.REACT_APP_AUTH0_CLIENT_ID,
-      scope:        'openid profile',
+      scope:        'openid',
       audience:     process.env.REACT_APP_AUTH0_AUDIENCE,
       responseType: 'token id_token',
       redirectUri : 'http://localhost:3000/'

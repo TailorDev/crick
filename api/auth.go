@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/TailorDev/crick/api/config"
 	"github.com/auth0-community/go-auth0"
@@ -10,17 +11,19 @@ import (
 	"gopkg.in/square/go-jose.v2"
 )
 
-func authMiddleware(h httprouter.Handle) httprouter.Handle {
+func auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
-		client := auth0.NewJWKClient(auth0.JWKClientOptions{URI: c.JwksURI})
-		configuration := auth0.NewConfiguration(client, c.Audience, c.Issuer, jose.RS256)
-		validator := auth0.NewValidator(configuration)
+		configuration := auth0.NewConfiguration(
+			auth0.NewKeyProvider([]byte(c.Secret)),
+			c.Audience,
+			c.Issuer,
+			jose.RS256,
+		)
 
-		token, err := validator.ValidateRequest(r)
+		_, err := auth0.NewValidator(configuration).ValidateRequest(r)
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println(token)
+			logger.Warn("authentication failed", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		} else {
 			h(w, r, ps)
