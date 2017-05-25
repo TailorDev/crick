@@ -29,7 +29,7 @@ func App(db *sql.DB) *httprouter.Router {
 		logger: logger,
 	}
 
-	router.GET("/users/me", h.Get)
+	router.GET("/users/me", h.UsersGetMe)
 
 	return router
 }
