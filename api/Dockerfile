@@ -8,12 +8,12 @@ RUN apk update && \
     apk add git && \
     rm -r /var/cache/apk/*
 
-COPY . /go/src/github.com/TailorDev/crick-api
-WORKDIR /go/src/github.com/TailorDev/crick-api
+COPY . /go/src/github.com/TailorDev/crick/api
+WORKDIR /go/src/github.com/TailorDev/crick/api
 
 CMD if [ "${APP_ENV}" == "production" ]; \
     then \
-    go build && ./crick-api; \
+    go build && ./api; \
     else \
     go get -u github.com/codegangsta/gin && gin --port 8000 run; \
     fi

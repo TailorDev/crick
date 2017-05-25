@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/TailorDev/crick-api/config"
+	"github.com/TailorDev/crick/api/config"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
@@ -29,7 +29,7 @@ func App(db *sql.DB) *httprouter.Router {
 		logger: logger,
 	}
 
-	router.GET("/", h.Get)
+	router.GET("/users/me", h.Get)
 
 	return router
 }

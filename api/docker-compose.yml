@@ -5,7 +5,7 @@ services:
     build:
       context: .
     volumes:
-      - .:/go/src/github.com/TailorDev/crick-api
+      - .:/go/src/github.com/TailorDev/crick/api
     environment:
       CRICK_DSN: postgres://crick:crickIsChic@db:5432/crick
     ports:
