@@ -48,5 +48,6 @@
 ## enforce that the alternate location is used for that project, regardless of
 ## what source location any dependent projects specify.
 # source = "https://github.com/myfork/package.git"
-
-
+[[overrides]]
+name = "github.com/square/go-jose"
+version = "^1.1.0"
