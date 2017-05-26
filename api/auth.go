@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -20,13 +21,22 @@ func auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 			c.Issuer,
 			jose.RS256,
 		)
+		validator := auth0.NewValidator(configuration)
 
-		_, err := auth0.NewValidator(configuration).ValidateRequest(r)
+		token, err := validator.ValidateRequest(r)
 		if err != nil {
 			logger.Warn("authentication failed", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		} else {
-			h(w, r, ps)
+			claims := map[string]interface{}{}
+			err = validator.Claims(r, token, &claims)
+			if err != nil {
+				logger.Error("retrieving claims failed", zap.Error(err))
+				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			}
+
+			ctx := context.WithValue(r.Context(), "user_id", claims["sub"])
+			h(w, r.WithContext(ctx), ps)
 		}
 	}
 }

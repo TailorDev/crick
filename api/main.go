@@ -1,12 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/TailorDev/crick/api/config"
+	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
@@ -14,12 +14,12 @@ import (
 
 // Handler is the structure that contains the different HTTP handlers.
 type Handler struct {
-	db     *sql.DB
+	db     *sqlx.DB
 	logger *zap.Logger
 }
 
 // App is the application kernel.
-func App(db *sql.DB) *httprouter.Router {
+func App(db *sqlx.DB) *httprouter.Router {
 	router := httprouter.New()
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
@@ -40,7 +40,7 @@ func applyMiddlewares(app http.Handler) http.Handler {
 }
 
 func main() {
-	db, err := sql.Open("postgres", config.DSN())
+	db, err := sqlx.Open("postgres", config.DSN())
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Could not connect to database: %v", err))
 	}
