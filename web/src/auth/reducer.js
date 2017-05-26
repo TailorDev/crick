@@ -19,7 +19,7 @@ const lock = new Auth0Lock(
       params: {
         scope: 'openid',
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-        responseType: 'token id_token',
+        responseType: 'token',
       },
     },
   }
@@ -47,7 +47,6 @@ export const addAuth0Listeners = (dispatch: Function, getState: Function) => {
 
   lock.on('authenticated', authResult => {
     localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('id_token', authResult.idToken);
 
     dispatch(loginSuccess(authResult.accessToken));
   });
@@ -70,7 +69,6 @@ const loginSuccess = (token: string): Action => {
 
 export const logout = (): Action => {
   localStorage.removeItem('access_token');
-  localStorage.removeItem('id_token');
 
   return { type: LOGOUT };
 };
