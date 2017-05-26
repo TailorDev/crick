@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import Test from '../Test';
 
 type Props = {
   isAuthenticated: boolean,
@@ -20,6 +21,7 @@ const App = (props: Props) => (
         :
         <button onClick={props.onLogin}>Login</button>
     }
+    <Test />
   </div>
 );
 

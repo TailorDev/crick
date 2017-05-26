@@ -8,11 +8,21 @@ import type {
 // State
 type State = {
   isAuthenticated: boolean,
+  token: ?string,
 };
 
 const lock = new Auth0Lock(
   process.env.REACT_APP_AUTH0_CLIENT_ID,
-  process.env.REACT_APP_AUTH0_DOMAIN
+  process.env.REACT_APP_AUTH0_DOMAIN,
+  {
+    auth: {
+      params: {
+        scope: 'openid',
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+        responseType: 'token id_token',
+      },
+    },
+  }
 );
 
 const checkToken = () => {
@@ -21,6 +31,7 @@ const checkToken = () => {
 
 const initialState: State = {
   isAuthenticated: checkToken(),
+  token: localStorage.getItem('access_token'),
 };
 
 // Actions
@@ -30,20 +41,15 @@ const LOGOUT = 'crick/auth/LOGOUT';
 
 // Listeners
 export const addAuth0Listeners = (dispatch: Function, getState: Function) => {
+  lock.on('authorization_error', error => {
+    dispatch(loginError(error));
+  });
+
   lock.on('authenticated', authResult => {
-    lock.getUserInfo(authResult.accessToken, (error, profile) => {
-      if (error) {
-        dispatch(loginError(error));
+    localStorage.setItem('access_token', authResult.accessToken);
+    localStorage.setItem('id_token', authResult.idToken);
 
-        return;
-      }
-
-      localStorage.setItem('access_token', authResult.accessToken);
-      localStorage.setItem('id_token', authResult.idToken);
-      localStorage.setItem('profile', JSON.stringify(profile));
-
-      dispatch(loginSuccess(profile));
-    });
+    dispatch(loginSuccess(authResult.accessToken));
   });
 };
 
@@ -58,14 +64,13 @@ const loginError = (error): Action => {
   return { type: LOGIN_ERROR, error };
 };
 
-const loginSuccess = (profile: Object): Action => {
-  return { type: LOGIN_SUCCESS, profile };
+const loginSuccess = (token: string): Action => {
+  return { type: LOGIN_SUCCESS, token };
 };
 
 export const logout = (): Action => {
   localStorage.removeItem('access_token');
   localStorage.removeItem('id_token');
-  localStorage.removeItem('profile');
 
   return { type: LOGOUT };
 };
@@ -79,11 +84,13 @@ export default function reducer(
     case LOGIN_SUCCESS:
       return {
         isAuthenticated: true,
+        token: action.token,
       };
 
     case LOGOUT:
       return {
         isAuthenticated: false,
+        token: null,
       };
 
     default:
