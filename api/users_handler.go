@@ -11,8 +11,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// UsersGetMe returns information related to the current logged user.
 func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := r.Context().Value("user_id").(string)
+	id := GetUserID(r.Context())
 
 	u := &models.User{}
 	err := h.db.Get(u, "SELECT * FROM users WHERE auth0_id=$1;", id)

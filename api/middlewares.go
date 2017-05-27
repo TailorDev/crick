@@ -12,6 +12,21 @@ import (
 	"gopkg.in/square/go-jose.v2"
 )
 
+type contextKey string
+
+func (c contextKey) String() string {
+	return "io.crick.api.middlewares" + string(c)
+}
+
+var (
+	contextUserID = contextKey("user_id")
+)
+
+// GetUserID returns the Auth0 user ID from the Context.
+func GetUserID(ctx context.Context) string {
+	return ctx.Value(contextUserID).(string)
+}
+
 func auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
@@ -35,7 +50,7 @@ func auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			}
 
-			ctx := context.WithValue(r.Context(), "user_id", claims["sub"])
+			ctx := context.WithValue(r.Context(), contextUserID, claims["sub"])
 			h(w, r.WithContext(ctx), ps)
 		}
 	}
