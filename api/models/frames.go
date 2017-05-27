@@ -4,11 +4,13 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 )
 
 var (
-	createFrame          = `INSERT INTO frames (id, start_at, end_at, project_id, synchronized_at) VALUES (:id, :start_at, :end_at, :project_id, NOW());`
+	createFrame = `INSERT INTO frames (id, start_at, end_at, project_id, tags, synchronized_at)
+				   VALUES (:id, :start_at, :end_at, :project_id, :tags, NOW());`
 	selectFramesByUserID = `SELECT frames.*, projects.name AS project_name FROM frames
 							INNER JOIN projects ON (frames.project_id = projects.id)
 							WHERE projects.user_id=$1;`
@@ -19,13 +21,13 @@ var (
 )
 
 type Frame struct {
-	ID             string    `db:"id" json:"id"`
-	StartAt        time.Time `db:"start_at" json:"start_at"`
-	EndAt          time.Time `db:"end_at" json:"end_at"`
-	ProjectID      uuid.UUID `db:"project_id" json:"-"`
-	SynchronizedAt time.Time `db:"synchronized_at" json:"-"`
-	ProjectName    string    `db:"project_name" json:"project"`
-	Tags           []string  `db:"-" json:"tags"`
+	ID             string         `db:"id" json:"id"`
+	StartAt        time.Time      `db:"start_at" json:"start_at"`
+	EndAt          time.Time      `db:"end_at" json:"end_at"`
+	ProjectID      uuid.UUID      `db:"project_id" json:"-"`
+	SynchronizedAt time.Time      `db:"synchronized_at" json:"-"`
+	ProjectName    string         `db:"project_name" json:"project"`
+	Tags           pq.StringArray `db:"tags" json:"tags"`
 }
 
 func GetFrames(db *sqlx.DB, userID uuid.UUID) ([]Frame, error) {

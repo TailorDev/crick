@@ -32,10 +32,11 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 		}
 
 		f.ProjectID = p.ID
-		models.CreateNewFrame(h.db, f)
+		_, err := models.CreateNewFrame(h.db, f)
+		if err != nil {
+			h.logger.Error("create new frame", zap.Error(err))
+		}
 		// TODO: handle error
-
-		// TODO: insert tags
 	}
 
 	w.Header().Set("Content-Type", "application/json")
