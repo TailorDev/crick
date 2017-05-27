@@ -21,12 +21,12 @@ func App(db *sqlx.DB) *httprouter.Router {
 	defer logger.Sync()
 
 	h := handlers.New(db, logger)
-	router.GET("/users/me", m.Auth(h.UsersGetMe, logger))
-	router.GET("/projects", m.Auth(m.WithUser(h.GetProjects, db, logger), logger))
+	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, db, logger, false))
+	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, db, logger, true))
 	// Watson API
-	router.GET("/api/projects", m.AuthToken(h.GetProjects, db))
-	router.GET("/api/frames", m.AuthToken(h.GetFrames, db))
-	router.POST("/api/frames/bulk", m.AuthToken(h.BulkInsertFrames, db))
+	router.GET("/api/projects", m.AuthWithToken(h.GetProjects, db))
+	router.GET("/api/frames", m.AuthWithToken(h.GetFrames, db))
+	router.POST("/api/frames/bulk", m.AuthWithToken(h.BulkInsertFrames, db))
 
 	return router
 }

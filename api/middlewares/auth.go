@@ -38,8 +38,8 @@ func GetCurrentUser(ctx context.Context) *models.User {
 	return ctx.Value(contextCurrentUser).(*models.User)
 }
 
-// Auth returns the Auth0 authentication middleware.
-func Auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
+// AuthWithAuth0 returns the Auth0 authentication middleware.
+func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger, withUser bool) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
 		configuration := auth0.NewConfiguration(
@@ -62,13 +62,28 @@ func Auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			}
 
-			ctx := context.WithValue(r.Context(), contextUserID, claims["sub"])
-			h(w, r.WithContext(ctx), ps)
+			if withUser {
+				u := &models.User{}
+				if err := db.Get(u, selectUserByID, claims["sub"]); err != nil {
+					logger.Error("select user by id in WithUser middleware", zap.Error(err))
+
+					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+					return
+				}
+
+				ctx := context.WithValue(r.Context(), contextCurrentUser, u)
+				h(w, r.WithContext(ctx), ps)
+			} else {
+				ctx := context.WithValue(r.Context(), contextUserID, claims["sub"])
+				h(w, r.WithContext(ctx), ps)
+			}
 		}
 	}
 }
 
-func AuthToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
+// AuthWithToken returns the token-based middleware, which adds an
+// authenticated user to the request context if everything is ok.
+func AuthWithToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		auth := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(auth, "Token ")
@@ -80,23 +95,6 @@ func AuthToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
 		u := &models.User{}
 		if err := db.Get(u, selectUserByToken, token); err != nil {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
-		h(w, r.WithContext(ctx), ps)
-	}
-}
-
-func WithUser(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		id := GetUserID(r.Context())
-
-		u := &models.User{}
-		if err := db.Get(u, selectUserByID, id); err != nil {
-			logger.Error("select user by id in WithUser middleware", zap.Error(err))
-
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
 

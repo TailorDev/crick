@@ -8,7 +8,7 @@ import (
 type Project struct {
 	ID     uuid.UUID `db:"id" json:"id"`
 	Name   string    `json:"name"`
-	UserID uuid.UUID `db:"user_id"`
+	UserID uuid.UUID `db:"user_id" json:"-"`
 }
 
 var (
