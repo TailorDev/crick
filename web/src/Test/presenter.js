@@ -6,7 +6,7 @@ class Test extends React.Component {
     super(props);
 
     this.state = {
-      fullname: '',
+      login: '',
     };
   }
 
@@ -16,7 +16,7 @@ class Test extends React.Component {
   };
 
   state: {
-    fullname: string,
+    login: string,
   };
 
   componentDidMount() {
@@ -32,7 +32,7 @@ class Test extends React.Component {
       if (nextProps.token !== null) {
         this.fetchMe(nextProps.token);
       } else {
-        this.setState({ fullname: '' });
+        this.setState({ login: '' });
       }
     }
   }
@@ -50,7 +50,7 @@ class Test extends React.Component {
       })
       .then(json => {
         this.setState({
-          fullname: json.fullname,
+          login: json.login,
         });
       })
     ;
@@ -58,7 +58,7 @@ class Test extends React.Component {
 
   render() {
     return (
-      <p>Hello, {`${this.state.fullname || 'Anonymous'}`}!</p>
+      <p>Hello, {`${this.state.login || 'Anonymous'}`}!</p>
     );
   }
 }
