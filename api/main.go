@@ -7,7 +7,7 @@ import (
 
 	"github.com/TailorDev/crick/api/config"
 	"github.com/TailorDev/crick/api/handlers"
-	"github.com/TailorDev/crick/api/middlewares"
+	m "github.com/TailorDev/crick/api/middlewares"
 	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
@@ -21,7 +21,12 @@ func App(db *sqlx.DB) *httprouter.Router {
 	defer logger.Sync()
 
 	h := handlers.New(db, logger)
-	router.GET("/users/me", middlewares.Auth(h.UsersGetMe, logger))
+	router.GET("/users/me", m.Auth(h.UsersGetMe, logger))
+	router.GET("/projects", m.Auth(m.WithUser(h.GetProjects, db, logger), logger))
+	// Watson API
+	router.GET("/api/projects", m.AuthToken(h.GetProjects, db))
+	router.GET("/api/frames", m.AuthToken(h.GetFrames, db))
+	router.POST("/api/frames/bulk", m.AuthToken(h.BulkInsertFrames, db))
 
 	return router
 }

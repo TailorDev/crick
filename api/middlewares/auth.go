@@ -3,11 +3,14 @@ package middlewares
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"go.uber.org/zap"
 
 	"github.com/TailorDev/crick/api/config"
+	"github.com/TailorDev/crick/api/models"
 	"github.com/auth0-community/go-auth0"
+	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	"gopkg.in/square/go-jose.v2"
 )
@@ -19,12 +22,20 @@ func (c contextKey) String() string {
 }
 
 var (
-	contextUserID = contextKey("user_id")
+	contextUserID      = contextKey("user_id")
+	contextCurrentUser = contextKey("current_user")
+	selectUserByID     = `SELECT * FROM users WHERE auth0_id=$1;`
+	selectUserByToken  = `SELECT * FROM users WHERE watson_token=$1;`
 )
 
-// GetUserID returns the Auth0 user ID from the Context.
+// GetUserID returns the user ID from the Context.
 func GetUserID(ctx context.Context) string {
 	return ctx.Value(contextUserID).(string)
+}
+
+// GetCurrentUser returns the current logged user from the Context.
+func GetCurrentUser(ctx context.Context) *models.User {
+	return ctx.Value(contextCurrentUser).(*models.User)
 }
 
 // Auth returns the Auth0 authentication middleware.
@@ -54,5 +65,42 @@ func Auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 			ctx := context.WithValue(r.Context(), contextUserID, claims["sub"])
 			h(w, r.WithContext(ctx), ps)
 		}
+	}
+}
+
+func AuthToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		auth := r.Header.Get("Authorization")
+		token := strings.TrimPrefix(auth, "Token ")
+		if token == "" {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		u := &models.User{}
+		if err := db.Get(u, selectUserByToken, token); err != nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
+		h(w, r.WithContext(ctx), ps)
+	}
+}
+
+func WithUser(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		id := GetUserID(r.Context())
+
+		u := &models.User{}
+		if err := db.Get(u, selectUserByID, id); err != nil {
+			logger.Error("select user by id in WithUser middleware", zap.Error(err))
+
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
+		h(w, r.WithContext(ctx), ps)
 	}
 }

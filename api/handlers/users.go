@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -23,7 +22,7 @@ func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httproute
 		if err == sql.ErrNoRows {
 			h.logger.Info("create user", zap.String("auth0_id", id))
 
-			u, err = models.CreateUser(h.db, id)
+			u, err = models.CreateNewUser(h.db, id)
 			if err != nil {
 				h.logger.Error("creating a user by auth0_id", zap.Error(err))
 			}
@@ -31,8 +30,6 @@ func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httproute
 			h.logger.Error("finding a user by auth0_id", zap.Error(err))
 		}
 	}
-
-	fmt.Println(models.GetProjects(h.db, u.ID.String()))
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(u)
