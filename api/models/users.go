@@ -30,8 +30,8 @@ func NewUser(auth0, login string) *User {
 	}
 }
 
-func CreateNewUser(db *sqlx.DB, auth0_id string) (*User, error) {
-	u := NewUser(auth0_id, "John Doe")
+func CreateNewUser(db *sqlx.DB, auth0ID string) (*User, error) {
+	u := NewUser(auth0ID, "John Doe")
 	if _, err := db.NamedExec(createUser, u); err != nil {
 		return nil, err
 	}

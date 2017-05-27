@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Auth0Config represents the Auth0 configuration.
 type Auth0Config struct {
 	Issuer   string
 	Secret   string
@@ -27,7 +28,7 @@ func DSN() string {
 	return os.Getenv("CRICK_DSN")
 }
 
-// Auth0Config returns the Auth0 configuration.
+// Auth0 returns the Auth0 configuration.
 func Auth0() Auth0Config {
 	return Auth0Config{
 		Issuer:   os.Getenv("AUTH0_ISSUER"),
