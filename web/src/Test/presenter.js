@@ -6,7 +6,7 @@ class Test extends React.Component {
     super(props);
 
     this.state = {
-      login: '',
+      projects: [],
     };
   }
 
@@ -16,7 +16,7 @@ class Test extends React.Component {
   };
 
   state: {
-    login: string,
+    projects: Array<Object>,
   };
 
   componentDidMount() {
@@ -32,7 +32,7 @@ class Test extends React.Component {
       if (nextProps.token !== null) {
         this.fetchMe(nextProps.token);
       } else {
-        this.setState({ login: '' });
+        this.setState({ projects: [] });
       }
     }
   }
@@ -44,13 +44,13 @@ class Test extends React.Component {
       'Authorization': `Bearer ${token}`,
     };
 
-    fetch('/users/me', { headers })
+    fetch('/projects', { headers })
       .then(response => {
         return response.json();
       })
       .then(json => {
         this.setState({
-          login: json.login,
+          projects: json,
         });
       })
     ;
@@ -58,7 +58,9 @@ class Test extends React.Component {
 
   render() {
     return (
-      <p>Hello, {`${this.state.login || 'Anonymous'}`}!</p>
+      <ul>
+      {this.state.projects.map(p => <li>{p.name}</li>)}
+      </ul>
     );
   }
 }
