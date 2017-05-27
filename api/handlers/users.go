@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -30,6 +31,8 @@ func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httproute
 			h.logger.Error("finding a user by auth0_id", zap.Error(err))
 		}
 	}
+
+	fmt.Println(models.GetProjects(h.db, u.ID.String()))
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(u)
