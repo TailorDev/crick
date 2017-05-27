@@ -1,4 +1,4 @@
-package main
+package middlewares
 
 import (
 	"context"
@@ -27,7 +27,8 @@ func GetUserID(ctx context.Context) string {
 	return ctx.Value(contextUserID).(string)
 }
 
-func auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
+// Auth returns the Auth0 authentication middleware.
+func Auth(h httprouter.Handle, logger *zap.Logger) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
 		configuration := auth0.NewConfiguration(

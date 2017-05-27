@@ -6,17 +6,13 @@ import (
 	"net/http"
 
 	"github.com/TailorDev/crick/api/config"
+	"github.com/TailorDev/crick/api/handlers"
+	"github.com/TailorDev/crick/api/middlewares"
 	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 )
-
-// Handler is the structure that contains the different HTTP handlers.
-type Handler struct {
-	db     *sqlx.DB
-	logger *zap.Logger
-}
 
 // App is the application kernel.
 func App(db *sqlx.DB) *httprouter.Router {
@@ -24,12 +20,8 @@ func App(db *sqlx.DB) *httprouter.Router {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
-	h := Handler{
-		db:     db,
-		logger: logger,
-	}
-
-	router.GET("/users/me", auth(h.UsersGetMe, logger))
+	h := handlers.New(db, logger)
+	router.GET("/users/me", middlewares.Auth(h.UsersGetMe, logger))
 
 	return router
 }
