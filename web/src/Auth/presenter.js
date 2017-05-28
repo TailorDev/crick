@@ -7,6 +7,7 @@ class Auth extends React.Component {
 
     this.state = {
       login: '',
+      token: '',
     };
   }
 
@@ -19,6 +20,7 @@ class Auth extends React.Component {
 
   state: {
     login: string,
+    token: string,
   };
 
   componentDidMount() {
@@ -39,6 +41,7 @@ class Auth extends React.Component {
     }
   }
 
+  // this is old school, we should use redux-api-middleware instead
   fetchMe(token: string) {
     const headers: Object = {
       'Accept': 'application/json',
@@ -53,23 +56,31 @@ class Auth extends React.Component {
       .then(json => {
         this.setState({
           login: json.login,
+          token: json.token,
         });
       })
     ;
   }
 
   render() {
+    if (this.props.isAuthenticated) {
+      return (
+        <div>
+          <p>
+            {this.state.login}
+            &nbsp;
+            <button onClick={this.props.onLogout}>Logout</button>
+          </p>
+          <p>
+            Watson token: <code>{this.state.token}</code>
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div>
-      {this.props.isAuthenticated ?
-        <p>
-          {this.state.login}
-          &nbsp;
-          <button onClick={this.props.onLogout}>Logout</button>
-        </p>
-        :
-        <button onClick={this.props.onLogin}>Login</button>
-      }
+      <button onClick={this.props.onLogin}>Login</button>
       </div>
     );
   }
