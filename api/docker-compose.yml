@@ -8,7 +8,7 @@ services:
       - .:/go/src/github.com/TailorDev/crick/api
     environment:
       CRICK_DSN: postgres://crick:crickIsChic@db:5432/crick?sslmode=disable
-      AUTH0_ISSUER: https://crick.eu.auth0.com/
+      AUTH0_DOMAIN: https://crick.eu.auth0.com/
       AUTH0_AUDIENCE: https://dev.api.crick.io/,https://crick.eu.auth0.com/userinfo
       AUTH0_JWKS_URI: https://crick.eu.auth0.com/.well-known/jwks.json
     ports:

@@ -36,7 +36,7 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 		configuration := auth0.NewConfiguration(
 			auth0.NewJWKClient(auth0.JWKClientOptions{URI: c.JwksURI}),
 			c.Audience,
-			c.Issuer,
+			c.Domain,
 			jose.RS256,
 		)
 		validator := auth0.NewValidator(configuration)
@@ -64,7 +64,7 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 			if err == sql.ErrNoRows {
 				logger.Info("create new authenticated user", zap.String("auth0_id", id))
 
-				profile, err := getUserProfile(c.Issuer, r.Header.Get("Authorization"))
+				profile, err := getUserProfile(c.Domain, r.Header.Get("Authorization"))
 				if err != nil {
 					logger.Error("cannot retrieve user profile", zap.Error(err))
 					SendError(w, http.StatusInternalServerError, DetailUserProfileRetrialFailed)
