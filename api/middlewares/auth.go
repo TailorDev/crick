@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 	"strings"
 
@@ -15,31 +16,13 @@ import (
 	"gopkg.in/square/go-jose.v2"
 )
 
-type contextKey string
-
-func (c contextKey) String() string {
-	return "io.crick.api.middlewares" + string(c)
-}
-
 var (
-	contextUserID      = contextKey("user_id")
-	contextCurrentUser = contextKey("current_user")
-	selectUserByID     = `SELECT * FROM users WHERE auth0_id=$1;`
-	selectUserByToken  = `SELECT * FROM users WHERE watson_token=$1;`
+	selectUserByID    = `SELECT * FROM users WHERE auth0_id=$1;`
+	selectUserByToken = `SELECT * FROM users WHERE watson_token=$1;`
 )
 
-// GetUserID returns the user ID from the Context.
-func GetUserID(ctx context.Context) string {
-	return ctx.Value(contextUserID).(string)
-}
-
-// GetCurrentUser returns the current logged user from the Context.
-func GetCurrentUser(ctx context.Context) *models.User {
-	return ctx.Value(contextCurrentUser).(*models.User)
-}
-
 // AuthWithAuth0 returns the Auth0 authentication middleware.
-func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger, withUser bool) httprouter.Handle {
+func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
 		configuration := auth0.NewConfiguration(
@@ -54,30 +37,38 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger, withUse
 		if err != nil {
 			logger.Warn("authentication failed", zap.Error(err))
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-		} else {
-			claims := map[string]interface{}{}
-			err = validator.Claims(r, token, &claims)
-			if err != nil {
-				logger.Error("retrieving claims failed", zap.Error(err))
-				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			}
+			return
+		}
 
-			if withUser {
-				u := &models.User{}
-				if err := db.Get(u, selectUserByID, claims["sub"]); err != nil {
-					logger.Error("select user by id in WithUser middleware", zap.Error(err))
+		// user's auth0_id is stored in a JWT claim (`sub`)
+		claims := map[string]interface{}{}
+		err = validator.Claims(r, token, &claims)
+		if err != nil {
+			logger.Error("cannot retrieve JWT claims", zap.Error(err))
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		}
 
-					http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		id := claims["sub"].(string)
+		u := &models.User{}
+		if err := db.Get(u, selectUserByID, id); err != nil {
+			if err == sql.ErrNoRows {
+				logger.Info("create new authenticated user", zap.String("auth0_id", id))
+
+				u, err = models.CreateNewUser(db, id)
+				if err != nil {
+					logger.Error("cannot create new user", zap.Error(err))
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 					return
 				}
-
-				ctx := context.WithValue(r.Context(), contextCurrentUser, u)
-				h(w, r.WithContext(ctx), ps)
 			} else {
-				ctx := context.WithValue(r.Context(), contextUserID, claims["sub"])
-				h(w, r.WithContext(ctx), ps)
+				logger.Error("could not select user by ID", zap.Error(err), zap.String("auth0_id", id))
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
 			}
 		}
+
+		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
+		h(w, r.WithContext(ctx), ps)
 	}
 }
 

@@ -21,8 +21,8 @@ func App(db *sqlx.DB) *httprouter.Router {
 	defer logger.Sync()
 
 	h := handlers.New(db, logger)
-	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, db, logger, false))
-	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, db, logger, true))
+	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, db, logger))
+	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, db, logger))
 	// Watson API
 	router.GET("/api/projects", m.AuthWithToken(h.GetProjects, db))
 	router.GET("/api/frames", m.AuthWithToken(h.GetFrames, db))
@@ -31,8 +31,8 @@ func App(db *sqlx.DB) *httprouter.Router {
 	return router
 }
 
-// applyMiddlewares applies the common middlewares to the whole app
-func applyMiddlewares(app http.Handler) http.Handler {
+// applyGlobalMiddlewares applies the common middlewares to the whole app
+func applyGlobalMiddlewares(app http.Handler) http.Handler {
 	return app
 }
 
@@ -46,6 +46,6 @@ func main() {
 	app := App(db)
 	log.Fatal(http.ListenAndServe(
 		fmt.Sprintf(":%s", config.Port()),
-		applyMiddlewares(app),
+		applyGlobalMiddlewares(app),
 	))
 }
