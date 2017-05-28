@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -25,27 +24,23 @@ func NewProject(name string, userID uuid.UUID) *Project {
 	}
 }
 
-func CreateNewProject(db *sqlx.DB, name string, userID uuid.UUID) (*Project, error) {
+func (r DatabaseRepository) CreateNewProject(name string, userID uuid.UUID) (*Project, error) {
 	p := NewProject(name, userID)
-	_, err := db.NamedExec(createProject, p)
+	_, err := r.db.NamedExec(createProject, p)
 
 	return p, err
 }
 
-func GetProjects(db *sqlx.DB, userID uuid.UUID) ([]Project, error) {
+func (r DatabaseRepository) GetProjects(userID uuid.UUID) ([]Project, error) {
 	projects := []Project{}
-	if err := db.Select(&projects, selectProjectsByUserID, userID); err != nil {
-		return nil, err
-	}
+	err := r.db.Select(&projects, selectProjectsByUserID, userID)
 
-	return projects, nil
+	return projects, err
 }
 
-func GetProjectByName(db *sqlx.DB, userID uuid.UUID, name string) (*Project, error) {
+func (r DatabaseRepository) GetProjectByName(userID uuid.UUID, name string) (*Project, error) {
 	p := &Project{}
-	if err := db.Get(p, selectProjectByName, userID, name); err != nil {
-		return nil, err
-	}
+	err := r.db.Get(p, selectProjectByName, userID, name)
 
-	return p, nil
+	return p, err
 }

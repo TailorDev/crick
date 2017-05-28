@@ -39,9 +39,9 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	for _, f := range frames {
-		p, _ := models.GetProjectByName(h.db, user.ID, f.ProjectName)
-		if p == nil {
-			p, err = models.CreateNewProject(h.db, f.ProjectName, user.ID)
+		p, err1 := h.repository.GetProjectByName(user.ID, f.ProjectName)
+		if err1 != nil {
+			p, err = h.repository.CreateNewProject(f.ProjectName, user.ID)
 			if err != nil {
 				middlewares.SendError(w, http.StatusInternalServerError, DetailProjectCreationFailed)
 				return
@@ -49,8 +49,7 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 		}
 
 		f.ProjectID = p.ID
-		_, err := models.CreateNewFrame(h.db, f)
-		if err != nil {
+		if err := h.repository.CreateNewFrame(f); err != nil {
 			h.logger.Error("create new frame", zap.Error(err))
 			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameCreationFailed)
 			return
@@ -70,14 +69,14 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 	date, err := time.Parse("2006-01-02T15:04:05-07:00", ls)
 
 	if err != nil {
-		frames, err = models.GetFrames(h.db, user.ID)
+		frames, err = h.repository.GetFrames(user.ID)
 		if err != nil {
 			h.logger.Error("get frames", zap.Error(err))
 			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
 			return
 		}
 	} else {
-		frames, err = models.GetFramesSince(h.db, user.ID, date)
+		frames, err = h.repository.GetFramesSince(user.ID, date)
 		if err != nil {
 			h.logger.Error("get frames since", zap.Error(err))
 			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
@@ -99,7 +98,7 @@ func (h Handler) GetFramesForProject(w http.ResponseWriter, r *http.Request, ps 
 		return
 	}
 
-	frames, err := models.GetFramesForProject(h.db, user.ID, projectID)
+	frames, err := h.repository.GetFramesForProject(user.ID, projectID)
 	if err != nil {
 		h.logger.Error("get frames for project", zap.Error(err))
 		middlewares.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)

@@ -13,14 +13,11 @@ import (
 	"github.com/TailorDev/crick/api/config"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/auth0-community/go-auth0"
-	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	"gopkg.in/square/go-jose.v2"
 )
 
 var (
-	selectUserByID                   = `SELECT * FROM users WHERE auth0_id=$1;`
-	selectUserByToken                = `SELECT * FROM users WHERE api_token=$1;`
 	DetailInvalidAuthorizationHeader = "Invalid or missing Authorization header"
 	DetailUserNotFound               = "User not found"
 	DetailMalformedToken             = "Malformed JWT token (claims)"
@@ -30,7 +27,7 @@ var (
 )
 
 // AuthWithAuth0 returns the Auth0 authentication middleware.
-func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprouter.Handle {
+func AuthWithAuth0(h httprouter.Handle, repo models.Repository, logger *zap.Logger) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
 		configuration := auth0.NewConfiguration(
@@ -57,10 +54,9 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 			return
 		}
 
-		u := &models.User{}
-
 		id := claims["sub"].(string)
-		if err := db.Get(u, selectUserByID, id); err != nil {
+		u, err := repo.GetUserByAuth0ID(id)
+		if err != nil {
 			if err == sql.ErrNoRows {
 				logger.Info("create new authenticated user", zap.String("auth0_id", id))
 
@@ -71,7 +67,7 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 					return
 				}
 
-				u, err = models.CreateNewUser(db, profile["sub"], profile["nickname"])
+				u, err = repo.CreateNewUser(profile["sub"], profile["nickname"])
 				if err != nil {
 					logger.Error("cannot create new user", zap.Error(err))
 					SendError(w, http.StatusInternalServerError, DetailUserCreationFailed)
@@ -91,7 +87,7 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 
 // AuthWithToken returns the token-based middleware, which adds an
 // authenticated user to the request context if everything is ok.
-func AuthWithToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
+func AuthWithToken(h httprouter.Handle, repo models.Repository) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		auth := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(auth, "Token ")
@@ -100,8 +96,8 @@ func AuthWithToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
 			return
 		}
 
-		u := &models.User{}
-		if err := db.Get(u, selectUserByToken, token); err != nil {
+		u, err := repo.GetUserByToken(token)
+		if err != nil {
 			SendError(w, http.StatusUnauthorized, DetailUserNotFound)
 			return
 		}

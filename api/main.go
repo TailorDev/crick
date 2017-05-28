@@ -8,6 +8,7 @@ import (
 	"github.com/TailorDev/crick/api/config"
 	"github.com/TailorDev/crick/api/handlers"
 	m "github.com/TailorDev/crick/api/middlewares"
+	"github.com/TailorDev/crick/api/models"
 	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
@@ -15,19 +16,17 @@ import (
 )
 
 // App is the application kernel.
-func App(db *sqlx.DB) *httprouter.Router {
+func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	router := httprouter.New()
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
 
-	h := handlers.New(db, logger)
-	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, db, logger))
-	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, db, logger))
-	router.GET("/projects/:id/frames", m.AuthWithAuth0(h.GetFramesForProject, db, logger))
+	h := handlers.New(repository, logger)
+	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, repository, logger))
+	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, repository, logger))
+	router.GET("/projects/:id/frames", m.AuthWithAuth0(h.GetFramesForProject, repository, logger))
 	// Watson API
-	router.GET("/api/projects", m.AuthWithToken(h.GetProjects, db))
-	router.GET("/api/frames", m.AuthWithToken(h.GetFrames, db))
-	router.POST("/api/frames/bulk", m.AuthWithToken(h.BulkInsertFrames, db))
+	router.GET("/api/projects", m.AuthWithToken(h.GetProjects, repository))
+	router.GET("/api/frames", m.AuthWithToken(h.GetFrames, repository))
+	router.POST("/api/frames/bulk", m.AuthWithToken(h.BulkInsertFrames, repository))
 
 	return router
 }
@@ -44,7 +43,10 @@ func main() {
 	}
 	defer db.Close()
 
-	app := App(db)
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+
+	app := App(models.NewDatabaseRepository(db), logger)
 	log.Fatal(http.ListenAndServe(
 		fmt.Sprintf(":%s", config.Port()),
 		applyGlobalMiddlewares(app),

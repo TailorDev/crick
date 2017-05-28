@@ -3,7 +3,6 @@ package models
 import (
 	"time"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 )
@@ -35,35 +34,29 @@ type Frame struct {
 	Tags           pq.StringArray `db:"tags" json:"tags"`
 }
 
-func GetFrames(db *sqlx.DB, userID uuid.UUID) ([]Frame, error) {
+func (r DatabaseRepository) GetFrames(userID uuid.UUID) ([]Frame, error) {
 	frames := []Frame{}
-	if err := db.Select(&frames, selectFramesByUserID, userID); err != nil {
-		return nil, err
-	}
+	err := r.db.Select(&frames, selectFramesByUserID, userID)
 
-	return frames, nil
+	return frames, err
 }
 
-func GetFramesSince(db *sqlx.DB, userID uuid.UUID, date time.Time) ([]Frame, error) {
+func (r DatabaseRepository) GetFramesSince(userID uuid.UUID, date time.Time) ([]Frame, error) {
 	frames := []Frame{}
-	if err := db.Select(&frames, selectFramesByUserIDAndDate, userID, date); err != nil {
-		return nil, err
-	}
+	err := r.db.Select(&frames, selectFramesByUserIDAndDate, userID, date)
 
-	return frames, nil
+	return frames, err
 }
 
-func CreateNewFrame(db *sqlx.DB, frame Frame) (Frame, error) {
-	_, err := db.NamedExec(createFrame, frame)
+func (r DatabaseRepository) CreateNewFrame(frame Frame) error {
+	_, err := r.db.NamedExec(createFrame, frame)
 
-	return frame, err
+	return err
 }
 
-func GetFramesForProject(db *sqlx.DB, userID, projectID uuid.UUID) ([]Frame, error) {
+func (r DatabaseRepository) GetFramesForProject(userID, projectID uuid.UUID) ([]Frame, error) {
 	frames := []Frame{}
-	if err := db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID); err != nil {
-		return nil, err
-	}
+	err := r.db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID)
 
-	return frames, nil
+	return frames, err
 }

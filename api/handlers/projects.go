@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/TailorDev/crick/api/middlewares"
-	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -19,7 +18,7 @@ var (
 func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
-	projects, err := models.GetProjects(h.db, user.ID)
+	projects, err := h.repository.GetProjects(user.ID)
 	if err != nil {
 		h.logger.Error("get projects", zap.Error(err))
 		middlewares.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)

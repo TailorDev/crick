@@ -1,20 +1,20 @@
 package handlers
 
 import (
-	"github.com/jmoiron/sqlx"
+	"github.com/TailorDev/crick/api/models"
 	"go.uber.org/zap"
 )
 
 // Handler is the structure that contains the different HTTP handlers.
 type Handler struct {
-	db     *sqlx.DB
-	logger *zap.Logger
+	repository models.Repository
+	logger     *zap.Logger
 }
 
 // New creates the main handler.
-func New(db *sqlx.DB, logger *zap.Logger) Handler {
+func New(repository models.Repository, logger *zap.Logger) Handler {
 	return Handler{
-		db:     db,
-		logger: logger,
+		repository: repository,
+		logger:     logger,
 	}
 }

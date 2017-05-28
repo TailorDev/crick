@@ -4,12 +4,13 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/satori/go.uuid"
 )
 
 var (
-	createUser = `INSERT INTO users (id, login, auth0_id, api_token) VALUES (:id, :login, :auth0_id, :api_token) ON CONFLICT DO NOTHING;`
+	selectUserByID    = `SELECT * FROM users WHERE auth0_id=$1;`
+	selectUserByToken = `SELECT * FROM users WHERE api_token=$1;`
+	createUser        = `INSERT INTO users (id, login, auth0_id, api_token) VALUES (:id, :login, :auth0_id, :api_token) ON CONFLICT DO NOTHING;`
 )
 
 type User struct {
@@ -30,13 +31,25 @@ func NewUser(auth0, login string) *User {
 	}
 }
 
-func CreateNewUser(db *sqlx.DB, auth0ID, login string) (*User, error) {
+func (r DatabaseRepository) CreateNewUser(auth0ID, login string) (*User, error) {
 	u := NewUser(auth0ID, login)
-	if _, err := db.NamedExec(createUser, u); err != nil {
-		return nil, err
-	}
+	_, err := r.db.NamedExec(createUser, u)
 
-	return u, nil
+	return u, err
+}
+
+func (r DatabaseRepository) GetUserByAuth0ID(auth0ID string) (*User, error) {
+	u := &User{}
+	err := r.db.Get(u, selectUserByID, auth0ID)
+
+	return u, err
+}
+
+func (r DatabaseRepository) GetUserByToken(token string) (*User, error) {
+	u := &User{}
+	err := r.db.Get(u, selectUserByToken, token)
+
+	return u, err
 }
 
 // cf. https://elithrar.github.io/article/generating-secure-random-numbers-crypto-rand/
