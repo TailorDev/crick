@@ -9,7 +9,7 @@ import (
 // Auth0Config represents the Auth0 configuration.
 type Auth0Config struct {
 	Issuer   string
-	Secret   string
+	JwksURI  string
 	Audience []string
 }
 
@@ -32,7 +32,7 @@ func DSN() string {
 func Auth0() Auth0Config {
 	return Auth0Config{
 		Issuer:   os.Getenv("AUTH0_ISSUER"),
-		Secret:   os.Getenv("AUTH0_SECRET"),
 		Audience: strings.Split(os.Getenv("AUTH0_AUDIENCE"), ","),
+		JwksURI:  os.Getenv("AUTH0_JWKS_URI"),
 	}
 }

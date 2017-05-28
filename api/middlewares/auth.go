@@ -31,7 +31,7 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		c := config.Auth0()
 		configuration := auth0.NewConfiguration(
-			auth0.NewKeyProvider([]byte(c.Secret)),
+			auth0.NewJWKClient(auth0.JWKClientOptions{URI: c.JwksURI}),
 			c.Audience,
 			c.Issuer,
 			jose.RS256,

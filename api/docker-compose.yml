@@ -9,8 +9,8 @@ services:
     environment:
       CRICK_DSN: postgres://crick:crickIsChic@db:5432/crick?sslmode=disable
       AUTH0_ISSUER: https://crick.eu.auth0.com/
-      AUTH0_AUDIENCE: https://dev.api.crick.io/
-      AUTH0_SECRET: Ve0Mv6TM4O2FcDnyu3wzfM02Xf9UGBk6
+      AUTH0_AUDIENCE: https://dev.api.crick.io/,https://crick.eu.auth0.com/userinfo
+      AUTH0_JWKS_URI: https://crick.eu.auth0.com/.well-known/jwks.json
     ports:
       - 8000:8000
     depends_on:

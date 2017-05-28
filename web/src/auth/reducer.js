@@ -17,7 +17,7 @@ const lock = new Auth0Lock(
   {
     auth: {
       params: {
-        scope: 'openid',
+        scope: 'openid profile',
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
         responseType: 'token',
       },
