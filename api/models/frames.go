@@ -10,14 +10,14 @@ import (
 
 var (
 	createFrame = `INSERT INTO frames (id, start_at, end_at, project_id, tags, synchronized_at)
-				   VALUES (:id, :start_at, :end_at, :project_id, :tags, NOW());`
+	VALUES (:id, :start_at, :end_at, :project_id, :tags, NOW());`
 	selectFramesByUserID = `SELECT frames.*, projects.name AS project_name FROM frames
-							INNER JOIN projects ON (frames.project_id = projects.id)
-							WHERE projects.user_id=$1;`
+	INNER JOIN projects ON (frames.project_id = projects.id)
+	WHERE projects.user_id=$1;`
 	selectFramesByUserIDAndDate = `SELECT frames.*, projects.name AS project_name FROM frames
-								   INNER JOIN projects ON (frames.project_id = projects.id)
-								   WHERE projects.user_id=$1
-								   AND frames.synchronized_at >= $2;`
+	INNER JOIN projects ON (frames.project_id = projects.id)
+	WHERE projects.user_id=$1
+	AND frames.synchronized_at >= $2;`
 )
 
 type Frame struct {
