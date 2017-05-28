@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from './rootReducer';
-import { addAuth0Listeners } from '../auth/reducer';
+import { addAuth0Listeners } from '../Auth/reducer';
 
 const middlewares = [thunk];
 

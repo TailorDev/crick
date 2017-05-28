@@ -1,11 +1,9 @@
 /* @flow */
 import React from 'react';
-import Test from '../Test';
+import Projects from '../Projects';
+import Auth from '../Auth';
 
 type Props = {
-  isAuthenticated: boolean,
-  onLogin: Function,
-  onLogout: Function,
 };
 
 const App = (props: Props) => (
@@ -13,15 +11,12 @@ const App = (props: Props) => (
     <div className="App-header">
       <h2>Welcome to React</h2>
     </div>
+
     <div className="App-intro">
-      {props.isAuthenticated ? 'You are authenticated' : ''}
+      <Auth />
     </div>
-    {props.isAuthenticated ?
-        <button onClick={props.onLogout}>Logout</button>
-        :
-        <button onClick={props.onLogin}>Login</button>
-    }
-    <Test />
+
+    <Projects />
   </div>
 );
 

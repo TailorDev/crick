@@ -1,6 +1,7 @@
 /* @flow */
 import { connect } from 'react-redux';
-import Test from './presenter';
+import Auth from './presenter';
+import { login, logout } from './reducer';
 
 const mapStateToProps = (state) => {
   const auth = state.auth;
@@ -12,6 +13,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<*>) => ({
+  onLogin: () => dispatch(login()),
+  onLogout: () => dispatch(logout()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Test);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

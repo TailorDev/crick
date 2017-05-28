@@ -1,22 +1,24 @@
 /* @flow */
 import React from 'react';
 
-class Test extends React.Component {
+class Auth extends React.Component {
   constructor(props: Object) {
     super(props);
 
     this.state = {
-      projects: [],
+      login: '',
     };
   }
 
   props: {
     isAuthenticated: boolean,
     token: string,
+    onLogout: Function,
+    onLogin: Function,
   };
 
   state: {
-    projects: Array<Object>,
+    login: string,
   };
 
   componentDidMount() {
@@ -32,7 +34,7 @@ class Test extends React.Component {
       if (nextProps.token !== null) {
         this.fetchMe(nextProps.token);
       } else {
-        this.setState({ projects: [] });
+        this.setState({ login: '' });
       }
     }
   }
@@ -44,13 +46,13 @@ class Test extends React.Component {
       'Authorization': `Bearer ${token}`,
     };
 
-    fetch('/projects', { headers })
+    fetch('/users/me', { headers })
       .then(response => {
         return response.json();
       })
       .then(json => {
         this.setState({
-          projects: json,
+          login: json.login,
         });
       })
     ;
@@ -58,11 +60,19 @@ class Test extends React.Component {
 
   render() {
     return (
-      <ul>
-      {this.state.projects.map(p => <li>{p.name}</li>)}
-      </ul>
+      <div>
+      {this.props.isAuthenticated ?
+        <p>
+          {this.state.login}
+          &nbsp;
+          <button onClick={this.props.onLogout}>Logout</button>
+        </p>
+        :
+        <button onClick={this.props.onLogin}>Login</button>
+      }
+      </div>
     );
   }
 }
 
-export default Test;
+export default Auth;
