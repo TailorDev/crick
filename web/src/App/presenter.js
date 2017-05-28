@@ -9,7 +9,7 @@ type Props = {
 const App = (props: Props) => (
   <div className="App">
     <div className="App-header">
-      <h2>Welcome to React</h2>
+      <h2>crick.io</h2>
     </div>
 
     <div className="App-intro">

@@ -27,6 +27,10 @@ class Projects extends React.Component {
   }
 
   render() {
+    if (this.props.projects.length === 0) {
+      return null;
+    }
+
     return (
       <div>
         <h2>Projects</h2>

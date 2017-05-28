@@ -22,6 +22,9 @@ const lock = new Auth0Lock(
         responseType: 'token',
       },
     },
+    theme: {
+      logo: 'https://crick.io/img/logo-crick-square-150px.png',
+    },
   }
 );
 
