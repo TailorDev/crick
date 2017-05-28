@@ -1,4 +1,5 @@
-RUN_MIGRATE=docker-compose -p crick -f docker-compose.yml -f docker-compose.tools.yml run --rm migrate
+DOCKER_COMPOSE=docker-compose -p crick
+RUN_MIGRATE=$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.tools.yml run --rm migrate
 
 default: help
 
@@ -8,7 +9,7 @@ dev: ## start the API with Docker
 .PHONY: dev
 
 logs: ## show the API logs
-	@docker-compose -p crick logs -f api
+	$(DOCKER_COMPOSE) logs -f api
 .PHONY: logs
 
 migrate-up: ## apply database migrations
@@ -18,6 +19,10 @@ migrate-up: ## apply database migrations
 migrate-version: ## show database migration version
 	$(RUN_MIGRATE) version
 .PHONY: migrate-version
+
+down: ## run docker-compose down
+	$(DOCKER_COMPOSE) down
+.PHONY: logs
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
