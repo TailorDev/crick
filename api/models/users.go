@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	createUser = `INSERT INTO users (id, login, auth0_id) VALUES (:id, :login, :auth0_id);`
+	createUser = `INSERT INTO users (id, login, auth0_id, watson_token) VALUES (:id, :login, :auth0_id, :watson_token) ON CONFLICT DO NOTHING;`
 )
 
 type User struct {
@@ -30,8 +30,8 @@ func NewUser(auth0, login string) *User {
 	}
 }
 
-func CreateNewUser(db *sqlx.DB, auth0ID string) (*User, error) {
-	u := NewUser(auth0ID, "John Doe")
+func CreateNewUser(db *sqlx.DB, auth0ID, login string) (*User, error) {
+	u := NewUser(auth0ID, login)
 	if _, err := db.NamedExec(createUser, u); err != nil {
 		return nil, err
 	}

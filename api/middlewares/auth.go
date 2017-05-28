@@ -3,6 +3,8 @@ package middlewares
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -24,6 +26,7 @@ var (
 	DetailMalformedToken             = "Malformed JWT token (claims)"
 	DetailUserCreationFailed         = "User creation failed"
 	DetailUserSelectionFailed        = "User selection failed"
+	DetailUserProfileRetrialFailed   = "User profile retrieval failed"
 )
 
 // AuthWithAuth0 returns the Auth0 authentication middleware.
@@ -54,13 +57,21 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 			return
 		}
 
-		id := claims["sub"].(string)
 		u := &models.User{}
+
+		id := claims["sub"].(string)
 		if err := db.Get(u, selectUserByID, id); err != nil {
 			if err == sql.ErrNoRows {
 				logger.Info("create new authenticated user", zap.String("auth0_id", id))
 
-				u, err = models.CreateNewUser(db, id)
+				profile, err := getUserProfile(c.Issuer, r.Header.Get("Authorization"))
+				if err != nil {
+					logger.Error("cannot retrieve user profile", zap.Error(err))
+					SendError(w, http.StatusInternalServerError, DetailUserProfileRetrialFailed)
+					return
+				}
+
+				u, err = models.CreateNewUser(db, profile["sub"], profile["nickname"])
 				if err != nil {
 					logger.Error("cannot create new user", zap.Error(err))
 					SendError(w, http.StatusInternalServerError, DetailUserCreationFailed)
@@ -98,4 +109,32 @@ func AuthWithToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
 		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
 		h(w, r.WithContext(ctx), ps)
 	}
+}
+
+func getUserProfile(domain, authHeader string) (map[string]string, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", domain+"userinfo", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", authHeader)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	raw, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	var profile map[string]string
+	if err = json.Unmarshal(raw, &profile); err != nil {
+		return nil, err
+	}
+
+	return profile, nil
 }
