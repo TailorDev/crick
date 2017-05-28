@@ -17,8 +17,13 @@ import (
 )
 
 var (
-	selectUserByID    = `SELECT * FROM users WHERE auth0_id=$1;`
-	selectUserByToken = `SELECT * FROM users WHERE watson_token=$1;`
+	selectUserByID                   = `SELECT * FROM users WHERE auth0_id=$1;`
+	selectUserByToken                = `SELECT * FROM users WHERE watson_token=$1;`
+	DetailInvalidAuthorizationHeader = "Invalid or missing Authorization header"
+	DetailUserNotFound               = "User not found"
+	DetailMalformedToken             = "Malformed JWT token (claims)"
+	DetailUserCreationFailed         = "User creation failed"
+	DetailUserSelectionFailed        = "User selection failed"
 )
 
 // AuthWithAuth0 returns the Auth0 authentication middleware.
@@ -36,7 +41,7 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 		token, err := validator.ValidateRequest(r)
 		if err != nil {
 			logger.Warn("authentication failed", zap.Error(err))
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			SendError(w, http.StatusUnauthorized, DetailUserNotFound)
 			return
 		}
 
@@ -45,7 +50,8 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 		err = validator.Claims(r, token, &claims)
 		if err != nil {
 			logger.Error("cannot retrieve JWT claims", zap.Error(err))
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			SendError(w, http.StatusBadRequest, DetailMalformedToken)
+			return
 		}
 
 		id := claims["sub"].(string)
@@ -57,12 +63,12 @@ func AuthWithAuth0(h httprouter.Handle, db *sqlx.DB, logger *zap.Logger) httprou
 				u, err = models.CreateNewUser(db, id)
 				if err != nil {
 					logger.Error("cannot create new user", zap.Error(err))
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+					SendError(w, http.StatusInternalServerError, DetailUserCreationFailed)
 					return
 				}
 			} else {
 				logger.Error("could not select user by ID", zap.Error(err), zap.String("auth0_id", id))
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				SendError(w, http.StatusInternalServerError, DetailUserSelectionFailed)
 				return
 			}
 		}
@@ -79,13 +85,13 @@ func AuthWithToken(h httprouter.Handle, db *sqlx.DB) httprouter.Handle {
 		auth := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(auth, "Token ")
 		if token == "" {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			SendError(w, http.StatusBadRequest, DetailInvalidAuthorizationHeader)
 			return
 		}
 
 		u := &models.User{}
 		if err := db.Get(u, selectUserByToken, token); err != nil {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			SendError(w, http.StatusUnauthorized, DetailUserNotFound)
 			return
 		}
 

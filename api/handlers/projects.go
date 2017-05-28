@@ -11,13 +11,19 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+var (
+	DetailGetProjectsFailed = "Failed to retrieve projects"
+)
+
+// GetProjects returns the user's projects.
 func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
 	projects, err := models.GetProjects(h.db, user.ID)
 	if err != nil {
 		h.logger.Error("get projects", zap.Error(err))
-		// TODO: return error
+		middlewares.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")

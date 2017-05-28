@@ -12,37 +12,55 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	DetailInvalidRequest        = "Invalid request"
+	DetailMalformedJSON         = "Malformed JSON"
+	DetailProjectCreationFailed = "Project creation failed"
+	DetailFrameCreationFailed   = "Frame creation failed"
+	DetailFrameSelectionFailed  = "Frame selection failed"
+)
+
+// BulkInsertFrames handles the bulk insertion of Watson frames.
 func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
-	body, _ := ioutil.ReadAll(r.Body)
-	// TODO: handle error
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		middlewares.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
 
 	frames := []models.Frame{}
 	if err := json.Unmarshal(body, &frames); err != nil {
 		h.logger.Error("unmarshal JSON frames to synchronize", zap.Error(err))
-		// TODO: return error
+		middlewares.SendError(w, http.StatusBadRequest, DetailMalformedJSON)
+		return
 	}
 
 	for _, f := range frames {
 		p, _ := models.GetProjectByName(h.db, user.ID, f.ProjectName)
 		if p == nil {
-			p, _ = models.CreateNewProject(h.db, f.ProjectName, user.ID)
-			// TODO: handle error
+			p, err = models.CreateNewProject(h.db, f.ProjectName, user.ID)
+			if err != nil {
+				middlewares.SendError(w, http.StatusInternalServerError, DetailProjectCreationFailed)
+				return
+			}
 		}
 
 		f.ProjectID = p.ID
 		_, err := models.CreateNewFrame(h.db, f)
 		if err != nil {
 			h.logger.Error("create new frame", zap.Error(err))
+			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameCreationFailed)
+			return
 		}
-		// TODO: handle error
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 }
 
+// GetFrames returns the user's frames, optionally since `last_sync` date.
 func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 	var frames []models.Frame
@@ -54,11 +72,15 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		frames, err = models.GetFrames(h.db, user.ID)
 		if err != nil {
 			h.logger.Error("get frames", zap.Error(err))
+			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
+			return
 		}
 	} else {
 		frames, err = models.GetFramesSince(h.db, user.ID, date)
 		if err != nil {
 			h.logger.Error("get frames since", zap.Error(err))
+			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
+			return
 		}
 	}
 
