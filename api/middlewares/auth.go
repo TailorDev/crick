@@ -20,7 +20,7 @@ import (
 
 var (
 	selectUserByID                   = `SELECT * FROM users WHERE auth0_id=$1;`
-	selectUserByToken                = `SELECT * FROM users WHERE watson_token=$1;`
+	selectUserByToken                = `SELECT * FROM users WHERE api_token=$1;`
 	DetailInvalidAuthorizationHeader = "Invalid or missing Authorization header"
 	DetailUserNotFound               = "User not found"
 	DetailMalformedToken             = "Malformed JWT token (claims)"

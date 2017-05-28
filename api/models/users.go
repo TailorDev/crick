@@ -9,24 +9,24 @@ import (
 )
 
 var (
-	createUser = `INSERT INTO users (id, login, auth0_id, watson_token) VALUES (:id, :login, :auth0_id, :watson_token) ON CONFLICT DO NOTHING;`
+	createUser = `INSERT INTO users (id, login, auth0_id, api_token) VALUES (:id, :login, :auth0_id, :api_token) ON CONFLICT DO NOTHING;`
 )
 
 type User struct {
-	ID          uuid.UUID `db:"id" json:"id"`
-	Auth0ID     string    `db:"auth0_id" json:"auth0_id"`
-	Login       string    `db:"login" json:"login"`
-	WatsonToken string    `db:"watson_token" json:"token"`
+	ID       uuid.UUID `db:"id" json:"id"`
+	Auth0ID  string    `db:"auth0_id" json:"auth0_id"`
+	Login    string    `db:"login" json:"login"`
+	ApiToken string    `db:"api_token" json:"token"`
 }
 
 func NewUser(auth0, login string) *User {
 	token, _ := generateRandomString(40)
 
 	return &User{
-		ID:          uuid.NewV4(),
-		Auth0ID:     auth0,
-		Login:       login,
-		WatsonToken: token,
+		ID:       uuid.NewV4(),
+		Auth0ID:  auth0,
+		Login:    login,
+		ApiToken: token,
 	}
 }
 
