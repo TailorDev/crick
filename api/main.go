@@ -23,6 +23,7 @@ func App(db *sqlx.DB) *httprouter.Router {
 	h := handlers.New(db, logger)
 	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, db, logger))
 	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, db, logger))
+	router.GET("/projects/:id/frames", m.AuthWithAuth0(h.GetFramesForProject, db, logger))
 	// Watson API
 	router.GET("/api/projects", m.AuthWithToken(h.GetProjects, db))
 	router.GET("/api/frames", m.AuthWithToken(h.GetFrames, db))

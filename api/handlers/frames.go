@@ -9,6 +9,7 @@ import (
 	"github.com/TailorDev/crick/api/middlewares"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
+	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
@@ -82,6 +83,27 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
 			return
 		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(frames)
+}
+
+// GetFramesForProject returns the user's frames for the given project.
+func (h Handler) GetFramesForProject(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	user := middlewares.GetCurrentUser(r.Context())
+
+	projectID, err := uuid.FromString(ps.ByName("id"))
+	if err != nil {
+		middlewares.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
+
+	frames, err := models.GetFramesForProject(h.db, user.ID, projectID)
+	if err != nil {
+		h.logger.Error("get frames for project", zap.Error(err))
+		middlewares.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")

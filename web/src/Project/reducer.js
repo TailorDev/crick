@@ -1,0 +1,52 @@
+/* @flow */
+import { CALL_API } from 'redux-api-middleware';
+import { LOGOUT } from '../Auth/reducer';
+import type {
+  Action,
+} from '../types';
+
+// State
+type State = {
+  frames: Array<Object>,
+};
+
+const initialState: State = {
+  frames: [],
+};
+
+// Actions
+const FETCH_REQUEST = 'crick/frames/FETCH_REQUEST';
+const FETCH_SUCCESS = 'crick/frames/FETCH_SUCCESS';
+const FETCH_FAILURE = 'crick/frames/FETCH_FAILURE';
+
+export const fetchFrames = (id: string): Action => {
+  return {
+    [CALL_API]: {
+      endpoint: `/projects/${id}/frames`,
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      types: [FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE],
+    },
+  };
+};
+
+// Reducer
+export default function reducer(
+  state: State = initialState,
+  action: Action = {}
+): State {
+  switch (action.type) {
+    case FETCH_SUCCESS:
+      return {
+        frames: action.payload,
+      };
+
+    case LOGOUT:
+      return {
+        frames: [],
+      };
+
+    default:
+      return state;
+  }
+}

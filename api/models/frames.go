@@ -11,13 +11,18 @@ import (
 var (
 	createFrame = `INSERT INTO frames (id, start_at, end_at, project_id, tags, synchronized_at)
 	VALUES (:id, :start_at, :end_at, :project_id, :tags, NOW());`
+
 	selectFramesByUserID = `SELECT frames.*, projects.name AS project_name FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
 	WHERE projects.user_id=$1;`
+
 	selectFramesByUserIDAndDate = `SELECT frames.*, projects.name AS project_name FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
-	WHERE projects.user_id=$1
-	AND frames.synchronized_at >= $2;`
+	WHERE projects.user_id=$1 AND frames.synchronized_at >= $2;`
+
+	selectFramesByUserAndProjectIDs = `SELECT frames.*, projects.name AS project_name FROM frames
+	INNER JOIN projects ON (frames.project_id = projects.id)
+	WHERE projects.user_id=$1 AND frames.project_id=$2;`
 )
 
 type Frame struct {
@@ -52,4 +57,13 @@ func CreateNewFrame(db *sqlx.DB, frame Frame) (Frame, error) {
 	_, err := db.NamedExec(createFrame, frame)
 
 	return frame, err
+}
+
+func GetFramesForProject(db *sqlx.DB, userID, projectID uuid.UUID) ([]Frame, error) {
+	frames := []Frame{}
+	if err := db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID); err != nil {
+		return nil, err
+	}
+
+	return frames, nil
 }
