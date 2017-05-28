@@ -18,7 +18,10 @@ class Projects extends React.Component {
   }
 
   componentWillReceiveProps(nextProps: Object) {
-    if (this.props.isAuthenticated !== nextProps.isAuthenticated) {
+    if (
+      this.props.isAuthenticated !== nextProps.isAuthenticated &&
+      nextProps.isAuthenticated === true
+    ) {
       this.props.fetchProjects();
     }
   }

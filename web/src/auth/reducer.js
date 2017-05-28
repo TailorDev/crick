@@ -37,7 +37,7 @@ const initialState: State = {
 // Actions
 const LOGIN_ERROR = 'crick/auth/LOGIN_ERROR';
 const LOGIN_SUCCESS = 'crick/auth/LOGIN_SUCCESS';
-const LOGOUT = 'crick/auth/LOGOUT';
+export const LOGOUT = 'crick/auth/LOGOUT';
 
 // Listeners
 export const addAuth0Listeners = (dispatch: Function, getState: Function) => {

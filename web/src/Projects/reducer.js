@@ -1,5 +1,6 @@
 /* @flow */
 import { CALL_API } from 'redux-api-middleware';
+import { LOGOUT } from '../Auth/reducer';
 import type {
   Action,
 } from '../types';
@@ -38,6 +39,11 @@ export default function reducer(
     case FETCH_SUCCESS:
       return {
         projects: action.payload,
+      };
+
+    case LOGOUT:
+      return {
+        projects: [],
       };
 
     default:
