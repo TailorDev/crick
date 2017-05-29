@@ -38,7 +38,7 @@ export default function reducer(
   switch (action.type) {
     case FETCH_SUCCESS:
       return {
-        projects: action.payload,
+        projects: action.payload.projects,
       };
 
     case LOGOUT:

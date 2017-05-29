@@ -109,5 +109,7 @@ func (h Handler) GetFramesForProject(w http.ResponseWriter, r *http.Request, ps 
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(frames)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"frames": frames,
+	})
 }
