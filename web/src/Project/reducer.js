@@ -22,7 +22,7 @@ const FETCH_FAILURE = 'crick/frames/FETCH_FAILURE';
 export const fetchFrames = (id: string): Action => {
   return {
     [CALL_API]: {
-      endpoint: `/projects/${id}/frames`,
+      endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects/${id}/frames`,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       types: [FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE],

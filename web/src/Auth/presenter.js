@@ -49,7 +49,7 @@ class Auth extends React.Component {
       'Authorization': `Bearer ${token}`,
     };
 
-    fetch('/users/me', { headers })
+    fetch(`${process.env.REACT_APP_API_HOST || ''}/users/me`, { headers })
       .then(response => {
         return response.json();
       })
