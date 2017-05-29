@@ -14,8 +14,6 @@ import (
 )
 
 var (
-	DetailInvalidRequest        = "Invalid request"
-	DetailMalformedJSON         = "Malformed JSON"
 	DetailProjectCreationFailed = "Project creation failed"
 	DetailFrameCreationFailed   = "Frame creation failed"
 	DetailFrameSelectionFailed  = "Frame selection failed"
