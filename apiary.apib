@@ -50,7 +50,7 @@ otherwise the response will be a `401 Unauthorized`.
 
 ## Projects [/projects]
 
-This endpoint allows to manage Crick projects, per user.
+This endpoint allows to manage Crick projects, scoped by user.
 
 It requires a `Authorization` header with a `Bearer` JSON Web Token,
 otherwise the response will be a `401 Unauthorized`.
@@ -131,6 +131,113 @@ otherwise the response will be a `401 Unauthorized`.
             "detail": "Unknown project",
             "title": "Not Found"
         }
+
+
+## Teams [/teams]
+
+This endpoint allows to manage Crick teams, scoped by user.
+
+It requires a `Authorization` header with a `Bearer` JSON Web Token,
+otherwise the response will be a `401 Unauthorized`.
+
+### List all user's teams [GET]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer <Auth0 JWT token>
+
++ Response 200 (application/json)
+
+        {
+            "teams": [
+                {
+                    "id": "26fb1e8c-b559-4d6e-a9a7-e9092ac5fb38",
+                    "name": "Team TailorDev",
+                    "projects": [
+                        "crick",
+                        "watson"
+                    ],
+                    "users": [
+                        {
+                            "id": "15178b45-0646-4b1e-84f6-ca6a5d7ba2bb",
+                            "login": "willdurand"
+                        },
+                        {
+                            "id": "15178b45-0646-4b1e-84f6-ca6a5d7battt",
+                            "login": "jmaupetit"
+                        }
+                    ]
+                },
+                {
+                    "id": "142d08ac-8244-4b43-b04a-4d0c18a93a6e",
+                    "name": "Team Rocket",
+                    "projects": [],
+                    "users": [
+                        {
+                            "id": "15178b45-0646-4b1e-84f6-ca6a5d7ba2bb",
+                            "login": "willdurand"
+                        }
+                    ]
+                }
+            ]
+        }
+
+### Create a team [POST]
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Content-type: application/json
+            Authorization: Bearer <Auth0 JWT token>
+
+    + Body
+    
+            {
+                "name": "My Team Name",
+                "user_ids": [
+                    "15178b45-0646-4b1e-84f6-ca6a5d7battt"
+                ],
+                "projects": [
+                    "that-project"
+                ]
+            }
+
++ Response 201 (application/json)
+
+            {
+                "id": "26fb1e8c-xxxx-yyyy-a9a7-e9092ac5fb38"
+            }
+
+### Update a team [PUT /teams/{id}]
+
++ Parameters
+    + id: `26fb1e8c-xxxx-yyyy-a9a7-e9092ac5fb38` (UUID) - ID of the team
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Content-type: application/json
+            Authorization: Bearer <Auth0 JWT token>
+
+    + Body
+    
+            {
+                "id": "26fb1e8c-xxxx-yyyy-a9a7-e9092ac5fb38",
+                "name": "My team name",
+                "user_ids": [
+                    "15178b45-0646-4b1e-84f6-ca6a5d7battt"
+                ],
+                "projects": [
+                    "that-project",
+                    "yet-another-project"
+                ]
+            }
+
++ Response 204 (application/json)
 
 
 # Group Crick API for Watson
