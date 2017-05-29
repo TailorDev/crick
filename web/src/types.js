@@ -8,3 +8,15 @@ export type Dispatch = (
 export type GetState = () => Object;
 export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
 export type PromiseAction = Promise<Action>;
+
+export type Team = {
+  id: string,
+  name: string,
+  projects: Array<string>,
+  users: Array<User>,
+};
+
+export type User = {
+  id: string,
+  login: string,
+};

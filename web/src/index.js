@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
 import App from './App';
 import Project from './Project';
+import Teams from './Teams';
 import './index.css';
 
 const store = configureStore();
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Switch>
           <Route exact path="/" component={App} />
           <Route path="/projects/:id" component={Project} />
+          <Route path="/teams" component={Teams} />
         </Switch>
       </div>
     </Router>
