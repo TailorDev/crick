@@ -11,6 +11,7 @@ services:
       AUTH0_DOMAIN: https://crick.eu.auth0.com/
       AUTH0_AUDIENCE: https://dev.api.crick.io/,https://crick.eu.auth0.com/userinfo
       AUTH0_JWKS_URI: https://crick.eu.auth0.com/.well-known/jwks.json
+      CORS_ALLOWED_ORIGINS: http://crick.dev:3000
     ports:
       - 8000:8000
     depends_on:

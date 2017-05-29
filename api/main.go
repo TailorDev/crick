@@ -11,7 +11,9 @@ import (
 	"github.com/TailorDev/crick/api/models"
 	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
+	"github.com/justinas/alice"
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 	"go.uber.org/zap"
 )
 
@@ -33,7 +35,15 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 
 // applyGlobalMiddlewares applies the common middlewares to the whole app
 func applyGlobalMiddlewares(app http.Handler) http.Handler {
-	return app
+	cors := cors.New(cors.Options{
+		AllowedOrigins: config.CorsAllowedOrigins(),
+		AllowedMethods: []string{"GET", "POST"},
+		AllowedHeaders: []string{"Authorization", "Accept", "Content-Type"},
+	})
+
+	return alice.New(
+		cors.Handler,
+	).Then(app)
 }
 
 func main() {

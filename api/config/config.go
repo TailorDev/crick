@@ -36,3 +36,16 @@ func Auth0() Auth0Config {
 		JwksURI:  os.Getenv("AUTH0_JWKS_URI"),
 	}
 }
+
+// CorsAllowedOrigins returns a list of allowed origins to configure the CORS
+// middleware.
+func CorsAllowedOrigins() []string {
+	var origins []string
+
+	val := os.Getenv("CORS_ALLOWED_ORIGINS")
+	if val != "" {
+		origins = strings.Split(val, ",")
+	}
+
+	return origins
+}
