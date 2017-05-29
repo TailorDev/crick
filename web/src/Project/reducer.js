@@ -38,7 +38,7 @@ export default function reducer(
   switch (action.type) {
     case FETCH_SUCCESS:
       return {
-        frames: action.payload,
+        frames: action.payload.frames,
       };
 
     case LOGOUT:
