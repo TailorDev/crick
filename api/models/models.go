@@ -16,12 +16,14 @@ type Repository interface {
 	CreateNewFrame(frame Frame) error
 	// GetFramesForProject returns all the frames for a given project.
 	GetFramesForProject(userID, projectID uuid.UUID) ([]Frame, error)
+
 	// CreateNewProject creates a new project, persists it and returns it.
 	CreateNewProject(name string, userID uuid.UUID) (*Project, error)
 	// GetProjects returns all the user's projects.
 	GetProjects(userID uuid.UUID) ([]Project, error)
 	// GetProjectByName returns a project corresponding to `name`.
 	GetProjectByName(userID uuid.UUID, name string) (*Project, error)
+
 	// CreateNewUser creates a new user, persists it and returns it.
 	CreateNewUser(auth0ID, login string) (*User, error)
 	// GetUserByAuth0ID returns a user corresponding to the given Auth0 id.

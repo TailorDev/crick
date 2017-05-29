@@ -25,7 +25,7 @@ var (
 )
 
 type Frame struct {
-	ID             string         `db:"id" json:"id"`
+	ID             uuid.UUID      `db:"id" json:"id"`
 	StartAt        time.Time      `db:"start_at" json:"start_at"`
 	EndAt          time.Time      `db:"end_at" json:"end_at"`
 	ProjectID      uuid.UUID      `db:"project_id" json:"-"`
