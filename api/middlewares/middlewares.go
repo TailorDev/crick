@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"context"
+	"encoding/json"
+	"net/http"
 
 	"github.com/TailorDev/crick/api/models"
 )
@@ -19,4 +21,13 @@ var (
 // GetCurrentUser returns the current logged user from the Context.
 func GetCurrentUser(ctx context.Context) *models.User {
 	return ctx.Value(contextCurrentUser).(*models.User)
+}
+
+func SendError(w http.ResponseWriter, statusCode int, detail string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(map[string]string{
+		"title":  http.StatusText(statusCode),
+		"detail": detail,
+	})
 }

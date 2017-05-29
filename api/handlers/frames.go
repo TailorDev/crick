@@ -19,6 +19,7 @@ var (
 	DetailProjectCreationFailed = "Project creation failed"
 	DetailFrameCreationFailed   = "Frame creation failed"
 	DetailFrameSelectionFailed  = "Frame selection failed"
+	DetailGetProjectFailed      = "Unknown project"
 )
 
 // BulkInsertFrames handles the bulk insertion of Watson frames.
@@ -27,14 +28,14 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		middlewares.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
 		return
 	}
 
 	frames := []models.Frame{}
 	if err := json.Unmarshal(body, &frames); err != nil {
 		h.logger.Error("unmarshal JSON frames to synchronize", zap.Error(err))
-		middlewares.SendError(w, http.StatusBadRequest, DetailMalformedJSON)
+		h.SendError(w, http.StatusBadRequest, DetailMalformedJSON)
 		return
 	}
 
@@ -43,7 +44,7 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 		if err1 != nil {
 			p, err = h.repository.CreateNewProject(f.ProjectName, user.ID)
 			if err != nil {
-				middlewares.SendError(w, http.StatusInternalServerError, DetailProjectCreationFailed)
+				h.SendError(w, http.StatusInternalServerError, DetailProjectCreationFailed)
 				return
 			}
 		}
@@ -51,7 +52,7 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 		f.ProjectID = p.ID
 		if err := h.repository.CreateNewFrame(f); err != nil {
 			h.logger.Error("create new frame", zap.Error(err))
-			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameCreationFailed)
+			h.SendError(w, http.StatusInternalServerError, DetailFrameCreationFailed)
 			return
 		}
 	}
@@ -72,14 +73,14 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		frames, err = h.repository.GetFrames(user.ID)
 		if err != nil {
 			h.logger.Error("get frames", zap.Error(err))
-			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
+			h.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
 			return
 		}
 	} else {
 		frames, err = h.repository.GetFramesSince(user.ID, date)
 		if err != nil {
 			h.logger.Error("get frames since", zap.Error(err))
-			middlewares.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
+			h.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
 			return
 		}
 	}
@@ -94,14 +95,16 @@ func (h Handler) GetFramesForProject(w http.ResponseWriter, r *http.Request, ps 
 
 	projectID, err := uuid.FromString(ps.ByName("id"))
 	if err != nil {
-		middlewares.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
 		return
 	}
+
+	// TODO: test if project exists, maybe
 
 	frames, err := h.repository.GetFramesForProject(user.ID, projectID)
 	if err != nil {
 		h.logger.Error("get frames for project", zap.Error(err))
-		middlewares.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)
+		h.SendError(w, http.StatusInternalServerError, DetailGetProjectFailed)
 		return
 	}
 

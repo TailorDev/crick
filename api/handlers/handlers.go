@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"github.com/TailorDev/crick/api/models"
 	"go.uber.org/zap"
 )
@@ -17,4 +20,13 @@ func New(repository models.Repository, logger *zap.Logger) Handler {
 		repository: repository,
 		logger:     logger,
 	}
+}
+
+func (h Handler) SendError(w http.ResponseWriter, statusCode int, detail string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(map[string]string{
+		"title":  http.StatusText(statusCode),
+		"detail": detail,
+	})
 }

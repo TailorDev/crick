@@ -21,7 +21,7 @@ func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprout
 	projects, err := h.repository.GetProjects(user.ID)
 	if err != nil {
 		h.logger.Error("get projects", zap.Error(err))
-		middlewares.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)
+		h.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)
 		return
 	}
 
