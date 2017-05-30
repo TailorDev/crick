@@ -99,7 +99,7 @@ func AuthWithAuth0(h httprouter.Handle, repo models.Repository, logger *zap.Logg
 					return
 				}
 
-				u, err = repo.CreateNewUser(profile["sub"], profile["nickname"])
+				u, err = repo.CreateNewUser(profile["sub"], profile["nickname"], profile["picture"])
 				if err != nil {
 					logger.Error("cannot create new user", zap.Error(err))
 					SendError(w, http.StatusInternalServerError, DetailUserCreationFailed)

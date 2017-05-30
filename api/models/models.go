@@ -28,7 +28,7 @@ type Repository interface {
 	GetProjectByName(userID uuid.UUID, name string) (*Project, error)
 
 	// CreateNewUser creates a new user, persists it and returns it.
-	CreateNewUser(auth0ID, login string) (*User, error)
+	CreateNewUser(auth0ID, login, avatarURL string) (*User, error)
 	// GetUserByAuth0ID returns a user corresponding to the given Auth0 id.
 	GetUserByAuth0ID(auth0ID string) (*User, error)
 	// GetUserByToken returns a user corresponding to the given API token.

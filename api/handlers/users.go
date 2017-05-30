@@ -14,9 +14,9 @@ func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httproute
 
 	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"id":       user.ID,
-		"auth0_id": user.Auth0ID,
-		"login":    user.Login,
-		"token":    user.APIToken,
+		"id":         user.ID,
+		"login":      user.Login,
+		"token":      user.APIToken,
+		"avatar_url": user.AvatarURL.String,
 	})
 }

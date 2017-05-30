@@ -10,7 +10,7 @@ import (
 )
 
 func GetFakeUser() *models.User {
-	return models.NewUser("auth0_id", "John Doe")
+	return models.NewUser("auth0_id", "John Doe", "avatar_url")
 }
 
 func AddUserToContext(c context.Context, u *models.User) context.Context {
@@ -56,7 +56,7 @@ func (r MockRepository) GetProjectByName(userID uuid.UUID, name string) (*models
 	return r.Project, r.Err
 }
 
-func (r MockRepository) CreateNewUser(auth0ID, login string) (*models.User, error) {
+func (r MockRepository) CreateNewUser(auth0ID, login, avatarURL string) (*models.User, error) {
 	return r.User, r.Err
 }
 
