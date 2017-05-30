@@ -13,6 +13,7 @@ class Auth extends React.Component {
 
     this.state = {
       isTokenDialogOpen: false,
+      avatar_url: '',
       login: '',
       token: '',
     };
@@ -30,6 +31,7 @@ class Auth extends React.Component {
 
   state: {
     isTokenDialogOpen: boolean,
+    avatar_url: string,
     login: string,
     token: string,
   };
@@ -59,7 +61,7 @@ class Auth extends React.Component {
       if (nextProps.token !== null) {
         this.fetchMe(nextProps.token);
       } else {
-        this.setState({ login: '' });
+        this.setState({ avatar_url: '', login: '' });
       }
     }
   }
@@ -78,6 +80,7 @@ class Auth extends React.Component {
       })
       .then(json => {
         this.setState({
+          avatar_url: json.avatar_url,
           login: json.login,
           token: json.token,
         });
@@ -113,11 +116,9 @@ class Auth extends React.Component {
           <IconMenu
             className="user-menu"
             iconButtonElement={
-              <Avatar>
-                {this.state.login.charAt(0).toUpperCase()}
-              </Avatar>
+              <Avatar src={this.state.avatar_url} />
             }
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
           >
             <MenuItem
