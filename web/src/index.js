@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
@@ -18,10 +19,24 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
+// TailorDev MUI theme for Crick
+// https://material.io/color/#!/?view.left=0&view.right=1&primary.color=2e354f&secondary.color=5ec3a0&secondary.text.color=2e354f
+const crickTheme = getMuiTheme({
+  palette: {
+    primary1Color: '#2e354f',
+    primary2Color: '#060f27',
+    primary3Color: '#585f7b',
+    accent1Color: '#5ec3a0',
+    accent2Color: '#269272',
+    accent3Color: '#91f6d1',
+    textColor: '#333',
+  }
+});
+
 const store = configureStore();
 
 ReactDOM.render(
-  <MuiThemeProvider>
+  <MuiThemeProvider muiTheme={crickTheme}>
     <Provider store={store}>
       <Router>
         <App>
