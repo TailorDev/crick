@@ -26,9 +26,9 @@ const crickTheme = getMuiTheme({
     primary1Color: '#2e354f',
     primary2Color: '#060f27',
     primary3Color: '#585f7b',
-    accent1Color: '#5ec3a0',
-    accent2Color: '#269272',
-    accent3Color: '#91f6d1',
+    accent1Color: '#269272',
+    accent2Color: '#91f6d1',
+    accent3Color: '#5ec3a0',
     textColor: '#333',
   }
 });

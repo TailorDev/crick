@@ -1,0 +1,22 @@
+.Project-details {}
+
+.Project-frames {}
+
+.Project-frame {}
+
+.Project-frame .start {}
+
+.Project-frame .end {}
+
+.Project-frame .duration {}
+
+.Project-frame .tags {}
+
+.Project-frame .tags .tags-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Project-frame .tags .tags-wrapper .tag {
+  margin-right: 0.5rem !important;
+}
