@@ -4,15 +4,18 @@
   "private": true,
   "dependencies": {
     "auth0-lock": "^10.16.0",
+    "material-ui": "^0.18.1",
     "moment": "^2.18.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-api-middleware": "dev",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "roboto-fontface": "^0.7.0"
   },
   "devDependencies": {
     "flow-bin": "^0.46.0",
