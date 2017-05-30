@@ -1,16 +1,23 @@
 machine:
+  node:
+    version: 7.10.0
   environment:
     GOPATH: "${HOME}/.go_project"
     PATH: "${PATH}:${GOPATH}/bin"
 
 dependencies:
+  cache_directories:
+    - ~/.cache/yarn
   override:
     - mkdir -p ~/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}
     - ln -s ${HOME}/${CIRCLE_PROJECT_REPONAME} ${HOME}/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
     - go get github.com/zenreach/go-junit-report
     - touch ${CIRCLE_TEST_REPORTS}/go-report.xml
+    - cd web/ && yarn install
 
 test:
   override:
     - cd ${HOME}/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/api/ \
       && make test | go-junit-report -set-exit-code=true -out=${CIRCLE_TEST_REPORTS}/go-report.xml
+    - cd web/ && yarn test -- --watch=false
+    - cd web/ && yarn flow
