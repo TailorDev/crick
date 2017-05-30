@@ -12,6 +12,7 @@ import Home from './Home';
 import Project from './Project';
 import Teams from './Teams';
 import './index.css';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

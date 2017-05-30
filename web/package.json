@@ -14,7 +14,8 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-api-middleware": "dev",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "roboto-fontface": "^0.7.0"
   },
   "devDependencies": {
     "flow-bin": "^0.46.0",
