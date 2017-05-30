@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/TailorDev/crick/api/config"
 	"github.com/TailorDev/crick/api/handlers"
 	m "github.com/TailorDev/crick/api/middlewares"
@@ -47,6 +48,7 @@ func applyGlobalMiddlewares(app http.Handler) http.Handler {
 
 	return alice.New(
 		cors.Handler,
+		gziphandler.GzipHandler,
 	).Then(app)
 }
 
