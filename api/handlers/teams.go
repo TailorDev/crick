@@ -30,10 +30,8 @@ func (h Handler) GetTeams(w http.ResponseWriter, r *http.Request, ps httprouter.
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"teams": teams,
-	})
+	w.Header().Set("Content-Type", DefaultContentType)
+	json.NewEncoder(w).Encode(teams)
 }
 
 // CreateTeam creates a new team and returns its id.
@@ -67,6 +65,6 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(team)
 }

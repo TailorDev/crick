@@ -66,7 +66,7 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", DefaultContentType)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -99,7 +99,7 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(frames)
 }
 
@@ -128,7 +128,7 @@ func (h Handler) GetFramesForProject(w http.ResponseWriter, r *http.Request, ps 
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"frames": frames,
 	})

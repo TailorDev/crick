@@ -23,7 +23,7 @@ type Repository interface {
 	// CreateNewProject creates a new project, persists it and returns it.
 	CreateNewProject(name string, userID uuid.UUID) (*Project, error)
 	// GetProjects returns all the user's projects.
-	GetProjects(userID uuid.UUID) ([]Project, error)
+	GetProjects(userID uuid.UUID) (Projects, error)
 	// GetProjectByName returns a project corresponding to `name`.
 	GetProjectByName(userID uuid.UUID, name string) (*Project, error)
 
@@ -35,7 +35,7 @@ type Repository interface {
 	GetUserByToken(token string) (*User, error)
 
 	// GetTeams returns the user's teams.
-	GetTeams(userID uuid.UUID) ([]Team, error)
+	GetTeams(userID uuid.UUID) (Teams, error)
 	// CreateNewTeam creates a new team and persists it.
 	CreateNewTeam(team Team) error
 }

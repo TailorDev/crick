@@ -14,6 +14,9 @@ import (
 )
 
 var (
+	// The default content type for handler responses.
+	DefaultContentType = "application/json"
+
 	// The error message used when the request parsing has failed.
 	DetailInvalidRequest = "Invalid request"
 	// The error message used when it is not possible to parse the JSON content.
@@ -36,7 +39,7 @@ func New(repository models.Repository, logger *zap.Logger) Handler {
 
 // SendError returns a HTTP error in JSON.
 func (h Handler) SendError(w http.ResponseWriter, statusCode int, detail string) {
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", DefaultContentType)
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(map[string]string{
 		"title":  http.StatusText(statusCode),

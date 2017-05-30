@@ -12,6 +12,12 @@ type Project struct {
 	UserID uuid.UUID `db:"user_id" json:"-"`
 }
 
+// Projects is a structure representing a set of projects. Its purpose is
+// mainly to ease the JSON serialization (to return a root key).
+type Projects struct {
+	Projects []Project `json:"projects"`
+}
+
 var (
 	createProject          = `INSERT INTO projects (id, name, user_id) VALUES (:id, :name, :user_id);`
 	selectProjectsByUserID = `SELECT * FROM projects WHERE user_id=$1;`
@@ -36,9 +42,9 @@ func (r DatabaseRepository) CreateNewProject(name string, userID uuid.UUID) (*Pr
 }
 
 // GetProjects returns all the user's projects.
-func (r DatabaseRepository) GetProjects(userID uuid.UUID) ([]Project, error) {
-	projects := []Project{}
-	err := r.db.Select(&projects, selectProjectsByUserID, userID)
+func (r DatabaseRepository) GetProjects(userID uuid.UUID) (Projects, error) {
+	projects := Projects{}
+	err := r.db.Select(&projects.Projects, selectProjectsByUserID, userID)
 
 	return projects, err
 }

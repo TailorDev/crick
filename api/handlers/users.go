@@ -12,6 +12,6 @@ import (
 func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(user)
 }
