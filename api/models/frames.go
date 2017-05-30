@@ -24,6 +24,7 @@ var (
 	WHERE projects.user_id=$1 AND frames.project_id=$2;`
 )
 
+// Frame is a data structure for representing time frames.
 type Frame struct {
 	ID             uuid.UUID      `db:"id" json:"id"`
 	StartAt        time.Time      `db:"start_at" json:"start_at"`
@@ -34,6 +35,7 @@ type Frame struct {
 	Tags           pq.StringArray `db:"tags" json:"tags"`
 }
 
+// GetFrames returns all the user's frames.
 func (r DatabaseRepository) GetFrames(userID uuid.UUID) ([]Frame, error) {
 	frames := []Frame{}
 	err := r.db.Select(&frames, selectFramesByUserID, userID)
@@ -41,6 +43,7 @@ func (r DatabaseRepository) GetFrames(userID uuid.UUID) ([]Frame, error) {
 	return frames, err
 }
 
+// GetFramesSince returns the user's fraces since date.
 func (r DatabaseRepository) GetFramesSince(userID uuid.UUID, date time.Time) ([]Frame, error) {
 	frames := []Frame{}
 	err := r.db.Select(&frames, selectFramesByUserIDAndDate, userID, date)
@@ -48,12 +51,14 @@ func (r DatabaseRepository) GetFramesSince(userID uuid.UUID, date time.Time) ([]
 	return frames, err
 }
 
+// CreateNewFrame creates a new frame and persists it.
 func (r DatabaseRepository) CreateNewFrame(frame Frame) error {
 	_, err := r.db.NamedExec(createFrame, frame)
 
 	return err
 }
 
+// GetFramesForProject returns all the frames for a given project.
 func (r DatabaseRepository) GetFramesForProject(userID, projectID uuid.UUID) ([]Frame, error) {
 	frames := []Frame{}
 	err := r.db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID)

@@ -13,7 +13,7 @@ type Auth0Config struct {
 	Audience []string
 }
 
-// Port returns the PORT value from environment or it defaults to `3000`.
+// Port returns the PORT value from environment or it defaults to 3000.
 func Port() string {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -23,12 +23,16 @@ func Port() string {
 	return port
 }
 
-// DSN returns the HOST value from environment.
+// DSN returns the CRICK_DSN value from environment.
 func DSN() string {
 	return os.Getenv("CRICK_DSN")
 }
 
-// Auth0 returns the Auth0 configuration.
+// Auth0 returns the Auth0 configuration, based on the AUTH0_* environment
+// variables:
+//   * AUTH0_DOMAIN is the Auth0 domain
+//   * AUTH0_AUDIENCE is expected to be a comma-separated string value, containing audiences
+//   * AUTH0_JWKS_URI is the Auth0 JWKS URI
 func Auth0() Auth0Config {
 	return Auth0Config{
 		Domain:   os.Getenv("AUTH0_DOMAIN"),

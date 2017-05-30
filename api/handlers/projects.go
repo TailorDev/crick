@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	// The error message used when fetching user's projects from database has failed.
 	DetailGetProjectsFailed = "Failed to retrieve projects"
 )
 
@@ -20,7 +21,7 @@ func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprout
 
 	projects, err := h.repository.GetProjects(user.ID)
 	if err != nil {
-		h.logger.Error("get projects", zap.Error(err))
+		h.logger.Error("get projects", zap.Stringer("user_id", user.ID), zap.Error(err))
 		h.SendError(w, http.StatusInternalServerError, DetailGetProjectsFailed)
 		return
 	}

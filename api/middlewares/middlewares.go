@@ -1,3 +1,4 @@
+// Package middlewares contains the HTTP middlewares.
 package middlewares
 
 import (
@@ -19,10 +20,15 @@ var (
 )
 
 // GetCurrentUser returns the current logged user from the Context.
+//
+// This function is usually called by the different handlers enhanced with one
+// of the authentication middlewares. NOTE: handlers expect a valid User to be
+// returned.
 func GetCurrentUser(ctx context.Context) *models.User {
 	return ctx.Value(contextCurrentUser).(*models.User)
 }
 
+// SendError returns a HTTP error in JSON.
 func SendError(w http.ResponseWriter, statusCode int, detail string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
