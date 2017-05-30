@@ -23,7 +23,7 @@ type MockRepository struct {
 	User     *models.User
 	Project  *models.Project
 	Frames   []models.Frame
-	Projects []models.Project
+	Projects models.Projects
 	Teams    models.Teams
 	Err      error
 }
@@ -48,7 +48,7 @@ func (r MockRepository) CreateNewProject(name string, userID uuid.UUID) (*models
 	return r.Project, r.Err
 }
 
-func (r MockRepository) GetProjects(userID uuid.UUID) ([]models.Project, error) {
+func (r MockRepository) GetProjects(userID uuid.UUID) (models.Projects, error) {
 	return r.Projects, r.Err
 }
 

@@ -27,7 +27,5 @@ func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	w.Header().Set("Content-Type", DefaultContentType)
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"projects": projects,
-	})
+	json.NewEncoder(w).Encode(projects)
 }
