@@ -16,6 +16,8 @@ func (c contextKey) String() string {
 }
 
 var (
+	// ContextCurrentUser is the context key for the models.User instance. It
+	// should not be exposed, but it is used in the test suite...
 	ContextCurrentUser = contextKey("current_user")
 )
 

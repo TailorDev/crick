@@ -14,12 +14,12 @@ import (
 )
 
 var (
-	// The default content type for handler responses.
+	// DefaultContentType is the default content type for handler responses.
 	DefaultContentType = "application/json"
 
-	// The error message used when the request parsing has failed.
+	// DetailInvalidRequest is the error message used when the request parsing has failed.
 	DetailInvalidRequest = "Invalid request"
-	// The error message used when it is not possible to parse the JSON content.
+	// DetailMalformedJSON is the error message used when it is not possible to parse the JSON content.
 	DetailMalformedJSON = "Malformed JSON"
 )
 

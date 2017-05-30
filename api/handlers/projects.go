@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	// The error message used when fetching user's projects from database has failed.
+	// DetailGetProjectsFailed is the error message used when fetching user's projects from database has failed.
 	DetailGetProjectsFailed = "Failed to retrieve projects"
 )
 

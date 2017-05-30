@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	// The error message used when fetching teams from database has failed.
+	// DetailGetTeamsFailed is the error message used when fetching teams from database has failed.
 	DetailGetTeamsFailed = "Failed to retrieve teams"
-	// The error message used when inserting a team in database has failed.
+	// DetailTeamCreationFailed is the error message used when inserting a team in database has failed.
 	DetailTeamCreationFailed = "Team creation failed"
 )
 
