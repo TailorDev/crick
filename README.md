@@ -1,6 +1,7 @@
 crick
 =====
 
+[![CircleCI](https://circleci.com/gh/TailorDev/crick/tree/master.svg?style=svg&circle-token=af802009a9119df1eb1869418316b2d742d65dda)](https://circleci.com/gh/TailorDev/crick/tree/master)
 
 Installation
 ------------
