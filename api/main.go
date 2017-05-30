@@ -22,9 +22,13 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	router := httprouter.New()
 
 	h := handlers.New(repository, logger)
+
 	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, repository, logger))
 	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, repository, logger))
 	router.GET("/projects/:id/frames", m.AuthWithAuth0(h.GetFramesForProject, repository, logger))
+	router.GET("/teams", m.AuthWithAuth0(h.GetTeams, repository, logger))
+	router.POST("/teams", m.AuthWithAuth0(h.CreateTeam, repository, logger))
+
 	// Watson API
 	router.GET("/watson/projects", m.AuthWithToken(h.GetProjects, repository))
 	router.GET("/watson/frames", m.AuthWithToken(h.GetFrames, repository))

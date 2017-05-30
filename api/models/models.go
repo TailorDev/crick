@@ -30,6 +30,11 @@ type Repository interface {
 	GetUserByAuth0ID(auth0ID string) (*User, error)
 	// GetUserByToken returns a user corresponding to the given API token.
 	GetUserByToken(token string) (*User, error)
+
+	// GetTeams returns the user's teams.
+	GetTeams(userID uuid.UUID) ([]Team, error)
+	// CreateNewTeam creates a new team and persists it.
+	CreateNewTeam(team Team) error
 }
 
 // DatabaseRepository is an implementation of the `Repository` interface with a

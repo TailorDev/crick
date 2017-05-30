@@ -8,6 +8,11 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	DetailInvalidRequest = "Invalid request"
+	DetailMalformedJSON  = "Malformed JSON"
+)
+
 // Handler is the structure that contains the different HTTP handlers.
 type Handler struct {
 	repository models.Repository
