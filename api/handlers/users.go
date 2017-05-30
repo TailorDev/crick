@@ -13,5 +13,10 @@ func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httproute
 	user := middlewares.GetCurrentUser(r.Context())
 
 	w.Header().Set("Content-Type", DefaultContentType)
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"id":       user.ID,
+		"auth0_id": user.Auth0ID,
+		"login":    user.Login,
+		"token":    user.APIToken,
+	})
 }
