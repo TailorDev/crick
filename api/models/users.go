@@ -2,6 +2,7 @@ package models
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"encoding/base64"
 
 	"github.com/satori/go.uuid"
@@ -15,10 +16,11 @@ var (
 
 // User is a structure representing a Crick user.
 type User struct {
-	ID       uuid.UUID `db:"id" json:"id"`
-	Auth0ID  string    `db:"auth0_id" json:"-"`
-	Login    string    `db:"login" json:"login"`
-	APIToken string    `db:"api_token" json:"-"`
+	ID        uuid.UUID      `db:"id" json:"id"`
+	Auth0ID   string         `db:"auth0_id" json:"-"`
+	Login     string         `db:"login" json:"login"`
+	APIToken  string         `db:"api_token" json:"-"`
+	AvatarURL sql.NullString `db:"avatar_url" json:"avatar_url"`
 }
 
 // IsOwnerOfTeam returns true if the user is owner of the given team, false
@@ -29,20 +31,21 @@ func (u *User) IsOwnerOfTeam(t Team) bool {
 
 // NewUser creates and returns a User instance. This function generates the
 // initial user's API token.
-func NewUser(auth0ID, login string) *User {
+func NewUser(auth0ID, login, avatarURL string) *User {
 	token, _ := generateRandomString(40)
 
 	return &User{
-		ID:       uuid.NewV4(),
-		Auth0ID:  auth0ID,
-		Login:    login,
-		APIToken: token,
+		ID:        uuid.NewV4(),
+		Auth0ID:   auth0ID,
+		Login:     login,
+		APIToken:  token,
+		AvatarURL: sql.NullString{String: avatarURL},
 	}
 }
 
 // CreateNewUser creates a new user, persists it and returns it.
-func (r DatabaseRepository) CreateNewUser(auth0ID, login string) (*User, error) {
-	u := NewUser(auth0ID, login)
+func (r DatabaseRepository) CreateNewUser(auth0ID, login, avatarURL string) (*User, error) {
+	u := NewUser(auth0ID, login, avatarURL)
 	_, err := r.db.NamedExec(createUser, u)
 
 	return u, err

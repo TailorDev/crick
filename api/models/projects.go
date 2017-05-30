@@ -33,6 +33,13 @@ func NewProject(name string, userID uuid.UUID) *Project {
 	}
 }
 
+// NewProjects returns an instance of NewProjects.
+func NewProjects() Projects {
+	return Projects{
+		Projects: []Project{},
+	}
+}
+
 // CreateNewProject creates a new project, persists it and returns it.
 func (r DatabaseRepository) CreateNewProject(name string, userID uuid.UUID) (*Project, error) {
 	p := NewProject(name, userID)
@@ -43,7 +50,7 @@ func (r DatabaseRepository) CreateNewProject(name string, userID uuid.UUID) (*Pr
 
 // GetProjects returns all the user's projects.
 func (r DatabaseRepository) GetProjects(userID uuid.UUID) (Projects, error) {
-	projects := Projects{}
+	projects := NewProjects()
 	err := r.db.Select(&projects.Projects, selectProjectsByUserID, userID)
 
 	return projects, err

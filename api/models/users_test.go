@@ -7,7 +7,7 @@ import (
 )
 
 func TestIsOwnerOfTeam(t *testing.T) {
-	user := models.NewUser("auth0ID", "login")
+	user := models.NewUser("auth0ID", "login", "avatar_url")
 	team1 := models.Team{OwnerID: user.ID}
 	team2 := models.Team{}
 

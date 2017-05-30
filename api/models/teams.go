@@ -49,9 +49,16 @@ func (t *Team) AddUser(u User) {
 	t.Users = append(t.Users, u)
 }
 
+// NewTeams returns an instance of NewTeams.
+func NewTeams() Teams {
+	return Teams{
+		Teams: []Team{},
+	}
+}
+
 // GetTeamsWithUsers returns the user's teams.
 func (r DatabaseRepository) GetTeamsWithUsers(userID uuid.UUID) (Teams, error) {
-	teamsWithUsers := Teams{}
+	teamsWithUsers := NewTeams()
 	rows, err := r.db.Queryx(selectTeamsByUserID, userID)
 	if err != nil {
 		return teamsWithUsers, err
