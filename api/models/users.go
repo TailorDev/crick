@@ -16,9 +16,15 @@ var (
 // User is a structure representing a Crick user.
 type User struct {
 	ID       uuid.UUID `db:"id" json:"id"`
-	Auth0ID  string    `db:"auth0_id" json:"auth0_id"`
+	Auth0ID  string    `db:"auth0_id" json:"-"`
 	Login    string    `db:"login" json:"login"`
-	APIToken string    `db:"api_token" json:"token"`
+	APIToken string    `db:"api_token" json:"-"`
+}
+
+// IsOwnerOfTeam returns true if the user is owner of the given team, false
+// otherwise.
+func (u *User) IsOwnerOfTeam(t Team) bool {
+	return u.ID == t.OwnerID
 }
 
 // NewUser creates and returns a User instance. This function generates the

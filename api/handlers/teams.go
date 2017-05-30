@@ -23,7 +23,7 @@ var (
 func (h Handler) GetTeams(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
-	teams, err := h.repository.GetTeams(user.ID)
+	teams, err := h.repository.GetTeamsWithUsers(user.ID)
 	if err != nil {
 		h.logger.Error("get teams", zap.Stringer("user_id", user.ID), zap.Error(err))
 		h.SendError(w, http.StatusInternalServerError, DetailGetTeamsFailed)

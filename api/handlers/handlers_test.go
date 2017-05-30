@@ -68,7 +68,7 @@ func (r MockRepository) GetUserByToken(token string) (*models.User, error) {
 	return r.User, r.Err
 }
 
-func (r MockRepository) GetTeams(userID uuid.UUID) (models.Teams, error) {
+func (r MockRepository) GetTeamsWithUsers(userID uuid.UUID) (models.Teams, error) {
 	return r.Teams, r.Err
 }
 
