@@ -2,6 +2,7 @@
 import AppBar from 'material-ui/AppBar';
 import React from 'react';
 
+import Auth from '../Auth';
 import './index.css';
 
 type Props = {
@@ -12,7 +13,7 @@ const App = (props: Props) => (
   <div className="App">
     <AppBar
       title="Crick.io"
-      iconClassNameRight="muidocs-icon-navigation-expand-more"
+      iconElementRight={<Auth />}
     />
     <div className="App-content">
       {props.children}

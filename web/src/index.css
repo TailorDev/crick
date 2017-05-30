@@ -12,3 +12,9 @@ body {
 a {
   color: #5ec3a0;
 }
+
+pre {
+  padding: 1rem;
+  background-color: #efefef;
+  color: #333;
+}
