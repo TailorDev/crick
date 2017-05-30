@@ -14,13 +14,13 @@ import (
 )
 
 var (
-	// The error message when inserting a project in database has failed.
+	// DetailProjectCreationFailed is the error message when inserting a project in database has failed.
 	DetailProjectCreationFailed = "Project creation failed"
-	// The error message when inserting a frame in database has failed.
+	// DetailFrameCreationFailed is the error message when inserting a frame in database has failed.
 	DetailFrameCreationFailed = "Frame creation failed"
-	// The error message when fetching frames from database has failed.
+	// DetailFrameSelectionFailed is the error message when fetching frames from database has failed.
 	DetailFrameSelectionFailed = "Frame selection failed"
-	// The error message when the project to retrieve does not exist in database.
+	// DetailGetProjectFailed is the error message when the project to retrieve does not exist in database.
 	DetailGetProjectFailed = "Unknown project"
 )
 

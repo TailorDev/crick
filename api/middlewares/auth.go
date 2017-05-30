@@ -19,22 +19,27 @@ import (
 
 var (
 	// Below are the error messages for the AuthWithToken() middleware.
-	//
-	// The error message used when the Authorization header content is not valid.
+
+	// DetailInvalidAuthorizationHeader is the error message used when the
+	// Authorization header content is not valid.
 	DetailInvalidAuthorizationHeader = "Invalid or missing Authorization header"
-	// The error message used when the user is unknown. It can only happen with
-	// the AuthWithToken() middleware.
+	// DetailUserNotFound is the error message used when the user is unknown.
+	// Such an error can only happen with the AuthWithToken() middleware.
 	DetailUserNotFound = "User not found"
 
 	// Below are the error messages for the AuthWithAuth0() middleware.
-	//
-	// The error message when retrieving claims from the JWT token has failed.
+
+	// DetailMalformedToken is the error message when retrieving claims from
+	// the JWT token has failed.
 	DetailMalformedToken = "Malformed JWT token (claims)"
-	// The error message when creating a user in database has failed.
+	// DetailUserCreationFailed is the error message when creating a user in
+	// database has failed.
 	DetailUserCreationFailed = "User creation failed"
-	// The error message when fetching a user in database has failed.
+	// DetailUserSelectionFailed is the error message when fetching a user in
+	// database has failed.
 	DetailUserSelectionFailed = "User selection failed"
-	// The error message when getting the user's profile from Auth0 API has failed.
+	// DetailUserProfileRetrialFailed is the error message when getting the
+	// user's profile from Auth0 API has failed.
 	DetailUserProfileRetrialFailed = "User profile retrieval failed"
 )
 

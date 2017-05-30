@@ -18,7 +18,7 @@ type User struct {
 	ID       uuid.UUID `db:"id" json:"id"`
 	Auth0ID  string    `db:"auth0_id" json:"auth0_id"`
 	Login    string    `db:"login" json:"login"`
-	ApiToken string    `db:"api_token" json:"token"`
+	APIToken string    `db:"api_token" json:"token"`
 }
 
 // NewUser creates and returns a User instance. This function generates the
@@ -30,7 +30,7 @@ func NewUser(auth0ID, login string) *User {
 		ID:       uuid.NewV4(),
 		Auth0ID:  auth0ID,
 		Login:    login,
-		ApiToken: token,
+		APIToken: token,
 	}
 }
 
