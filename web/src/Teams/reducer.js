@@ -1,21 +1,19 @@
 /* @flow */
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
-import type {
-  ThunkAction,
-    Action,
-    Team,
-} from '../types';
+import type { User, ThunkAction, Action, Team, NewTeam } from '../types';
 
 // State
 type State = {
-  newTeam: ?Team,
+  newTeam: ?NewTeam,
   teams: Array<Team>,
+  suggestedUsers: Array<User>,
 };
 
 const initialState: State = {
   newTeam: null,
   teams: [],
+  suggestedUsers: [],
 };
 
 // Actions
@@ -26,6 +24,9 @@ const CREATE_REQUEST = 'crick/teams/CREATE_REQUEST';
 const CREATE_SUCCESS = 'crick/teams/CREATE_SUCCESS';
 const CREATE_FAILURE = 'crick/teams/CREATE_FAILURE';
 const SET_NEW_TEAM = 'crick/teams/SET_NEW_TEAM';
+const FETCH_USERS_REQUEST = 'crick/teams/FETCH_USERS_REQUEST';
+const FETCH_USERS_SUCCESS = 'crick/teams/FETCH_USERS_SUCCESS';
+const FETCH_USERS_FAILURE = 'crick/teams/FETCH_USERS_FAILURE';
 
 // Action Creators
 export const fetchTeams = (): Action => {
@@ -39,7 +40,7 @@ export const fetchTeams = (): Action => {
   };
 };
 
-export const createTeam = (team: Team): ThunkAction => {
+export const createTeam = (team: NewTeam): ThunkAction => {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SET_NEW_TEAM, team });
 
@@ -51,10 +52,27 @@ export const createTeam = (team: Team): ThunkAction => {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(team),
+        body: JSON.stringify({
+          name: team.name,
+          projects: team.projects,
+          user_ids: team.users.map(u => u.id),
+        }),
         types: [CREATE_REQUEST, CREATE_SUCCESS, CREATE_FAILURE],
       },
     });
+  };
+};
+
+export const autoCompleteUsers = (input: string): Action => {
+  return {
+    [CALL_API]: {
+      endpoint: `${process.env.REACT_APP_API_HOST || ''}/users?q=${input}`,
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      types: [FETCH_USERS_REQUEST, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE],
+    },
   };
 };
 
@@ -81,6 +99,7 @@ export default function reducer(
 
       if (newTeam) {
         return {
+          ...state,
           newTeam: null,
           teams: teams.concat({
             ...newTeam,
@@ -90,6 +109,12 @@ export default function reducer(
       }
 
       return state;
+
+    case FETCH_USERS_SUCCESS:
+      return {
+        ...state,
+        suggestedUsers: action.payload.users,
+      };
 
     case LOGOUT:
       return initialState;

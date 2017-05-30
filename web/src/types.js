@@ -9,6 +9,12 @@ export type GetState = () => Object;
 export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
 export type PromiseAction = Promise<Action>;
 
+export type NewTeam = {
+  name: string,
+  projects: Array<string>,
+  users: Array<User>,
+};
+
 export type Team = {
   id: string,
   name: string,

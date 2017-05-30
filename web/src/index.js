@@ -43,7 +43,8 @@ ReactDOM.render(
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/projects/:id" component={Project} />
-            <Route path="/teams" component={Teams} />
+            <Route exact path="/teams" component={Teams} />
+            <Route path="/teams/:id/edit" component={Teams} />
           </Switch>
         </App>
       </Router>
