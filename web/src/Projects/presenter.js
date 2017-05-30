@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
 import Project from './Project';
+import './index.css';
+
 
 class Projects extends React.Component {
   props: {
@@ -32,11 +34,12 @@ class Projects extends React.Component {
     }
 
     return (
-      <div>
+      <div className="Projects">
         <h2>Projects</h2>
-        <ul>
+
+        <div className="Project-list">
           {this.props.projects.map(p => <Project key={p.id} {...p} />)}
-        </ul>
+        </div>
       </div>
     );
   }

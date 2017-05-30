@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Paper from 'material-ui/Paper';
+
 
 type Props = {
   id: string,
@@ -8,9 +10,11 @@ type Props = {
 };
 
 const Project = (props: Props) => (
-  <li>
-    <Link to={`/projects/${props.id}`}>{props.name}</Link>
-  </li>
+  <Paper className="Project">
+    <h4>
+      <Link to={`/projects/${props.id}`}>{props.name}</Link>
+    </h4>
+  </Paper>
 );
 
 export default Project;

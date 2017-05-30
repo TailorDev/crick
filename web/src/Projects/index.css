@@ -1,0 +1,38 @@
+.Projects {}
+
+.Project-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Project:last-child h4 a {
+  background-color: #269272 !important;
+}
+
+.Project:last-child h4 a:hover {
+  background-color: #5ec3a0 !important;
+}
+
+.Project {
+  width: calc(20vw - 1.5rem);
+  margin: 1rem 0.5rem;
+}
+
+.Project h4 {
+  margin: 0;
+}
+
+.Project h4 a {
+  display: block;
+  height: 100%;
+  padding: 2rem 1rem;
+  background-color: #2e354f !important;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.Project h4 a:hover {
+  background-color: #585f7b !important;
+}
