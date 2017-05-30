@@ -1,3 +1,4 @@
+// Package models contains the data structures and functions.
 package models
 
 import (
@@ -7,10 +8,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// Repository is the main model interface, exposing all functions to manipulate
+// the different data structures.
 type Repository interface {
-	// GetFrames returns all the user's frames
+	// GetFrames returns all the user's frames.
 	GetFrames(userID uuid.UUID) ([]Frame, error)
-	// GetFramesSince returns the user's fraces since `date`.
+	// GetFramesSince returns the user's fraces since date.
 	GetFramesSince(userID uuid.UUID, date time.Time) ([]Frame, error)
 	// CreateNewFrame creates a new frame and persists it.
 	CreateNewFrame(frame Frame) error

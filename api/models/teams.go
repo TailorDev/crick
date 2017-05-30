@@ -14,6 +14,10 @@ var (
 	OR $1=ANY(user_ids);`
 )
 
+// Team is a structure representing a Crick team, i.e. a set of users and
+// projects shared among them. NOTE: right now, projects are shared without any
+// permission granted by the users, as soon as they have a project named that
+// is contained into the Projects of the team.
 type Team struct {
 	ID       uuid.UUID      `db:"id" json:"id"`
 	Name     string         `db:"name" json:"name"`
@@ -22,6 +26,7 @@ type Team struct {
 	OwnerID  uuid.UUID      `db:"owner_id" json:"-"`
 }
 
+// GetTeams returns the user's teams.
 func (r DatabaseRepository) GetTeams(userID uuid.UUID) ([]Team, error) {
 	teams := []Team{}
 	rows, err := r.db.Queryx(selectTeamsByUserID, userID)
@@ -44,6 +49,7 @@ func (r DatabaseRepository) GetTeams(userID uuid.UUID) ([]Team, error) {
 	return teams, nil
 }
 
+// CreateNewTeam creates a new team and persists it.
 func (r DatabaseRepository) CreateNewTeam(team Team) error {
 	_, err := r.db.Exec(createTeam, team.ID, team.Name, team.Projects, pq.Array(team.UserIDs), team.OwnerID)
 

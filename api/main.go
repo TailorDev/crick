@@ -1,3 +1,4 @@
+// Package main contains the Crick API application.
 package main
 
 import (
@@ -20,7 +21,6 @@ import (
 // App is the application kernel.
 func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	router := httprouter.New()
-
 	h := handlers.New(repository, logger)
 
 	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, repository, logger))
@@ -30,9 +30,9 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	router.POST("/teams", m.AuthWithAuth0(h.CreateTeam, repository, logger))
 
 	// Watson API
-	router.GET("/watson/projects", m.AuthWithToken(h.GetProjects, repository))
-	router.GET("/watson/frames", m.AuthWithToken(h.GetFrames, repository))
-	router.POST("/watson/frames/bulk", m.AuthWithToken(h.BulkInsertFrames, repository))
+	router.GET("/watson/projects", m.AuthWithToken(h.GetProjects, repository, logger))
+	router.GET("/watson/frames", m.AuthWithToken(h.GetFrames, repository, logger))
+	router.POST("/watson/frames/bulk", m.AuthWithToken(h.BulkInsertFrames, repository, logger))
 
 	return router
 }
@@ -51,14 +51,14 @@ func applyGlobalMiddlewares(app http.Handler) http.Handler {
 }
 
 func main() {
-	db, err := sqlx.Open("postgres", config.DSN())
-	if err != nil {
-		log.Fatal(fmt.Sprintf("Could not connect to database: %v", err))
-	}
-	defer db.Close()
-
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
+
+	db, err := sqlx.Open("postgres", config.DSN())
+	if err != nil {
+		logger.Fatal("could not connect to database", zap.Error(err))
+	}
+	defer db.Close()
 
 	app := App(models.NewDatabaseRepository(db), logger)
 	log.Fatal(http.ListenAndServe(

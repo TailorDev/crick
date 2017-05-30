@@ -13,7 +13,9 @@ import (
 )
 
 var (
-	DetailGetTeamsFailed     = "Failed to retrieve teams"
+	// The error message used when fetching teams from database has failed.
+	DetailGetTeamsFailed = "Failed to retrieve teams"
+	// The error message used when inserting a team in database has failed.
 	DetailTeamCreationFailed = "Team creation failed"
 )
 
@@ -23,7 +25,7 @@ func (h Handler) GetTeams(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 	teams, err := h.repository.GetTeams(user.ID)
 	if err != nil {
-		h.logger.Error("get teams", zap.Error(err))
+		h.logger.Error("get teams", zap.Stringer("user_id", user.ID), zap.Error(err))
 		h.SendError(w, http.StatusInternalServerError, DetailGetTeamsFailed)
 		return
 	}
@@ -40,16 +42,20 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+		h.logger.Warn("create team", zap.Error(err))
 		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
 		return
 	}
 
 	team := models.Team{}
 	if err := json.Unmarshal(body, &team); err != nil {
-		h.logger.Error("unmarshal JSON team to create", zap.Error(err))
+		h.logger.Warn("unmarshal JSON team to create", zap.Error(err))
 		h.SendError(w, http.StatusBadRequest, DetailMalformedJSON)
 		return
 	}
+
+	// TODO: validate team.UserIDs
+	// TODO: validate team.Projects
 
 	team.ID = uuid.NewV4()
 	team.OwnerID = user.ID

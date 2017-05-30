@@ -13,6 +13,7 @@ var (
 	createUser        = `INSERT INTO users (id, login, auth0_id, api_token) VALUES (:id, :login, :auth0_id, :api_token) ON CONFLICT DO NOTHING;`
 )
 
+// User is a structure representing a Crick user.
 type User struct {
 	ID       uuid.UUID `db:"id" json:"id"`
 	Auth0ID  string    `db:"auth0_id" json:"auth0_id"`
@@ -20,17 +21,20 @@ type User struct {
 	ApiToken string    `db:"api_token" json:"token"`
 }
 
-func NewUser(auth0, login string) *User {
+// NewUser creates and returns a User instance. This function generates the
+// initial user's API token.
+func NewUser(auth0ID, login string) *User {
 	token, _ := generateRandomString(40)
 
 	return &User{
 		ID:       uuid.NewV4(),
-		Auth0ID:  auth0,
+		Auth0ID:  auth0ID,
 		Login:    login,
 		ApiToken: token,
 	}
 }
 
+// CreateNewUser creates a new user, persists it and returns it.
 func (r DatabaseRepository) CreateNewUser(auth0ID, login string) (*User, error) {
 	u := NewUser(auth0ID, login)
 	_, err := r.db.NamedExec(createUser, u)
@@ -38,6 +42,7 @@ func (r DatabaseRepository) CreateNewUser(auth0ID, login string) (*User, error) 
 	return u, err
 }
 
+// GetUserByAuth0ID returns a user corresponding to the given Auth0 id.
 func (r DatabaseRepository) GetUserByAuth0ID(auth0ID string) (*User, error) {
 	u := &User{}
 	err := r.db.Get(u, selectUserByID, auth0ID)
@@ -45,6 +50,7 @@ func (r DatabaseRepository) GetUserByAuth0ID(auth0ID string) (*User, error) {
 	return u, err
 }
 
+// GetUserByToken returns a user corresponding to the given API token.
 func (r DatabaseRepository) GetUserByToken(token string) (*User, error) {
 	u := &User{}
 	err := r.db.Get(u, selectUserByToken, token)

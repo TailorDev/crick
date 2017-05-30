@@ -4,6 +4,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// Project is a structure representing a project. Usually, frames are
+// associated to a project, and a project is owned by a user.
 type Project struct {
 	ID     uuid.UUID `db:"id" json:"id"`
 	Name   string    `json:"name"`
@@ -16,6 +18,7 @@ var (
 	selectProjectByName    = `SELECT * FROM projects WHERE user_id=$1 and name=$2;`
 )
 
+// NewProject creates and returns a Project instance.
 func NewProject(name string, userID uuid.UUID) *Project {
 	return &Project{
 		ID:     uuid.NewV4(),
@@ -24,6 +27,7 @@ func NewProject(name string, userID uuid.UUID) *Project {
 	}
 }
 
+// CreateNewProject creates a new project, persists it and returns it.
 func (r DatabaseRepository) CreateNewProject(name string, userID uuid.UUID) (*Project, error) {
 	p := NewProject(name, userID)
 	_, err := r.db.NamedExec(createProject, p)
@@ -31,6 +35,7 @@ func (r DatabaseRepository) CreateNewProject(name string, userID uuid.UUID) (*Pr
 	return p, err
 }
 
+// GetProjects returns all the user's projects.
 func (r DatabaseRepository) GetProjects(userID uuid.UUID) ([]Project, error) {
 	projects := []Project{}
 	err := r.db.Select(&projects, selectProjectsByUserID, userID)
@@ -38,6 +43,7 @@ func (r DatabaseRepository) GetProjects(userID uuid.UUID) ([]Project, error) {
 	return projects, err
 }
 
+// GetProjectByName returns a project corresponding to `name`.
 func (r DatabaseRepository) GetProjectByName(userID uuid.UUID, name string) (*Project, error) {
 	p := &Project{}
 	err := r.db.Get(p, selectProjectByName, userID, name)
