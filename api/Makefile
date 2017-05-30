@@ -5,7 +5,7 @@ default: help
 
 dev: ## start the API with Docker
 	@docker-compose -p crick up -d
-	@echo "\033[92mYou can browse the application at: http://127.0.0.1:8000\033[0m"
+	@echo "\033[92mYou can browse the application at: http://api.crick.dev:8000\033[0m"
 .PHONY: dev
 
 logs: ## show the API logs
