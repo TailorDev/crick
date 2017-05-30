@@ -1,0 +1,16 @@
+.Auth {
+  color: #fff;
+  padding: 0.2rem;
+}
+
+.Auth button.action {
+  color: #fff !important;
+}
+
+.Auth.logged-in {}
+
+.Auth.logged-in .user-menu:hover {
+  cursor: pointer;
+}
+
+.Auth.logged-out {}

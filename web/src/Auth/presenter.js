@@ -1,14 +1,25 @@
 /* @flow */
 import React from 'react';
+import Avatar from 'material-ui/Avatar';
+import Dialog from 'material-ui/Dialog';
+import IconMenu from 'material-ui/IconMenu';
+import FlatButton from 'material-ui/FlatButton';
+import MenuItem from 'material-ui/MenuItem';
+import './index.css';
 
 class Auth extends React.Component {
   constructor(props: Object) {
     super(props);
 
     this.state = {
+      isTokenDialogOpen: false,
+      avatar_url: '',
       login: '',
       token: '',
     };
+
+    this.handleTokenDialogClose = this.handleTokenDialogClose.bind(this);
+    this.handleTokenDialogOpen = this.handleTokenDialogOpen.bind(this);
   }
 
   props: {
@@ -19,9 +30,23 @@ class Auth extends React.Component {
   };
 
   state: {
+    isTokenDialogOpen: boolean,
+    avatar_url: string,
     login: string,
     token: string,
   };
+
+  handleTokenDialogClose() {
+    this.setState({
+      isTokenDialogOpen: false,
+    });
+  }
+
+  handleTokenDialogOpen() {
+    this.setState({
+      isTokenDialogOpen: true,
+    });
+  }
 
   componentDidMount() {
     if (!this.props.isAuthenticated) {
@@ -36,7 +61,7 @@ class Auth extends React.Component {
       if (nextProps.token !== null) {
         this.fetchMe(nextProps.token);
       } else {
-        this.setState({ login: '' });
+        this.setState({ avatar_url: '', login: '' });
       }
     }
   }
@@ -55,6 +80,7 @@ class Auth extends React.Component {
       })
       .then(json => {
         this.setState({
+          avatar_url: json.avatar_url,
           login: json.login,
           token: json.token,
         });
@@ -64,23 +90,57 @@ class Auth extends React.Component {
 
   render() {
     if (this.props.isAuthenticated) {
+      const actions = [
+        <FlatButton
+          label="Close"
+          primary={true}
+          onTouchTap={this.handleTokenDialogClose}
+        />,
+      ];
+
       return (
-        <div>
-          <p>
-            {this.state.login}
-            &nbsp;
-            <button onClick={this.props.onLogout}>Logout</button>
-          </p>
-          <p>
-            Watson token: <code>{this.state.token}</code>
-          </p>
+        <div className="Auth logged-in">
+          <Dialog
+            title="API token"
+            actions={actions}
+            modal={false}
+            open={this.state.isTokenDialogOpen}
+            onRequestClose={this.handleTokenDialogClose}
+          >
+            Copy/paste this token to access Crick API:
+            <pre>
+              <code>{this.state.token}</code>
+            </pre>
+          </Dialog>
+
+          <IconMenu
+            className="user-menu"
+            iconButtonElement={
+              <Avatar src={this.state.avatar_url} />
+            }
+            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+          >
+            <MenuItem
+              primaryText="My API Token"
+              onTouchTap={this.handleTokenDialogOpen}
+            />
+            <MenuItem
+              primaryText="Sign out"
+              onTouchTap={this.props.onLogout}
+            />
+          </IconMenu>
         </div>
       );
     }
 
     return (
-      <div>
-      <button onClick={this.props.onLogin}>Login</button>
+      <div className="Auth logged-out">
+        <FlatButton
+          label="Login"
+          className="action"
+          onTouchTap={this.props.onLogin}
+        />
       </div>
     );
   }
