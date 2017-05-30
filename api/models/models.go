@@ -35,7 +35,7 @@ type Repository interface {
 	GetUserByToken(token string) (*User, error)
 
 	// GetTeams returns the user's teams.
-	GetTeams(userID uuid.UUID) ([]Team, error)
+	GetTeams(userID uuid.UUID) (Teams, error)
 	// CreateNewTeam creates a new team and persists it.
 	CreateNewTeam(team Team) error
 }

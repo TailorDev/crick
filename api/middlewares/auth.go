@@ -107,7 +107,7 @@ func AuthWithAuth0(h httprouter.Handle, repo models.Repository, logger *zap.Logg
 			}
 		}
 
-		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
+		ctx := context.WithValue(r.Context(), ContextCurrentUser, u)
 		h(w, r.WithContext(ctx), ps)
 	}
 }
@@ -138,7 +138,7 @@ func AuthWithToken(h httprouter.Handle, repo models.Repository, logger *zap.Logg
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), contextCurrentUser, u)
+		ctx := context.WithValue(r.Context(), ContextCurrentUser, u)
 		h(w, r.WithContext(ctx), ps)
 	}
 }

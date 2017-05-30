@@ -26,9 +26,15 @@ type Team struct {
 	OwnerID  uuid.UUID      `db:"owner_id" json:"-"`
 }
 
+// Teams is a structure representing a set of teams. Its purpose is mainly to
+// ease the JSON serialization (to return a root key).
+type Teams struct {
+	Teams []Team `json:"teams"`
+}
+
 // GetTeams returns the user's teams.
-func (r DatabaseRepository) GetTeams(userID uuid.UUID) ([]Team, error) {
-	teams := []Team{}
+func (r DatabaseRepository) GetTeams(userID uuid.UUID) (Teams, error) {
+	teams := Teams{}
 	rows, err := r.db.Queryx(selectTeamsByUserID, userID)
 	if err != nil {
 		return teams, err
@@ -43,7 +49,7 @@ func (r DatabaseRepository) GetTeams(userID uuid.UUID) ([]Team, error) {
 			return teams, nil
 		}
 
-		teams = append(teams, t)
+		teams.Teams = append(teams.Teams, t)
 	}
 
 	return teams, nil
