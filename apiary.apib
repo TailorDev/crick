@@ -29,9 +29,9 @@ otherwise the response will be a `401 Unauthorized`.
 
         {
             "id": "15178b45-0646-4b1e-84f6-ca6a5d7ba2bb",
-            "auth0_id": "github|217628",
             "login": "willdurand",
-            "token": "xyz=="
+            "token": "xyz==",
+            "avatar_url": "https://bitbucket.org/account/willdurand/avatar/32/"
         }
 
 + Response 401 (application/json)
@@ -162,11 +162,13 @@ otherwise the response will be a `401 Unauthorized`.
                     "users": [
                         {
                             "id": "15178b45-0646-4b1e-84f6-ca6a5d7ba2bb",
-                            "login": "willdurand"
+                            "login": "willdurand",
+                            "avatar_url": "https://bitbucket.org/account/willdurand/avatar/32/"
                         },
                         {
                             "id": "15178b45-0646-4b1e-84f6-ca6a5d7battt",
-                            "login": "jmaupetit"
+                            "login": "jmaupetit",
+                            "avatar_url": "https://bitbucket.org/account/jmaupetit/avatar/32/"
                         }
                     ]
                 },
@@ -177,7 +179,8 @@ otherwise the response will be a `401 Unauthorized`.
                     "users": [
                         {
                             "id": "15178b45-0646-4b1e-84f6-ca6a5d7ba2bb",
-                            "login": "willdurand"
+                            "login": "willdurand",
+                            "avatar_url": "https://bitbucket.org/account/willdurand/avatar/32/"
                         }
                     ]
                 }
@@ -260,16 +263,18 @@ otherwise the response will be a `401 Unauthorized`.
 
 + Response 200 (application/json)
 
-        [
-            {
-                "id": "26fb1e8c-b559-4d6e-a9a7-e9092ac5fb38",
-                "name": "project 1"
-            },
-            {
-                "id": "142d08ac-8244-4b43-b04a-4d0c18a93a6e",
-                "name": "project 2"
-            }
-        ]
+        {
+            "projects": [
+                {
+                    "id": "26fb1e8c-b559-4d6e-a9a7-e9092ac5fb38",
+                    "name": "project 1"
+                },
+                {
+                    "id": "142d08ac-8244-4b43-b04a-4d0c18a93a6e",
+                    "name": "project 2"
+                }
+            ]
+        }
 
 + Response 400 (application/json)
 
@@ -303,22 +308,24 @@ otherwise the response will be a `401 Unauthorized`.
 
 + Response 200 (application/json)
 
-        [
-            {
-                "id": "5b37098a-c971-4956-92a3-5a81fc0b342b",
-                "start_at": "2016-10-21T09:43:36Z",
-                "end_at": "2016-10-21T12:03:47Z",
-                "project": "project 1",
-                "tags": ["tag1", "tag 2"]
-            },
-            {
-                "id": "5b37098a-c971-4956-92a3-5a81fc0b3aaa",
-                "start_at": "2016-10-22T09:43:36Z",
-                "end_at": "2016-10-22T12:03:47Z",
-                "project": "project 1",
-                "tags": []
-            }
-        ]
+        {
+            "frames": [
+                {
+                    "id": "5b37098a-c971-4956-92a3-5a81fc0b342b",
+                    "start_at": "2016-10-21T09:43:36Z",
+                    "end_at": "2016-10-21T12:03:47Z",
+                    "project": "project 1",
+                    "tags": ["tag1", "tag 2"]
+                },
+                {
+                    "id": "5b37098a-c971-4956-92a3-5a81fc0b3aaa",
+                    "start_at": "2016-10-22T09:43:36Z",
+                    "end_at": "2016-10-22T12:03:47Z",
+                    "project": "project 1",
+                    "tags": []
+                }
+            ]
+        }
 
 + Response 400 (application/json)
 
