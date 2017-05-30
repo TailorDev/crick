@@ -18,8 +18,8 @@ class Auth extends React.Component {
       token: '',
     };
 
-    this.handleTokenDialogClose = this.handleTokenDialogClose.bind(this);
-    this.handleTokenDialogOpen = this.handleTokenDialogOpen.bind(this);
+    (this: any).handleTokenDialogClose = this.handleTokenDialogClose.bind(this);
+    (this: any).handleTokenDialogOpen = this.handleTokenDialogOpen.bind(this);
   }
 
   props: {

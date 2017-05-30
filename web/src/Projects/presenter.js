@@ -39,7 +39,6 @@ class Projects extends React.Component {
 
         <div className="Project-list">
           {this.props.projects.map(p => <Project key={p.id} {...p} />)}
-          <Project name="+ add new" />
         </div>
       </div>
     );
