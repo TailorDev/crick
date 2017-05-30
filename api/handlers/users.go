@@ -17,6 +17,6 @@ func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httproute
 		"id":         user.ID,
 		"login":      user.Login,
 		"token":      user.APIToken,
-		"avatar_url": user.AvatarURL.String,
+		"avatar_url": user.AvatarURL,
 	})
 }

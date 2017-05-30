@@ -90,14 +90,19 @@ func AuthWithAuth0(h httprouter.Handle, repo models.Repository, logger *zap.Logg
 		u, err := repo.GetUserByAuth0ID(id)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				logger.Info("create new authenticated user", zap.String("auth0_id", id))
-
 				profile, err := getUserProfile(c.Domain, r.Header.Get("Authorization"))
 				if err != nil {
 					logger.Error("cannot retrieve user profile", zap.Error(err))
 					SendError(w, http.StatusInternalServerError, DetailUserProfileRetrialFailed)
 					return
 				}
+
+				logger.Info(
+					"create new authenticated user",
+					zap.String("auth0_id", id),
+					zap.String("login", profile["nickname"]),
+					zap.String("avatar_url", profile["picture"]),
+				)
 
 				u, err = repo.CreateNewUser(profile["sub"], profile["nickname"], profile["picture"])
 				if err != nil {

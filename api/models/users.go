@@ -2,25 +2,28 @@ package models
 
 import (
 	"crypto/rand"
-	"database/sql"
 	"encoding/base64"
 
 	"github.com/satori/go.uuid"
 )
 
 var (
-	selectUserByID    = `SELECT * FROM users WHERE auth0_id=$1;`
+	selectUserByID = `SELECT * FROM users WHERE auth0_id=$1;`
+
 	selectUserByToken = `SELECT * FROM users WHERE api_token=$1;`
-	createUser        = `INSERT INTO users (id, login, auth0_id, api_token) VALUES (:id, :login, :auth0_id, :api_token) ON CONFLICT DO NOTHING;`
+
+	createUser = `INSERT INTO users (id, login, auth0_id, api_token, avatar_url)
+	VALUES (:id, :login, :auth0_id, :api_token, :avatar_url)
+	ON CONFLICT DO NOTHING;`
 )
 
 // User is a structure representing a Crick user.
 type User struct {
-	ID        uuid.UUID      `db:"id" json:"id"`
-	Auth0ID   string         `db:"auth0_id" json:"-"`
-	Login     string         `db:"login" json:"login"`
-	APIToken  string         `db:"api_token" json:"-"`
-	AvatarURL sql.NullString `db:"avatar_url" json:"avatar_url"`
+	ID        uuid.UUID `db:"id" json:"id"`
+	Auth0ID   string    `db:"auth0_id" json:"-"`
+	Login     string    `db:"login" json:"login"`
+	APIToken  string    `db:"api_token" json:"-"`
+	AvatarURL string    `db:"avatar_url" json:"avatar_url"`
 }
 
 // IsOwnerOfTeam returns true if the user is owner of the given team, false
@@ -39,7 +42,7 @@ func NewUser(auth0ID, login, avatarURL string) *User {
 		Auth0ID:   auth0ID,
 		Login:     login,
 		APIToken:  token,
-		AvatarURL: sql.NullString{String: avatarURL},
+		AvatarURL: avatarURL,
 	}
 }
 
