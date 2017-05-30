@@ -29,6 +29,9 @@ Stop and remove the Docker environment:
 
     $ make down
 
+Load Watson's frames to your local server (python 3.4+ is required):
+
+    $ CRICK_API_TOKEN='mytoken' python3 api/scripts/watson_push.py (-h)
 
 ### Web App
 
