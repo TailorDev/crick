@@ -17,6 +17,31 @@ This endpoint allows to manage Crick users.
 It requires a `Authorization` header with a `Bearer` JSON Web Token,
 otherwise the response will be a `401 Unauthorized`.
 
+### Get users [GET /users{?q}]
+
+This endpoint returns at most `LimitUsersToReturn` (`10` currently) users.
+
++ Parameters
+    + q: `johndoe` (string, optional) - A string to autocomplete on login.
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer <Auth0 JWT token>
+
++ Response 200 (application/json)
+
+        {
+            "users": [
+                {
+                    "id": "44178b45-0646-4b1e-84f6-ca6a5d7ba2bb",
+                    "login": "johndoe",
+                    "avatar_url": "https://bitbucket.org/account/johndoe/avatar/32/"
+                }
+            ]
+        }
+
 ### Get current user's profile [GET /users/me]
 
 + Request
