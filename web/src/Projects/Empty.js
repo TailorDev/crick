@@ -6,16 +6,17 @@ import style from '../shared/emptyStyle';
 
 type Props = {
   token: string,
+  login: string,
 };
 
-const Empty = ({ token }: Props) => (
+const Empty = ({ login, token }: Props) => (
   <div className="Empty">
     <Paper style={style.paper} zDepth={1}>
       <ActionBackupIcon
         style={style.icon}
         color="#5ec3a0"
       />
-      <h4 style={style.title}>Hello, you are almost done!</h4>
+      <h4 style={style.title}>Hello @{login}, you are almost done!</h4>
       <p>
         Crick is Watson's most famous colleague, <a href="https://en.wikipedia.org/wiki/Francis_Crick">true story</a>.
         Therefore, you need to connect <a href="https://github.com/TailorDev/Watson">Watson</a> to your Crick account,

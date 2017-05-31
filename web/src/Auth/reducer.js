@@ -1,5 +1,7 @@
 /* @flow */
 import Auth0Lock from 'auth0-lock';
+import { CALL_API } from 'redux-api-middleware';
+import { API_ERROR } from '../Errors/reducer';
 import type {
   ThunkAction,
   Action,
@@ -7,8 +9,11 @@ import type {
 
 // State
 type State = {
-  isAuthenticated: boolean,
   token: ?string,
+  login: ?string,
+  avatar_url: ?string,
+  api_token: ?string,
+  isAuthenticated: boolean,
 };
 
 const lock = new Auth0Lock(
@@ -35,12 +40,17 @@ const checkToken = () => {
 const initialState: State = {
   isAuthenticated: checkToken(),
   token: localStorage.getItem('access_token'),
+  login: null,
+  api_token: null,
+  avatar_url: null,
 };
 
 // Actions
+export const LOGOUT = 'crick/auth/LOGOUT';
 const LOGIN_ERROR = 'crick/auth/LOGIN_ERROR';
 const LOGIN_SUCCESS = 'crick/auth/LOGIN_SUCCESS';
-export const LOGOUT = 'crick/auth/LOGOUT';
+const FETCH_USER_REQUEST = 'crick/auth/FETCH_USER_REQUEST';
+const FETCH_USER_SUCCESS = 'crick/auth/FETCH_USER_SUCCESS';
 
 // Listeners
 export const addAuth0Listeners = (dispatch: Function, getState: Function) => {
@@ -76,6 +86,17 @@ export const logout = (): Action => {
   return { type: LOGOUT };
 };
 
+export const fetchUser = (): Action => {
+  return {
+    [CALL_API]: {
+      endpoint: `${process.env.REACT_APP_API_HOST || ''}/users/me`,
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      types: [FETCH_USER_REQUEST, FETCH_USER_SUCCESS, API_ERROR],
+    },
+  };
+};
+
 // Reducer
 export default function reducer(
   state: State = initialState,
@@ -84,15 +105,21 @@ export default function reducer(
   switch (action.type) {
     case LOGIN_SUCCESS:
       return {
+        ...state,
         isAuthenticated: true,
         token: action.token,
       };
 
-    case LOGOUT:
+    case FETCH_USER_SUCCESS:
       return {
-        isAuthenticated: false,
-        token: null,
+        ...state,
+        login: action.payload.login,
+        api_token: action.payload.token,
+        avatar_url: action.payload.avatar_url,
       };
+
+    case LOGOUT:
+      return initialState;
 
     default:
       return state;

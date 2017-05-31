@@ -10,7 +10,9 @@ const mapStateToProps = (state) => {
   const { auth, projects } = state;
 
   return {
-    token: 'xyw',
+    token: auth.api_token,
+    login: auth.login,
+    avatar_url: auth.avatar_url,
     isAuthenticated: auth.isAuthenticated,
     projects: projects.projects,
   };

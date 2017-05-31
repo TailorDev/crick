@@ -8,6 +8,7 @@ import './index.css';
 class Projects extends React.Component {
   props: {
     token: string,
+    login: string,
     isAuthenticated: boolean,
     projects: Array<Object>,
     fetchProjects: Function,
@@ -31,8 +32,12 @@ class Projects extends React.Component {
   }
 
   render() {
+    if (!this.props.isAuthenticated) {
+      return null;
+    }
+
     if (this.props.projects.length === 0) {
-      return <Empty token={this.props.token} />
+      return <Empty login={this.props.login} token={this.props.token} />
     }
 
     return (
