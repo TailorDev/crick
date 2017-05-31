@@ -43,10 +43,6 @@ func (r MockRepository) CreateNewFrame(frame models.Frame) error {
 	return r.Err
 }
 
-func (r MockRepository) GetFramesForProject(userID, projectID uuid.UUID, limit, page int) (int, []models.Frame, error) {
-	return r.NbFrames, r.Frames, r.Err
-}
-
 func (r MockRepository) CreateNewProject(name string, userID uuid.UUID) (*models.Project, error) {
 	return r.Project, r.Err
 }
@@ -93,4 +89,8 @@ func (r MockRepository) UpdateTeam(team *models.Team) error {
 
 func (r MockRepository) GetProjectByID(userID, projectID uuid.UUID) (*models.Project, error) {
 	return r.Project, r.Err
+}
+
+func (r MockRepository) GetFramesWithQueryBuilder(qb models.QueryBuilder) (int, []models.Frame, error) {
+	return r.NbFrames, r.Frames, r.Err
 }
