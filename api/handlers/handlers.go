@@ -9,6 +9,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/TailorDev/crick/api/models"
 	"go.uber.org/zap"
@@ -57,4 +59,27 @@ func getIntOrDefault(value string, defaultValue int) int {
 	}
 
 	return v
+}
+
+func getTimeOrNil(value string) *time.Time {
+	time, err := time.Parse("2006-01-02", value)
+	if err != nil {
+		return nil
+	}
+
+	return &time
+}
+
+func getStringSlice(value string) []string {
+	var slice []string
+
+	if value == "" {
+		return slice
+	}
+
+	for _, v := range strings.Split(value, ",") {
+		slice = append(slice, strings.TrimSpace(v))
+	}
+
+	return slice
 }

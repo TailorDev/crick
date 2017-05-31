@@ -89,3 +89,7 @@ func (r MockRepository) GetTeamByID(teamID uuid.UUID) (*models.Team, error) {
 func (r MockRepository) UpdateTeam(team *models.Team) error {
 	return r.Err
 }
+
+func (r MockRepository) GetProjectByID(userID, projectID uuid.UUID) (*models.Project, error) {
+	return r.Project, r.Err
+}

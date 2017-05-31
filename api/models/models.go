@@ -26,6 +26,8 @@ type Repository interface {
 	GetProjects(userID uuid.UUID) (Projects, error)
 	// GetProjectByName returns a project corresponding to `name`.
 	GetProjectByName(userID uuid.UUID, name string) (*Project, error)
+	// GetProjectByID returns a project given its id and user ID.
+	GetProjectByID(userID, projectID uuid.UUID) (*Project, error)
 
 	// CreateNewUser creates a new user, persists it and returns it.
 	CreateNewUser(auth0ID, login, avatarURL string) (*User, error)

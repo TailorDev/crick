@@ -28,9 +28,11 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	router.GET("/users/me", m.AuthWithAuth0(h.UsersGetMe, repository, logger))
 	router.GET("/users", m.AuthWithAuth0(h.GetUsers, repository, logger))
 
-	// projects / frames
+	// projects
 	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, repository, logger))
-	router.GET("/projects/:id/frames", m.AuthWithAuth0(h.GetFramesForProject, repository, logger))
+
+	// frames
+	router.GET("/frames", m.AuthWithAuth0(h.GetFrames, repository, logger))
 
 	// teams
 	router.GET("/teams", m.AuthWithAuth0(h.GetTeams, repository, logger))
@@ -39,7 +41,7 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 
 	// Watson API
 	router.GET("/watson/projects", m.AuthWithToken(h.GetProjects, repository, logger))
-	router.GET("/watson/frames", m.AuthWithToken(h.GetFrames, repository, logger))
+	router.GET("/watson/frames", m.AuthWithToken(h.GetFramesSince, repository, logger))
 	router.POST("/watson/frames/bulk", m.AuthWithToken(h.BulkInsertFrames, repository, logger))
 
 	return router
