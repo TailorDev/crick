@@ -21,7 +21,8 @@ var (
 
 	selectFramesByUserAndProjectIDs = `SELECT frames.*, projects.name AS project_name FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
-	WHERE projects.user_id=$1 AND frames.project_id=$2;`
+	WHERE projects.user_id=$1 AND frames.project_id=$2
+	ORDER BY frames.start_at DESC;`
 )
 
 // Frame is a data structure for representing time frames.
