@@ -23,6 +23,7 @@ type MockRepository struct {
 	User     *models.User
 	Project  *models.Project
 	Frames   []models.Frame
+	Users    models.Users
 	Projects models.Projects
 	Teams    models.Teams
 	Err      error
@@ -74,4 +75,8 @@ func (r MockRepository) GetTeamsWithUsers(userID uuid.UUID) (models.Teams, error
 
 func (r MockRepository) CreateNewTeam(team models.Team) error {
 	return r.Err
+}
+
+func (r MockRepository) GetUsersByLoginLike(like string) (models.Users, error) {
+	return r.Users, r.Err
 }

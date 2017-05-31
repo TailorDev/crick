@@ -8,7 +8,6 @@ import (
 	"github.com/TailorDev/crick/api/middlewares"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
-	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
@@ -45,8 +44,8 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	team := models.Team{}
-	if err := json.Unmarshal(body, &team); err != nil {
+	input := models.TeamInput{}
+	if err := json.Unmarshal(body, &input); err != nil {
 		h.logger.Warn("unmarshal JSON team to create", zap.Error(err))
 		h.SendError(w, http.StatusBadRequest, DetailMalformedJSON)
 		return
@@ -54,10 +53,7 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	// TODO: validate team.UserIDs
 	// TODO: validate team.Projects
-
-	team.ID = uuid.NewV4()
-	team.OwnerID = user.ID
-	team.UserIDs = append(team.UserIDs, user.ID)
+	team := models.NewTeamFromInput(input, user.ID)
 
 	if err := h.repository.CreateNewTeam(team); err != nil {
 		h.logger.Error("create new team", zap.Error(err))
@@ -66,5 +62,8 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	w.Header().Set("Content-Type", DefaultContentType)
-	json.NewEncoder(w).Encode(team)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"id": team.ID,
+	})
 }

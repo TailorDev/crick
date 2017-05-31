@@ -33,6 +33,9 @@ type Repository interface {
 	GetUserByAuth0ID(auth0ID string) (*User, error)
 	// GetUserByToken returns a user corresponding to the given API token.
 	GetUserByToken(token string) (*User, error)
+	// GetUsersByLoginLike returns a set of users based on the given login, it
+	// is used for autocompletion for instance.
+	GetUsersByLoginLike(login string) (Users, error)
 
 	// GetTeamsWithUsers returns the user's teams.
 	GetTeamsWithUsers(userID uuid.UUID) (Teams, error)
