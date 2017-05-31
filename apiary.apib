@@ -265,7 +265,23 @@ otherwise the response will be a `401 Unauthorized`.
                 ]
             }
 
-+ Response 204 (application/json)
++ Response 200 (application/json)
+
+            {
+                "id": "26fb1e8c-xxxx-yyyy-a9a7-e9092ac5fb38",
+                "name": "My team name",
+                "users": [
+                    {
+                        "id": "15178b45-0646-4b1e-84f6-ca6a5d7battt",
+                        "login": "willdurand",
+                        "avatar_url": "https://bitbucket.org/account/willdurand/avatar/32/"
+                    }
+                ],
+                "projects": [
+                    "that-project",
+                    "yet-another-project"
+                ]
+            }
 
 
 # Group Crick API for Watson
