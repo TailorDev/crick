@@ -9,6 +9,8 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import { Link } from 'react-router-dom';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import type { User, Team } from '../types';
 
 class List extends React.Component {
@@ -34,6 +36,7 @@ class List extends React.Component {
             <TableHeaderColumn>Name</TableHeaderColumn>
             <TableHeaderColumn>Projects</TableHeaderColumn>
             <TableHeaderColumn>Members</TableHeaderColumn>
+            <TableHeaderColumn>Actions</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody
@@ -46,6 +49,11 @@ class List extends React.Component {
             <TableRowColumn>{team.projects.join(', ')}</TableRowColumn>
             <TableRowColumn>
               {team.users.map(u => this.renderUser(u))}
+            </TableRowColumn>
+            <TableRowColumn>
+              <Link to={`/teams/${team.id}/edit`}>
+                <EditIcon title="Edit this team" />
+              </Link>
             </TableRowColumn>
           </TableRow>
         ))}

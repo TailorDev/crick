@@ -15,7 +15,11 @@ class Form extends React.Component {
   constructor(props: Object) {
     super(props);
 
-    this.state = initialState;
+    this.state = props.team ? {
+      name: props.team.name,
+      users: props.team.users,
+      projects: props.team.projects,
+    } : initialState;
 
     (this: any).onNameChange = this.onNameChange.bind(this);
     (this: any).onSubmit = this.onSubmit.bind(this);
@@ -27,7 +31,7 @@ class Form extends React.Component {
 
   props: {
     onSave: Function,
-    team?: ?Team,
+    team: ?Team,
     suggestedUsers: Array<User>,
     autoCompleteUsers: Function,
   };
@@ -39,7 +43,7 @@ class Form extends React.Component {
   };
 
   componentWillReceiveProps(nextProps: Object) {
-    if (this.props.team !== nextProps.team && nextProps.team) {
+    if (nextProps.team && nextProps.team !== null) {
       const t: Team = nextProps.team;
 
       this.setState({
@@ -105,6 +109,7 @@ class Form extends React.Component {
             dataSource={this.props.suggestedUsers}
             dataSourceConfig={{ text: 'login', value: 'id' }}
             onUpdateInput={this.onAutoCompleteMember}
+            defaultValue={this.state.users}
             onChange={this.onMembersChange}
           />
         </div>
@@ -112,7 +117,7 @@ class Form extends React.Component {
           <ChipInput
             fullWidth
             value={this.state.projects}
-            hintText="e.g. emails"
+            hintText="e.g. world-domination-plan"
             floatingLabelText="Team projects"
             onRequestAdd={this.onProjectAdd}
             onRequestDelete={this.onProjectRemove}
@@ -122,7 +127,7 @@ class Form extends React.Component {
           <RaisedButton
             primary
             fullWidth
-            label="Create"
+            label={this.props.team ? 'Update' : 'Create'}
             onClick={this.onSubmit}
             disabled={!this.canSubmit()}
           />
