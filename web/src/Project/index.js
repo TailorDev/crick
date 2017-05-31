@@ -9,6 +9,7 @@ const mapStateToProps = (state) => {
 
   return {
     frames: frames.frames,
+    project: frames.project,
   };
 };
 

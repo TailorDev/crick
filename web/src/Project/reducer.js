@@ -9,10 +9,12 @@ import type {
 // State
 type State = {
   frames: Array<Object>,
+  project: string,
 };
 
 const initialState: State = {
   frames: [],
+  project: '',
 };
 
 // Actions
@@ -39,12 +41,11 @@ export default function reducer(
     case FETCH_SUCCESS:
       return {
         frames: action.payload.frames,
+        project: action.payload.meta.project.name,
       };
 
     case LOGOUT:
-      return {
-        frames: [],
-      };
+      return initialState;
 
     default:
       return state;
