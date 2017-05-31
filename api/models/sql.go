@@ -15,6 +15,7 @@ type QueryBuilder struct {
 	offset  int
 	limit   int
 	values  []interface{}
+	orderBy string
 }
 
 // Returns a new QueryBuilder.
@@ -27,6 +28,7 @@ func NewQueryBuilder() QueryBuilder {
 		values:  []interface{}{},
 		limit:   0,
 		offset:  0,
+		orderBy: "",
 	}
 }
 
@@ -62,6 +64,12 @@ func (q *QueryBuilder) Paginate(page, limit int) *QueryBuilder {
 	return q
 }
 
+// OrderBy adds the ORDER BY clause to the query.
+func (q *QueryBuilder) OrderBy(clause string) *QueryBuilder {
+	q.orderBy = clause
+	return q
+}
+
 // Values returns the parameter values of the query.
 func (q *QueryBuilder) Values() []interface{} {
 	return q.values
@@ -86,6 +94,10 @@ func (q *QueryBuilder) ToSQL() string {
 		}
 
 		sql = fmt.Sprintf("%s WHERE %s", sql, strings.Join(where, " AND "))
+	}
+
+	if q.orderBy != "" {
+		sql = fmt.Sprintf("%s ORDER BY %s", sql, q.orderBy)
 	}
 
 	if q.limit > 0 && q.offset >= 0 {

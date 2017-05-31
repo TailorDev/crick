@@ -30,6 +30,13 @@ func TestQueryBuilder(t *testing.T) {
 	qb.AddJoin("JOIN other_table ON (table.ot_id = other_table.id)")
 	assertSQL(t, qb.ToSQL(), `SELECT * FROM table JOIN other_table ON (table.ot_id = other_table.id) WHERE id = $1 AND id = $2 AND name = $3 AND user_id LIKE $4 LIMIT 10 OFFSET 0`)
 	assertSQL(t, qb.ToCountSQL(), `SELECT COUNT(*) FROM table JOIN other_table ON (table.ot_id = other_table.id) WHERE id = $1 AND id = $2 AND name = $3 AND user_id LIKE $4`)
+
+	qb = models.NewQueryBuilder()
+	qb.AddSelect("*")
+	qb.AddFrom("table")
+	qb.OrderBy("date DESC")
+	assertSQL(t, qb.ToSQL(), `SELECT * FROM table ORDER BY date DESC`)
+	assertSQL(t, qb.ToCountSQL(), `SELECT COUNT(*) FROM table`)
 }
 
 func assertSQL(t *testing.T, query, expected string) {

@@ -108,16 +108,15 @@ func (h Handler) GetFramesSince(w http.ResponseWriter, r *http.Request, ps httpr
 func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
+	// create query builder
 	qb := models.NewQueryBuilder()
 	qb.AddSelect("frames.*, projects.name AS project_name")
 	qb.AddFrom("frames")
 	qb.AddJoin("INNER JOIN projects ON (frames.project_id = projects.id)")
 	qb.AddWhere("projects.user_id=?", user.ID)
+	qb.OrderBy("frames.start_at DESC")
 
 	// query parameters
-	page := getIntOrDefault(r.URL.Query().Get("page"), 1)
-	limit := getIntOrDefault(r.URL.Query().Get("limit"), 50)
-	tags := getStringSlice(r.URL.Query().Get("tags"))
 	projectId := r.URL.Query().Get("projectId")
 	projects := getStringSlice(r.URL.Query().Get("projects"))
 	//teamId := r.URL.Query().Get("teamId")
@@ -181,13 +180,16 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		qb.AddWhere("frames.end_at < ?", to)
 	}
 
+	tags := getStringSlice(r.URL.Query().Get("tags"))
 	if len(tags) > 0 {
 		qb.AddWhere("frames.tags @> ?", pq.StringArray(tags))
 	}
 
+	page := getIntOrDefault(r.URL.Query().Get("page"), 1)
+	limit := getIntOrDefault(r.URL.Query().Get("limit"), 50)
 	qb.Paginate(page, limit)
 
-	_, frames, err := h.repository.GetFramesWithQueryBuilder(qb)
+	count, frames, err := h.repository.GetFramesWithQueryBuilder(qb)
 	if err != nil {
 		h.logger.Error(
 			"get frames with query builder",
@@ -198,7 +200,12 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 	}
 
 	w.Header().Set("Content-Type", DefaultContentType)
-	json.NewEncoder(w).Encode(frames)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"meta": map[string]interface{}{
+			"page": makePager(page, limit, count, len(frames)),
+		},
+		"frames": frames,
+	})
 }
 
 func makePager(page, limit, count, nbFrames int) map[string]int {
