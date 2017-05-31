@@ -24,6 +24,7 @@ type MockRepository struct {
 	Project  *models.Project
 	Team     *models.Team
 	Frames   []models.Frame
+	NbFrames int
 	Users    models.Users
 	Projects models.Projects
 	Teams    models.Teams
@@ -42,8 +43,8 @@ func (r MockRepository) CreateNewFrame(frame models.Frame) error {
 	return r.Err
 }
 
-func (r MockRepository) GetFramesForProject(userID, projectID uuid.UUID, limit, page int) ([]models.Frame, error) {
-	return r.Frames, r.Err
+func (r MockRepository) GetFramesForProject(userID, projectID uuid.UUID, limit, page int) (int, []models.Frame, error) {
+	return r.NbFrames, r.Frames, r.Err
 }
 
 func (r MockRepository) CreateNewProject(name string, userID uuid.UUID) (*models.Project, error) {

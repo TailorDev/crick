@@ -152,7 +152,7 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 
 		}
 
-		frames, err := h.repository.GetFramesForProject(user.ID, projectID, limit, page)
+		count, frames, err := h.repository.GetFramesForProject(user.ID, projectID, limit, page)
 		if err != nil {
 			h.logger.Error(
 				"get frames",
@@ -167,9 +167,7 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.Header().Set("Content-Type", DefaultContentType)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"meta": map[string]interface{}{
-				"page": map[string]interface{}{
-					"limit": limit,
-				},
+				"page":    makePager(page, limit, count, len(frames)),
 				"project": project,
 			},
 			"frames": frames,
@@ -178,4 +176,21 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.Header().Set("Content-Type", DefaultContentType)
 		json.NewEncoder(w).Encode(map[string]interface{}{})
 	}
+}
+
+func makePager(page, limit, count, nbFrames int) map[string]int {
+	pager := map[string]int{
+		"limit": limit,
+		"count": count,
+	}
+
+	if nbFrames < count {
+		pager["next"] = page + 1
+	}
+
+	if count > 0 && page > 1 {
+		pager["prev"] = page - 1
+	}
+
+	return pager
 }
