@@ -21,6 +21,7 @@ var (
 )
 
 var (
+	// LimitUsersToReturn is the default number of users to return.
 	LimitUsersToReturn = 10
 )
 

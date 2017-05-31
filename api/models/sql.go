@@ -18,7 +18,7 @@ type QueryBuilder struct {
 	orderBy string
 }
 
-// Returns a new QueryBuilder.
+// NewQueryBuilder returns a new QueryBuilder.
 func NewQueryBuilder() QueryBuilder {
 	return QueryBuilder{
 		selects: []string{},
