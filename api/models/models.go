@@ -41,6 +41,8 @@ type Repository interface {
 	GetTeamsWithUsers(userID uuid.UUID) (Teams, error)
 	// CreateNewTeam creates a new team and persists it.
 	CreateNewTeam(team Team) error
+	// GetTeamByID returns a team.
+	GetTeamByID(teamID uuid.UUID) (*Team, error)
 }
 
 // DatabaseRepository is an implementation of the `Repository` interface with a

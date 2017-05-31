@@ -11,7 +11,10 @@ var (
 
 	selectTeamsByUserID = `SELECT * FROM teams WHERE $1=ANY(user_ids);`
 
+	// This query is used to retrieve teams' members/users.
 	selectUsersByID = `SELECT * FROM users WHERE id=ANY($1);`
+
+	selectTeamByID = `SELECT * FROM teams WHERE id=$1;`
 )
 
 // Team is a structure representing a Crick team, i.e. a set of users and
@@ -28,9 +31,10 @@ type Team struct {
 }
 
 // TeamInput is a structure representing the data received by a handler when a
-// new Team is about to be created. Its purpose is to unmarshal the request
-// data into this structure.
+// Team is about to be created or updated. Its purpose is to unmarshal the
+// request data into this structure.
 type TeamInput struct {
+	ID       uuid.UUID   `json:"id"`
 	Name     string      `json:"name"`
 	Projects []string    `json:"projects"`
 	UserIDs  []uuid.UUID `json:"user_ids"`
@@ -129,4 +133,13 @@ func (r DatabaseRepository) CreateNewTeam(team Team) error {
 	_, err := r.db.Exec(createTeam, team.ID, team.Name, team.Projects, pq.Array(team.UserIDs), team.OwnerID)
 
 	return err
+}
+
+// GetTeamByID returns a team.
+func (r DatabaseRepository) GetTeamByID(teamID uuid.UUID) (*Team, error) {
+	t := &Team{}
+	row := r.db.QueryRow(selectTeamByID, teamID)
+	err := row.Scan(&t.ID, &t.Name, &t.Projects, pq.Array(&t.UserIDs), &t.OwnerID)
+
+	return t, err
 }
