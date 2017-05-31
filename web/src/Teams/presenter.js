@@ -85,14 +85,14 @@ class Teams extends React.Component {
 
     return (
       <div>
-        <h2>Team management</h2>
+        <h2>Teams</h2>
 
         {this.props.teams.length > 0 ? (
           <List teams={this.props.teams} />
         ) : <Empty /> }
 
         <Dialog
-          title="Add a new team"
+          title="Create a new team"
           actions={actions}
           open={this.state.dialogIsOpen}
           onRequestClose={this.onCloseDialog}
