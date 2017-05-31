@@ -4,6 +4,7 @@ import { LOGOUT } from '../Auth/reducer';
 import type {
   Action,
 } from '../types';
+import { API_ERROR } from '../Errors/reducer';
 
 // State
 type State = {
@@ -17,7 +18,6 @@ const initialState: State = {
 // Actions
 const FETCH_REQUEST = 'crick/projects/FETCH_REQUEST';
 const FETCH_SUCCESS = 'crick/projects/FETCH_SUCCESS';
-const FETCH_FAILURE = 'crick/projects/FETCH_FAILURE';
 
 export const fetchProjects = (): Action => {
   return {
@@ -25,7 +25,7 @@ export const fetchProjects = (): Action => {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects`,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      types: [FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE],
+      types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
     },
   };
 };

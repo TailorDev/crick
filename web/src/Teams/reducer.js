@@ -1,6 +1,7 @@
 /* @flow */
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
+import { API_ERROR } from '../Errors/reducer';
 import type { User, ThunkAction, Action, Team, NewTeam } from '../types';
 
 // State
@@ -19,17 +20,13 @@ const initialState: State = {
 // Actions
 const FETCH_REQUEST = 'crick/teams/FETCH_REQUEST';
 const FETCH_SUCCESS = 'crick/teams/FETCH_SUCCESS';
-const FETCH_FAILURE = 'crick/teams/FETCH_FAILURE';
 const CREATE_REQUEST = 'crick/teams/CREATE_REQUEST';
 const CREATE_SUCCESS = 'crick/teams/CREATE_SUCCESS';
-const CREATE_FAILURE = 'crick/teams/CREATE_FAILURE';
 const SET_NEW_TEAM = 'crick/teams/SET_NEW_TEAM';
 const FETCH_USERS_REQUEST = 'crick/teams/FETCH_USERS_REQUEST';
 const FETCH_USERS_SUCCESS = 'crick/teams/FETCH_USERS_SUCCESS';
-const FETCH_USERS_FAILURE = 'crick/teams/FETCH_USERS_FAILURE';
 const UPDATE_REQUEST = 'crick/teams/UPDATE_REQUEST';
 const UPDATE_SUCCESS = 'crick/teams/UPDATE_SUCCESS';
-const UPDATE_FAILURE = 'crick/teams/UPDATE_FAILURE';
 
 // Action Creators
 export const fetchTeams = (): Action => {
@@ -38,7 +35,7 @@ export const fetchTeams = (): Action => {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/teams`,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      types: [FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE],
+      types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
     },
   };
 };
@@ -60,7 +57,7 @@ export const createTeam = (team: NewTeam): ThunkAction => {
           projects: team.projects,
           user_ids: team.users.map(u => u.id),
         }),
-        types: [CREATE_REQUEST, CREATE_SUCCESS, CREATE_FAILURE],
+        types: [CREATE_REQUEST, CREATE_SUCCESS, API_ERROR],
       },
     });
   };
@@ -81,7 +78,7 @@ export const updateTeam = (team: Team): Action => {
         projects: team.projects,
         user_ids: team.users.map(u => u.id),
       }),
-      types: [UPDATE_REQUEST, UPDATE_SUCCESS, UPDATE_FAILURE],
+      types: [UPDATE_REQUEST, UPDATE_SUCCESS, API_ERROR],
     },
   };
 };
@@ -94,7 +91,7 @@ export const autoCompleteUsers = (input: string): Action => {
       headers: {
         'Accept': 'application/json',
       },
-      types: [FETCH_USERS_REQUEST, FETCH_USERS_SUCCESS, FETCH_USERS_FAILURE],
+      types: [FETCH_USERS_REQUEST, FETCH_USERS_SUCCESS, API_ERROR],
     },
   };
 };
