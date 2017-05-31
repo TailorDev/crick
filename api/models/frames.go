@@ -19,7 +19,8 @@ var (
 	INNER JOIN projects ON (frames.project_id = projects.id)
 	WHERE projects.user_id=$1 AND frames.synchronized_at >= $2;`
 
-	selectFramesByUserAndProjectIDs = `SELECT frames.*, projects.name AS project_name FROM frames
+	selectFramesByUserAndProjectIDs = `SELECT frames.*, projects.name AS project_name
+	FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
 	WHERE projects.user_id=$1 AND frames.project_id=$2
 	ORDER BY frames.start_at DESC
@@ -77,6 +78,23 @@ func (r DatabaseRepository) GetFramesForProject(userID, projectID uuid.UUID, lim
 	}
 
 	err = r.db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID, limit, (page-1)*limit)
+
+	return count, frames, err
+}
+
+func (r DatabaseRepository) GetFramesWithQueryBuilder(qb QueryBuilder) (int, []Frame, error) {
+	count := 0
+	frames := []Frame{}
+
+	countQuery := qb.ToCountSQL()
+	selectQuery := qb.ToSQL()
+
+	err := r.db.Get(&count, countQuery, qb.Values...)
+	if err != nil {
+		return count, frames, err
+	}
+
+	err = r.db.Select(&frames, selectQuery, qb.Values...)
 
 	return count, frames, err
 }

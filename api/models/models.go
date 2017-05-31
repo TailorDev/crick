@@ -21,6 +21,7 @@ type Repository interface {
 	// paginated with limit and page. The first return value is the count of
 	// all frames.
 	GetFramesForProject(userID, projectID uuid.UUID, limit, page int) (int, []Frame, error)
+	GetFramesWithQueryBuilder(qb QueryBuilder) (int, []Frame, error)
 
 	// CreateNewProject creates a new project, persists it and returns it.
 	CreateNewProject(name string, userID uuid.UUID) (*Project, error)

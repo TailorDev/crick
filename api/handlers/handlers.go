@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/TailorDev/crick/api/models"
 	"go.uber.org/zap"
@@ -59,15 +58,6 @@ func getIntOrDefault(value string, defaultValue int) int {
 	}
 
 	return v
-}
-
-func getTimeOrNil(value string) *time.Time {
-	time, err := time.Parse("2006-01-02", value)
-	if err != nil {
-		return nil
-	}
-
-	return &time
 }
 
 func getStringSlice(value string) []string {
