@@ -8,6 +8,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/TailorDev/crick/api/models"
 	"go.uber.org/zap"
@@ -47,4 +48,13 @@ func (h Handler) SendError(w http.ResponseWriter, statusCode int, detail string)
 		"title":  http.StatusText(statusCode),
 		"detail": detail,
 	})
+}
+
+func getIntOrDefault(value string, defaultValue int) int {
+	v, err := strconv.Atoi(value)
+	if err != nil {
+		v = defaultValue
+	}
+
+	return v
 }

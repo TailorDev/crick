@@ -22,7 +22,9 @@ var (
 	selectFramesByUserAndProjectIDs = `SELECT frames.*, projects.name AS project_name FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
 	WHERE projects.user_id=$1 AND frames.project_id=$2
-	ORDER BY frames.start_at DESC;`
+	ORDER BY frames.start_at DESC
+	LIMIT $3 OFFSET $4
+	;`
 )
 
 // Frame is a data structure for representing time frames.
@@ -60,9 +62,9 @@ func (r DatabaseRepository) CreateNewFrame(frame Frame) error {
 }
 
 // GetFramesForProject returns all the frames for a given project.
-func (r DatabaseRepository) GetFramesForProject(userID, projectID uuid.UUID) ([]Frame, error) {
+func (r DatabaseRepository) GetFramesForProject(userID, projectID uuid.UUID, limit, page int) ([]Frame, error) {
 	frames := []Frame{}
-	err := r.db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID)
+	err := r.db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID, limit, (page-1)*limit)
 
 	return frames, err
 }

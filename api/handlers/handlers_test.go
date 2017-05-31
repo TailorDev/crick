@@ -42,7 +42,7 @@ func (r MockRepository) CreateNewFrame(frame models.Frame) error {
 	return r.Err
 }
 
-func (r MockRepository) GetFramesForProject(userID, projectID uuid.UUID) ([]models.Frame, error) {
+func (r MockRepository) GetFramesForProject(userID, projectID uuid.UUID, limit, page int) ([]models.Frame, error) {
 	return r.Frames, r.Err
 }
 

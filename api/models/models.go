@@ -18,7 +18,7 @@ type Repository interface {
 	// CreateNewFrame creates a new frame and persists it.
 	CreateNewFrame(frame Frame) error
 	// GetFramesForProject returns all the frames for a given project.
-	GetFramesForProject(userID, projectID uuid.UUID) ([]Frame, error)
+	GetFramesForProject(userID, projectID uuid.UUID, limit, page int) ([]Frame, error)
 
 	// CreateNewProject creates a new project, persists it and returns it.
 	CreateNewProject(name string, userID uuid.UUID) (*Project, error)

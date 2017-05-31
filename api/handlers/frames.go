@@ -116,7 +116,10 @@ func (h Handler) GetFramesForProject(w http.ResponseWriter, r *http.Request, ps 
 
 	// TODO: test if project exists, maybe
 
-	frames, err := h.repository.GetFramesForProject(user.ID, projectID)
+	limit := getIntOrDefault(r.URL.Query().Get("limit"), 50)
+	page := getIntOrDefault(r.URL.Query().Get("page"), 1)
+
+	frames, err := h.repository.GetFramesForProject(user.ID, projectID, limit, page)
 	if err != nil {
 		h.logger.Error(
 			"get frames for project",
