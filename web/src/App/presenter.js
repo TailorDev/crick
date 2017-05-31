@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import React from 'react';
 
 import Auth from '../Auth';
+import Errors from '../Errors';
 import './index.css';
 
 type Props = {
@@ -18,6 +19,8 @@ const App = (props: Props) => (
     <div className="App-content">
       {props.children}
     </div>
+
+    <Errors />
   </div>
 );
 

@@ -1,6 +1,7 @@
 /* @flow */
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
+import { API_ERROR } from '../Errors/reducer';
 import type {
   Action,
 } from '../types';
@@ -17,7 +18,6 @@ const initialState: State = {
 // Actions
 const FETCH_REQUEST = 'crick/frames/FETCH_REQUEST';
 const FETCH_SUCCESS = 'crick/frames/FETCH_SUCCESS';
-const FETCH_FAILURE = 'crick/frames/FETCH_FAILURE';
 
 export const fetchFrames = (id: string): Action => {
   return {
@@ -25,7 +25,7 @@ export const fetchFrames = (id: string): Action => {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects/${id}/frames`,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      types: [FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILURE],
+      types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
     },
   };
 };
