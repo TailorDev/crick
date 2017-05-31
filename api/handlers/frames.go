@@ -9,6 +9,7 @@ import (
 	"github.com/TailorDev/crick/api/middlewares"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
+	"github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
@@ -107,15 +108,21 @@ func (h Handler) GetFramesSince(w http.ResponseWriter, r *http.Request, ps httpr
 func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	user := middlewares.GetCurrentUser(r.Context())
 
+	// create query builder
+	qb := models.NewQueryBuilder()
+	qb.AddSelect("frames.*, projects.name AS project_name")
+	qb.AddFrom("frames")
+	qb.AddJoin("INNER JOIN projects ON (frames.project_id = projects.id)")
+	qb.AddWhere("projects.user_id=?", user.ID)
+	qb.OrderBy("frames.start_at DESC")
+
 	// query parameters
-	page := getIntOrDefault(r.URL.Query().Get("page"), 1)
-	limit := getIntOrDefault(r.URL.Query().Get("limit"), 50)
-	//from := getTimeOrNil(r.URL.Query().Get("from"))
-	//to := getTimeOrNil(r.URL.Query().Get("to"))
-	//tags := getStringSlice(r.URL.Query().Get("tags"))
 	projectId := r.URL.Query().Get("projectId")
 	projects := getStringSlice(r.URL.Query().Get("projects"))
 	//teamId := r.URL.Query().Get("teamId")
+
+	// for the meta result
+	meta := map[string]interface{}{}
 
 	if projectId != "" {
 		if len(projects) > 0 {
@@ -141,41 +148,77 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 
 		project, err := h.repository.GetProjectByID(user.ID, projectID)
 		if err != nil {
-			h.logger.Error(
-				"get project by id",
-				zap.Stringer("user_id", user.ID),
-				zap.Stringer("project_id", projectID),
-				zap.Error(err),
-			)
-			h.SendError(w, http.StatusInternalServerError, DetailGetProjectFailed)
-			return
-
-		}
-
-		count, frames, err := h.repository.GetFramesForProject(user.ID, projectID, limit, page)
-		if err != nil {
-			h.logger.Error(
-				"get frames",
-				zap.Stringer("user_id", user.ID),
-				zap.Stringer("project_id", projectID),
-				zap.Error(err),
-			)
-			h.SendError(w, http.StatusInternalServerError, DetailGetProjectFailed)
+			h.logger.Error("get project by id", zap.Error(err))
+			h.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
 			return
 		}
 
-		w.Header().Set("Content-Type", DefaultContentType)
-		json.NewEncoder(w).Encode(map[string]interface{}{
-			"meta": map[string]interface{}{
-				"page":    makePager(page, limit, count, len(frames)),
-				"project": project,
-			},
-			"frames": frames,
-		})
-	} else {
-		w.Header().Set("Content-Type", DefaultContentType)
-		json.NewEncoder(w).Encode(map[string]interface{}{})
+		qb.AddWhere("frames.project_id=?", projectID)
+		meta["project"] = project
+	} else if len(projects) > 0 {
+		qb.AddWhere("projects.name = ANY(?)", pq.StringArray(projects))
+		// TODO: fetch projects
+		meta["projects"] = map[string]interface{}{}
 	}
+
+	if r.URL.Query().Get("from") != "" {
+		from, err := time.Parse("2006-01-02", r.URL.Query().Get("from"))
+		if err != nil {
+			h.logger.Warn(
+				"failed to parse from date",
+				zap.Stringer("user_id", user.ID),
+				zap.String("from", r.URL.Query().Get("from")),
+				zap.Error(err),
+			)
+			h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+			return
+		}
+
+		qb.AddWhere("frames.start_at > ?", from)
+	}
+
+	if r.URL.Query().Get("to") != "" {
+		to, err := time.Parse("2006-01-02", r.URL.Query().Get("to"))
+		if err != nil {
+			h.logger.Warn(
+				"failed to parse to date",
+				zap.Stringer("user_id", user.ID),
+				zap.String("to", r.URL.Query().Get("to")),
+				zap.Error(err),
+			)
+			h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+			return
+		}
+
+		qb.AddWhere("frames.end_at < ?", to)
+	}
+
+	tags := getStringSlice(r.URL.Query().Get("tags"))
+	if len(tags) > 0 {
+		qb.AddWhere("frames.tags @> ?", pq.StringArray(tags))
+	}
+
+	page := getIntOrDefault(r.URL.Query().Get("page"), 1)
+	limit := getIntOrDefault(r.URL.Query().Get("limit"), 50)
+	qb.Paginate(page, limit)
+
+	count, frames, err := h.repository.GetFramesWithQueryBuilder(qb)
+	if err != nil {
+		h.logger.Error(
+			"get frames with query builder",
+			zap.Error(err),
+		)
+		h.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
+		return
+	}
+
+	meta["page"] = makePager(page, limit, count, len(frames))
+
+	w.Header().Set("Content-Type", DefaultContentType)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"meta":   meta,
+		"frames": frames,
+	})
 }
 
 func makePager(page, limit, count, nbFrames int) map[string]int {

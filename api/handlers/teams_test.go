@@ -15,7 +15,7 @@ import (
 )
 
 func TestGetTeams(t *testing.T) {
-	r := MockRepository{
+	r := &MockRepository{
 		Teams: models.Teams{
 			Teams: []models.Team{
 				models.Team{},
@@ -54,7 +54,7 @@ func TestGetTeams(t *testing.T) {
 }
 
 func TestGetTeamsWithEmptyResultSet(t *testing.T) {
-	r := MockRepository{
+	r := &MockRepository{
 		Teams: models.Teams{},
 	}
 	h := handlers.New(r, zap.NewNop())
@@ -79,7 +79,7 @@ func TestGetTeamsWithEmptyResultSet(t *testing.T) {
 }
 
 func TestGetTeamsWithError(t *testing.T) {
-	r := MockRepository{
+	r := &MockRepository{
 		Err: fmt.Errorf("database error"),
 	}
 	h := handlers.New(r, zap.NewNop())

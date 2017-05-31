@@ -18,18 +18,6 @@ var (
 	selectFramesByUserIDAndDate = `SELECT frames.*, projects.name AS project_name FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
 	WHERE projects.user_id=$1 AND frames.synchronized_at >= $2;`
-
-	selectFramesByUserAndProjectIDs = `SELECT frames.*, projects.name AS project_name FROM frames
-	INNER JOIN projects ON (frames.project_id = projects.id)
-	WHERE projects.user_id=$1 AND frames.project_id=$2
-	ORDER BY frames.start_at DESC
-	LIMIT $3 OFFSET $4;`
-
-	countFramesByUserAndProjectIDs = `SELECT COUNT(frames.*)
-	FROM frames
-	INNER JOIN projects ON (frames.project_id = projects.id)
-	WHERE projects.user_id=$1 AND frames.project_id=$2
-	GROUP BY frames.project_id;`
 )
 
 // Frame is a data structure for representing time frames.
@@ -66,17 +54,22 @@ func (r DatabaseRepository) CreateNewFrame(frame Frame) error {
 	return err
 }
 
-// GetFramesForProject returns all the frames for a given project.
-func (r DatabaseRepository) GetFramesForProject(userID, projectID uuid.UUID, limit, page int) (int, []Frame, error) {
+// GetFramesWithQueryBuilder returns the frames matching the query from the
+// QueryBuilder. It returns the number of results as first return value, then
+// the result set paginated.
+func (r DatabaseRepository) GetFramesWithQueryBuilder(qb QueryBuilder) (int, []Frame, error) {
 	count := 0
 	frames := []Frame{}
 
-	err := r.db.Get(&count, countFramesByUserAndProjectIDs, userID, projectID)
+	countQuery := qb.ToCountSQL()
+	selectQuery := qb.ToSQL()
+
+	err := r.db.Get(&count, countQuery, qb.Values()...)
 	if err != nil {
 		return count, frames, err
 	}
 
-	err = r.db.Select(&frames, selectFramesByUserAndProjectIDs, userID, projectID, limit, (page-1)*limit)
+	err = r.db.Select(&frames, selectQuery, qb.Values()...)
 
 	return count, frames, err
 }
