@@ -27,6 +27,15 @@ type Team struct {
 	Users    []User         `db:"-" json:"users"`
 }
 
+// TeamInput is a structure representing the data received by a handler when a
+// new Team is about to be created. Its purpose is to unmarshal the request
+// data into this structure.
+type TeamInput struct {
+	Name     string      `json:"name"`
+	Projects []string    `json:"projects"`
+	UserIDs  []uuid.UUID `json:"user_ids"`
+}
+
 // Teams is a structure representing a set of teams. Its purpose is mainly to
 // ease the JSON serialization (to return a root key).
 type Teams struct {
@@ -54,6 +63,20 @@ func NewTeams() Teams {
 	return Teams{
 		Teams: []Team{},
 	}
+}
+
+// NewTeamFromInput instanciates a new Team based on the given TeamInput. Each
+// Team must have a User who is a owner, hence the need for a ownerID.
+func NewTeamFromInput(in TeamInput, ownerID uuid.UUID) Team {
+	team := Team{
+		ID:       uuid.NewV4(),
+		Name:     in.Name,
+		OwnerID:  ownerID,
+		Projects: in.Projects,
+		UserIDs:  append(in.UserIDs, ownerID),
+	}
+
+	return team
 }
 
 // GetTeamsWithUsers returns the user's teams.
