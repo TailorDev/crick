@@ -21,7 +21,12 @@ class List extends React.Component {
 
   renderUser(user: User) {
     return (
-      <Avatar key={user.id} title={user.login} src={user.avatar_url} />
+      <Avatar
+        key={user.id}
+        title={user.login}
+        src={user.avatar_url}
+        style={{ marginRight: '5px' }}
+      />
     );
   }
 
