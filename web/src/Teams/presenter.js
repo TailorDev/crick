@@ -22,6 +22,7 @@ class Teams extends React.Component {
     (this: any).addTeam = this.addTeam.bind(this);
     (this: any).onOpenDialog = this.onOpenDialog.bind(this);
     (this: any).onCloseDialog = this.onCloseDialog.bind(this);
+    (this: any).updateTeam = this.updateTeam.bind(this);
   }
 
   props: {
@@ -29,6 +30,7 @@ class Teams extends React.Component {
     teams: Array<Team>,
     fetchTeams: Function,
     createTeam: Function,
+    updateTeam: Function,
     // for the form
     suggestedUsers: Array<User>,
     autoCompleteUsers: Function,
@@ -68,6 +70,12 @@ class Teams extends React.Component {
     });
   }
 
+  updateTeam(team: Team) {
+    this.setState({ dialogIsOpen: false }, () => {
+      this.props.updateTeam(team);
+    });
+  }
+
   onOpenDialog() {
     this.setState({ dialogIsOpen: true });
   }
@@ -104,7 +112,8 @@ class Teams extends React.Component {
           onRequestClose={this.onCloseDialog}
         >
           <Form
-            onSave={this.addTeam}
+            onCreate={this.addTeam}
+            onUpdate={this.updateTeam}
             suggestedUsers={this.props.suggestedUsers}
             autoCompleteUsers={this.props.autoCompleteUsers}
             team={editTeam}
