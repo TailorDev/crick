@@ -3,6 +3,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import ChipInput from 'material-ui-chip-input';
+import { Link } from 'react-router-dom';
 import type { User, Team, NewTeam } from '../types';
 
 const initialState: NewTeam = {
@@ -30,7 +31,8 @@ class Form extends React.Component {
   }
 
   props: {
-    onSave: Function,
+    onCreate: Function,
+    onUpdate: Function,
     team: ?Team,
     suggestedUsers: Array<User>,
     autoCompleteUsers: Function,
@@ -75,10 +77,15 @@ class Form extends React.Component {
   }
 
   onSubmit(e: SyntheticEvent) {
-    e.preventDefault();
-
     if (this.canSubmit()) {
-      this.props.onSave(this.state);
+      if (this.props.team) {
+        this.props.onUpdate({
+          ...this.state,
+          id: this.props.team.id,
+        });
+      } else {
+        this.props.onCreate(this.state);
+      }
 
       this.setState(initialState);
     }
@@ -124,13 +131,15 @@ class Form extends React.Component {
           />
         </div>
         <div>
-          <RaisedButton
-            primary
-            fullWidth
-            label={this.props.team ? 'Update' : 'Create'}
-            onClick={this.onSubmit}
-            disabled={!this.canSubmit()}
-          />
+          <Link to={`/teams`}>
+            <RaisedButton
+              primary
+              fullWidth
+              label={this.props.team ? 'Update' : 'Create'}
+              onClick={this.onSubmit}
+              disabled={!this.canSubmit()}
+            />
+          </Link>
         </div>
       </form>
     );

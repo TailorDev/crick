@@ -21,6 +21,8 @@ var (
 	DetailInvalidRequest = "Invalid request"
 	// DetailMalformedJSON is the error message used when it is not possible to parse the JSON content.
 	DetailMalformedJSON = "Malformed JSON"
+	// DetailUserIsNotAllowedToPerformOperation is the error message when the user cannot perform an operation.
+	DetailUserIsNotAllowedToPerformOperation = "Not allowed"
 )
 
 // Handler is the structure that contains the different HTTP handlers.

@@ -27,6 +27,9 @@ const SET_NEW_TEAM = 'crick/teams/SET_NEW_TEAM';
 const FETCH_USERS_REQUEST = 'crick/teams/FETCH_USERS_REQUEST';
 const FETCH_USERS_SUCCESS = 'crick/teams/FETCH_USERS_SUCCESS';
 const FETCH_USERS_FAILURE = 'crick/teams/FETCH_USERS_FAILURE';
+const UPDATE_REQUEST = 'crick/teams/UPDATE_REQUEST';
+const UPDATE_SUCCESS = 'crick/teams/UPDATE_SUCCESS';
+const UPDATE_FAILURE = 'crick/teams/UPDATE_FAILURE';
 
 // Action Creators
 export const fetchTeams = (): Action => {
@@ -60,6 +63,26 @@ export const createTeam = (team: NewTeam): ThunkAction => {
         types: [CREATE_REQUEST, CREATE_SUCCESS, CREATE_FAILURE],
       },
     });
+  };
+};
+
+export const updateTeam = (team: Team): Action => {
+  return {
+    [CALL_API]: {
+      endpoint: `${process.env.REACT_APP_API_HOST || ''}/teams/${team.id}`,
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: team.id,
+        name: team.name,
+        projects: team.projects,
+        user_ids: team.users.map(u => u.id),
+      }),
+      types: [UPDATE_REQUEST, UPDATE_SUCCESS, UPDATE_FAILURE],
+    },
   };
 };
 
@@ -109,6 +132,21 @@ export default function reducer(
       }
 
       return state;
+
+    case UPDATE_SUCCESS:
+      const editedTeam = action.payload;
+      const updatedTeams = state.teams.map(team => {
+        if (team.id === editedTeam.id) {
+          return editedTeam;
+        }
+
+        return team;
+      });
+
+      return {
+        ...state,
+        teams: updatedTeams,
+      };
 
     case FETCH_USERS_SUCCESS:
       return {
