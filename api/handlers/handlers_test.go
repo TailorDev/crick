@@ -22,6 +22,7 @@ func AddUserToContext(c context.Context, u *models.User) context.Context {
 type MockRepository struct {
 	User     *models.User
 	Project  *models.Project
+	Team     *models.Team
 	Frames   []models.Frame
 	Users    models.Users
 	Projects models.Projects
@@ -79,4 +80,12 @@ func (r MockRepository) CreateNewTeam(team models.Team) error {
 
 func (r MockRepository) GetUsersByLoginLike(like string) (models.Users, error) {
 	return r.Users, r.Err
+}
+
+func (r MockRepository) GetTeamByID(teamID uuid.UUID) (*models.Team, error) {
+	return r.Team, r.Err
+}
+
+func (r MockRepository) UpdateTeam(team *models.Team) error {
+	return r.Err
 }

@@ -19,6 +19,8 @@ var (
 	DetailTeamCreationFailed = "Team creation failed"
 	// DetailGetTeamFailed is the error message used when retrieving a team from database has failed.
 	DetailGetTeamFailed = "Failed to retrieve team"
+	// DetailTeamUpdateFailed is the error message used when updating a team in database has failed.
+	DetailTeamUpdateFailed = "Failed to update the team"
 )
 
 // GetTeams returns the user's teams.
@@ -54,8 +56,6 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	// TODO: validate team.UserIDs
-	// TODO: validate team.Projects
 	team := models.NewTeamFromInput(input, user.ID)
 
 	if err := h.repository.CreateNewTeam(team); err != nil {
@@ -115,10 +115,14 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	team.Name = input.Name
-	team.Projects = input.Projects
-	team.UserIDs = append(input.UserIDs, user.ID)
+	team.SetProjects(input.Projects)
+	team.SetUserIDs(append(input.UserIDs, user.ID))
 
-	// TODO: persist
+	if err := h.repository.UpdateTeam(team); err != nil {
+		h.logger.Warn("update team", zap.Error(err))
+		h.SendError(w, http.StatusInternalServerError, DetailTeamUpdateFailed)
+		return
+	}
 
 	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(team)
