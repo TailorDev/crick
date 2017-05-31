@@ -121,6 +121,9 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 	projects := getStringSlice(r.URL.Query().Get("projects"))
 	//teamId := r.URL.Query().Get("teamId")
 
+	// for the meta result
+	meta := map[string]interface{}{}
+
 	if projectId != "" {
 		if len(projects) > 0 {
 			h.logger.Warn(
@@ -143,9 +146,19 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 			return
 		}
 
+		project, err := h.repository.GetProjectByID(user.ID, projectID)
+		if err != nil {
+			h.logger.Error("get project by id", zap.Error(err))
+			h.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
+			return
+		}
+
 		qb.AddWhere("frames.project_id=?", projectID)
+		meta["project"] = project
 	} else if len(projects) > 0 {
 		qb.AddWhere("projects.name = ANY(?)", pq.StringArray(projects))
+		// TODO: fetch projects
+		meta["projects"] = map[string]interface{}{}
 	}
 
 	if r.URL.Query().Get("from") != "" {
@@ -199,11 +212,11 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
+	meta["page"] = makePager(page, limit, count, len(frames))
+
 	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"meta": map[string]interface{}{
-			"page": makePager(page, limit, count, len(frames)),
-		},
+		"meta":   meta,
 		"frames": frames,
 	})
 }
