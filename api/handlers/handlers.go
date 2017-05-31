@@ -8,6 +8,9 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/TailorDev/crick/api/models"
 	"go.uber.org/zap"
@@ -47,4 +50,36 @@ func (h Handler) SendError(w http.ResponseWriter, statusCode int, detail string)
 		"title":  http.StatusText(statusCode),
 		"detail": detail,
 	})
+}
+
+func getIntOrDefault(value string, defaultValue int) int {
+	v, err := strconv.Atoi(value)
+	if err != nil {
+		v = defaultValue
+	}
+
+	return v
+}
+
+func getTimeOrNil(value string) *time.Time {
+	time, err := time.Parse("2006-01-02", value)
+	if err != nil {
+		return nil
+	}
+
+	return &time
+}
+
+func getStringSlice(value string) []string {
+	var slice []string
+
+	if value == "" {
+		return slice
+	}
+
+	for _, v := range strings.Split(value, ",") {
+		slice = append(slice, strings.TrimSpace(v))
+	}
+
+	return slice
 }

@@ -19,9 +19,13 @@ type Projects struct {
 }
 
 var (
-	createProject          = `INSERT INTO projects (id, name, user_id) VALUES (:id, :name, :user_id);`
+	createProject = `INSERT INTO projects (id, name, user_id) VALUES (:id, :name, :user_id);`
+
 	selectProjectsByUserID = `SELECT * FROM projects WHERE user_id=$1;`
-	selectProjectByName    = `SELECT * FROM projects WHERE user_id=$1 and name=$2;`
+
+	selectProjectByName = `SELECT * FROM projects WHERE user_id=$1 and name=$2;`
+
+	selectProjectByID = `SELECT * FROM projects WHERE user_id=$1 and id=$2;`
 )
 
 // NewProject creates and returns a Project instance.
@@ -60,6 +64,14 @@ func (r DatabaseRepository) GetProjects(userID uuid.UUID) (Projects, error) {
 func (r DatabaseRepository) GetProjectByName(userID uuid.UUID, name string) (*Project, error) {
 	p := &Project{}
 	err := r.db.Get(p, selectProjectByName, userID, name)
+
+	return p, err
+}
+
+// GetProjectByID returns a project given its id and user ID.
+func (r DatabaseRepository) GetProjectByID(userID, projectID uuid.UUID) (*Project, error) {
+	p := &Project{}
+	err := r.db.Get(p, selectProjectByID, userID, projectID)
 
 	return p, err
 }

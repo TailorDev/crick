@@ -17,8 +17,10 @@ type Repository interface {
 	GetFramesSince(userID uuid.UUID, date time.Time) ([]Frame, error)
 	// CreateNewFrame creates a new frame and persists it.
 	CreateNewFrame(frame Frame) error
-	// GetFramesForProject returns all the frames for a given project.
-	GetFramesForProject(userID, projectID uuid.UUID) ([]Frame, error)
+	// GetFramesForProject returns all the frames for a given project,
+	// paginated with limit and page. The first return value is the count of
+	// all frames.
+	GetFramesForProject(userID, projectID uuid.UUID, limit, page int) (int, []Frame, error)
 
 	// CreateNewProject creates a new project, persists it and returns it.
 	CreateNewProject(name string, userID uuid.UUID) (*Project, error)
@@ -26,6 +28,8 @@ type Repository interface {
 	GetProjects(userID uuid.UUID) (Projects, error)
 	// GetProjectByName returns a project corresponding to `name`.
 	GetProjectByName(userID uuid.UUID, name string) (*Project, error)
+	// GetProjectByID returns a project given its id and user ID.
+	GetProjectByID(userID, projectID uuid.UUID) (*Project, error)
 
 	// CreateNewUser creates a new user, persists it and returns it.
 	CreateNewUser(auth0ID, login, avatarURL string) (*User, error)
