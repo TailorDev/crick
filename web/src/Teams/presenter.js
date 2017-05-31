@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { Link } from 'react-router-dom';
 import type { User, Team, NewTeam } from '../types';
 import Form from './Form';
 import List from './List';
@@ -56,6 +57,7 @@ class Teams extends React.Component {
     if (nextProps.match.params.id) {
       this.setState({
         editTeam: nextProps.teams.find(t => nextProps.match.params.id === t.id),
+        dialogIsOpen: true,
       });
     }
   }
@@ -76,12 +78,16 @@ class Teams extends React.Component {
 
   render() {
     const actions = [
-      <FlatButton
-        label="Cancel"
-        primary
-        onTouchTap={this.onCloseDialog}
-      />,
+      <Link to={`/teams`}>
+        <FlatButton
+          primary
+          label="Cancel"
+          onTouchTap={this.onCloseDialog}
+        />
+      </Link>,
     ];
+
+    const { editTeam, dialogIsOpen } = this.state;
 
     return (
       <div>
@@ -92,15 +98,16 @@ class Teams extends React.Component {
         ) : <Empty /> }
 
         <Dialog
-          title="Create a new team"
+          title={editTeam ? `Edit "${editTeam.name}"` : 'Create a new team'}
           actions={actions}
-          open={this.state.dialogIsOpen}
+          open={dialogIsOpen}
           onRequestClose={this.onCloseDialog}
         >
           <Form
             onSave={this.addTeam}
             suggestedUsers={this.props.suggestedUsers}
             autoCompleteUsers={this.props.autoCompleteUsers}
+            team={editTeam}
           />
         </Dialog>
 
