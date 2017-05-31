@@ -20,77 +20,79 @@ func AddUserToContext(c context.Context, u *models.User) context.Context {
 // MockRepository implements the models.Repository interface for unit testing
 // purpose.
 type MockRepository struct {
-	User     *models.User
-	Project  *models.Project
-	Team     *models.Team
-	Frames   []models.Frame
-	NbFrames int
-	Users    models.Users
-	Projects models.Projects
-	Teams    models.Teams
-	Err      error
+	User         *models.User
+	Project      *models.Project
+	Team         *models.Team
+	Frames       []models.Frame
+	NbFrames     int
+	Users        models.Users
+	Projects     models.Projects
+	Teams        models.Teams
+	Err          error
+	QueryBuilder models.QueryBuilder
 }
 
-func (r MockRepository) GetFrames(userID uuid.UUID) ([]models.Frame, error) {
+func (r *MockRepository) GetFrames(userID uuid.UUID) ([]models.Frame, error) {
 	return r.Frames, r.Err
 }
 
-func (r MockRepository) GetFramesSince(userID uuid.UUID, date time.Time) ([]models.Frame, error) {
+func (r *MockRepository) GetFramesSince(userID uuid.UUID, date time.Time) ([]models.Frame, error) {
 	return r.Frames, r.Err
 }
 
-func (r MockRepository) CreateNewFrame(frame models.Frame) error {
+func (r *MockRepository) CreateNewFrame(frame models.Frame) error {
 	return r.Err
 }
 
-func (r MockRepository) CreateNewProject(name string, userID uuid.UUID) (*models.Project, error) {
+func (r *MockRepository) CreateNewProject(name string, userID uuid.UUID) (*models.Project, error) {
 	return r.Project, r.Err
 }
 
-func (r MockRepository) GetProjects(userID uuid.UUID) (models.Projects, error) {
+func (r *MockRepository) GetProjects(userID uuid.UUID) (models.Projects, error) {
 	return r.Projects, r.Err
 }
 
-func (r MockRepository) GetProjectByName(userID uuid.UUID, name string) (*models.Project, error) {
+func (r *MockRepository) GetProjectByName(userID uuid.UUID, name string) (*models.Project, error) {
 	return r.Project, r.Err
 }
 
-func (r MockRepository) CreateNewUser(auth0ID, login, avatarURL string) (*models.User, error) {
+func (r *MockRepository) CreateNewUser(auth0ID, login, avatarURL string) (*models.User, error) {
 	return r.User, r.Err
 }
 
-func (r MockRepository) GetUserByAuth0ID(auth0ID string) (*models.User, error) {
+func (r *MockRepository) GetUserByAuth0ID(auth0ID string) (*models.User, error) {
 	return r.User, r.Err
 }
 
-func (r MockRepository) GetUserByToken(token string) (*models.User, error) {
+func (r *MockRepository) GetUserByToken(token string) (*models.User, error) {
 	return r.User, r.Err
 }
 
-func (r MockRepository) GetTeamsWithUsers(userID uuid.UUID) (models.Teams, error) {
+func (r *MockRepository) GetTeamsWithUsers(userID uuid.UUID) (models.Teams, error) {
 	return r.Teams, r.Err
 }
 
-func (r MockRepository) CreateNewTeam(team models.Team) error {
+func (r *MockRepository) CreateNewTeam(team models.Team) error {
 	return r.Err
 }
 
-func (r MockRepository) GetUsersByLoginLike(like string) (models.Users, error) {
+func (r *MockRepository) GetUsersByLoginLike(like string) (models.Users, error) {
 	return r.Users, r.Err
 }
 
-func (r MockRepository) GetTeamByID(teamID uuid.UUID) (*models.Team, error) {
+func (r *MockRepository) GetTeamByID(teamID uuid.UUID) (*models.Team, error) {
 	return r.Team, r.Err
 }
 
-func (r MockRepository) UpdateTeam(team *models.Team) error {
+func (r *MockRepository) UpdateTeam(team *models.Team) error {
 	return r.Err
 }
 
-func (r MockRepository) GetProjectByID(userID, projectID uuid.UUID) (*models.Project, error) {
+func (r *MockRepository) GetProjectByID(userID, projectID uuid.UUID) (*models.Project, error) {
 	return r.Project, r.Err
 }
 
-func (r MockRepository) GetFramesWithQueryBuilder(qb models.QueryBuilder) (int, []models.Frame, error) {
+func (r *MockRepository) GetFramesWithQueryBuilder(qb models.QueryBuilder) (int, []models.Frame, error) {
+	r.QueryBuilder = qb
 	return r.NbFrames, r.Frames, r.Err
 }

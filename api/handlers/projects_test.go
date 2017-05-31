@@ -14,7 +14,7 @@ import (
 )
 
 func TestGetProjects(t *testing.T) {
-	r := MockRepository{
+	r := &MockRepository{
 		Projects: models.Projects{
 			Projects: []models.Project{
 				models.Project{},
@@ -52,7 +52,7 @@ func TestGetProjects(t *testing.T) {
 }
 
 func TestGetProjectsWithError(t *testing.T) {
-	r := MockRepository{
+	r := &MockRepository{
 		Err: fmt.Errorf("database error"),
 	}
 	h := handlers.New(r, zap.NewNop())
