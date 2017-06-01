@@ -1,10 +1,10 @@
 /* @flow */
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
+import { API_ERROR } from '../Errors/reducer';
 import type {
   Action,
 } from '../types';
-import { API_ERROR } from '../Errors/reducer';
 
 // State
 type State = {

@@ -13,9 +13,6 @@ class Auth extends React.Component {
 
     this.state = {
       isTokenDialogOpen: false,
-      avatar_url: '',
-      login: '',
-      token: '',
     };
 
     (this: any).handleTokenDialogClose = this.handleTokenDialogClose.bind(this);
@@ -23,17 +20,16 @@ class Auth extends React.Component {
   }
 
   props: {
-    isAuthenticated: boolean,
     token: string,
+    avatar_url: string,
+    isAuthenticated: boolean,
     onLogout: Function,
     onLogin: Function,
+    fetchUser: Function,
   };
 
   state: {
     isTokenDialogOpen: boolean,
-    avatar_url: string,
-    login: string,
-    token: string,
   };
 
   handleTokenDialogClose() {
@@ -53,39 +49,7 @@ class Auth extends React.Component {
       return;
     }
 
-    this.fetchMe(this.props.token);
-  }
-
-  componentWillReceiveProps(nextProps: Object) {
-    if (this.props.isAuthenticated !== nextProps.isAuthenticated) {
-      if (nextProps.token !== null) {
-        this.fetchMe(nextProps.token);
-      } else {
-        this.setState({ avatar_url: '', login: '' });
-      }
-    }
-  }
-
-  // this is old school, we should use redux-api-middleware instead
-  fetchMe(token: string) {
-    const headers: Object = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    };
-
-    fetch(`${process.env.REACT_APP_API_HOST || ''}/users/me`, { headers })
-      .then(response => {
-        return response.json();
-      })
-      .then(json => {
-        this.setState({
-          avatar_url: json.avatar_url,
-          login: json.login,
-          token: json.token,
-        });
-      })
-    ;
+    this.props.fetchUser();
   }
 
   render() {
@@ -109,14 +73,14 @@ class Auth extends React.Component {
           >
             Copy/paste this token to access Crick API:
             <pre>
-              <code>{this.state.token}</code>
+              <code>{this.props.token}</code>
             </pre>
           </Dialog>
 
           <IconMenu
             className="user-menu"
             iconButtonElement={
-              <Avatar src={this.state.avatar_url} />
+              <Avatar src={this.props.avatar_url} />
             }
             anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             targetOrigin={{horizontal: 'right', vertical: 'top'}}

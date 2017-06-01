@@ -2,27 +2,9 @@
 import React from 'react';
 import ActionSupervisorIcon from 'material-ui/svg-icons/action/supervisor-account';
 import Paper from 'material-ui/Paper';
+import style from '../shared/emptyStyle';
 
-type Props = {
-};
-
-const style = {
-  paper: {
-    width: '60%',
-    margin: '10px 20% 10px 20%',
-    padding: '20px',
-    textAlign: 'center',
-  },
-  icon: {
-    height: '80px',
-    width: '80px',
-  },
-  title: {
-    marginTop: 0,
-  },
-};
-
-const Empty = (props: Props) => (
+const Empty = () => (
   <div>
     <Paper style={style.paper} zDepth={1}>
       <ActionSupervisorIcon

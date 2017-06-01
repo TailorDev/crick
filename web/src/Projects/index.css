@@ -36,3 +36,7 @@
 .Project h4 a:hover {
   background-color: #585f7b !important;
 }
+
+.Empty pre {
+  text-align: left;
+}
