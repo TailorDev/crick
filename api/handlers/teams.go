@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/TailorDev/crick/api/middlewares"
 	"github.com/TailorDev/crick/api/models"
@@ -61,6 +62,12 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
+	if strings.TrimSpace(input.Name) == "" {
+		h.logger.Warn("team name is blank", zap.Error(err))
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
+
 	team := models.NewTeamFromInput(input, user.ID)
 
 	if err := h.repository.CreateNewTeam(team); err != nil {
@@ -87,10 +94,15 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	team, err := h.repository.GetTeamByID(teamID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			h.logger.Warn("update team", zap.Error(err))
+			h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
+			return
+		}
+
 		h.logger.Error("update team", zap.Error(err))
 		h.SendError(w, http.StatusInternalServerError, DetailGetTeamFailed)
 		return
-
 	}
 
 	user := middlewares.GetCurrentUser(r.Context())
@@ -115,6 +127,12 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	if input.ID != teamID {
 		h.logger.Warn("team ids mismatch", zap.Error(err))
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
+
+	if strings.TrimSpace(input.Name) == "" {
+		h.logger.Warn("team name is blank", zap.Error(err))
 		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
 		return
 	}
