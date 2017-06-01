@@ -49,6 +49,8 @@ class Teams extends React.Component {
 
   componentDidMount() {
     this.props.fetchTeams();
+
+    document.title = 'Teams - ' + document.title;
   }
 
   componentWillReceiveProps(nextProps: Object) {
