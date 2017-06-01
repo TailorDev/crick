@@ -37,10 +37,7 @@ export type Frame = {
   tags: Array<string>,
 };
 
-export type TagReport = {
-  name: string,
-  count: number,
-};
+export type TagReport = Array<mixed>;
 
 export type TagReports = Array<TagReport>;
 

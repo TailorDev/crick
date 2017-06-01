@@ -5,9 +5,11 @@ import LinearProgress from 'material-ui/LinearProgress';
 import Subheader from 'material-ui/Subheader';
 import './report.css';
 import moment from 'moment';
+import type {TagReports} from '../types';
+
 
 type Props = {
-  total: Object,
+  total: number,
   tagReports: TagReports
 };
 

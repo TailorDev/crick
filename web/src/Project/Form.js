@@ -22,9 +22,8 @@ class Form extends React.Component {
   props: {};
 
   state: {
-    start: Date,
-    end: Date,
-    project: string,
+    from: string,
+    to: string,
     tags: Array<string>,
   };
 
