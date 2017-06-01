@@ -21,7 +21,7 @@ class Form extends React.Component {
       name: props.team.name,
       users: props.team.users,
       projects: props.team.projects,
-      owner_id: props.team.owner_id,
+      owner_id: props.userId,
     } : initialState;
 
     (this: any).onNameChange = this.onNameChange.bind(this);
@@ -89,7 +89,10 @@ class Form extends React.Component {
           id: this.props.team.id,
         });
       } else {
-        this.props.onCreate(this.state);
+        this.props.onCreate({
+          ...this.state,
+          owner_id: this.props.userId,
+        });
       }
 
       this.setState(initialState);
