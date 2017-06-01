@@ -51,6 +51,9 @@ type Repository interface {
 	UpdateTeam(team *Team) error
 	// DeleteTeam deletes a team, forever.
 	DeleteTeam(team *Team) error
+
+	// GetProjectWorkloads returns a set of workloads for a given user and project.
+	GetProjectWorkloads(userID, projectID uuid.UUID) (*Workloads, error)
 }
 
 // DatabaseRepository is an implementation of the `Repository` interface with a

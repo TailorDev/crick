@@ -30,6 +30,7 @@ type MockRepository struct {
 	Teams        models.Teams
 	Err          error
 	QueryBuilder models.QueryBuilder
+	Workloads    *models.Workloads
 }
 
 func (r *MockRepository) GetFrames(userID uuid.UUID) ([]models.Frame, error) {
@@ -99,4 +100,8 @@ func (r *MockRepository) GetFramesWithQueryBuilder(qb models.QueryBuilder) (int,
 
 func (r *MockRepository) DeleteTeam(team *models.Team) error {
 	return r.Err
+}
+
+func (r *MockRepository) GetProjectWorkloads(userID, projectID uuid.UUID) (*models.Workloads, error) {
+	return r.Workloads, r.Err
 }
