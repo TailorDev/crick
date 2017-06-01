@@ -378,6 +378,20 @@ otherwise the response will be a `401 Unauthorized`.
                 "id": "26fb1e8c-xxxx-yyyy-a9a7-e9092ac5fb38"
             }
 
++ Response 400 (application/json)
+
+        {
+            "detail": "Invalid request",
+            "title": "Bad Request"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "detail": "User not found",
+            "title": "Unauthorized"
+        }
+
 ### Update a team [PUT /teams/{id}]
 
 + Parameters
