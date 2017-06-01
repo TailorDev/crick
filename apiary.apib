@@ -80,7 +80,7 @@ This endpoint allows to manage Crick projects, scoped by user.
 It requires a `Authorization` header with a `Bearer` JSON Web Token,
 otherwise the response will be a `401 Unauthorized`.
 
-### List all user's projects [GET]
+### Retrieve all user's projects [GET]
 
 + Request
     + Headers
@@ -110,14 +110,77 @@ otherwise the response will be a `401 Unauthorized`.
             "title": "Unauthorized"
         }
 
-### List all user's frames for a project [GET /projects/{id}/frames]
+## Frames [/frames]
+
+This endpoint allows to manage Crick frames, scoped by user.
+
+It requires a `Authorization` header with a `Bearer` JSON Web Token,
+otherwise the response will be a `401 Unauthorized`.
+
+### Retrieve frames [GET /frames{?page,limit,from,to,tags,projectId,projects,teamId}]
+
+The response must contain two root keys: `meta` and `frames`.
+
+#### Pagination
+
+This endpoint supports **pagination**, hence the presence of a `page` meta
+object with the following attributes:
+
+* `prev` is the previous page number (omitted if the current page is also the
+   first page);
+* `next` is the next page number (omitted if the current page is also the last
+  page);
+* `count` is the number of objects in total for the given request. It is not
+  the number of individual objects that are returned in each page but the number
+  of all individual objects;
+* `limit` is the number of individual objects that are returned in each page.
+  Note that this is an upper limit. If there are not enough objects remaining
+  in the list of data, then fewer will be returned.
+
+#### About `projectId` and `projects`
+
+The parameters `projectId` and `projects` are mutually exclusive. If you add
+both in the request, you will get a `400` error.
+
+#### About `tags` and `projects`
+
+The parameters `tags` and `projects` expect a comma-separated list of string
+values. All extra spaces between these values will be trimed.
+
+#### About `projectId` and `teamId`
+
+The parameters `projectId` and `teamId` expect a UUID as value. The API will
+return a `404` error if the project or the team does not exist.
 
 + Parameters
-    + id: `26fb1e8c-b559-4d6e-a9a7-e9092ac5fb38` (UUID) - ID of the project
+    + page: `2` (optional, integer) - The page to retrieve
+        + Default: `1`
+    + limit: `20` (optional, integer) - The number of frames to return (max)
+        + Default: `50`
+    + from: `2017-01-01` (optional, date) - Used to return frames after this date
+    + to: `2017-01-01` (optional, date) - Used to return frames until this date
+    + tags: `email,sprint-4` (optional, string) - A comma-separated list of tags
+    + projectId: `5b37098a-c971-4956-92a3-5a81fc0b342b` (optional, UUID) - A project ID to only get the frames of this project
+    + projects: `world-domination-plan,perso` (optional, string) - A comma-separated list of project names
+    + teamId: `5b37098a-c971-4956-92a3-5a81fc0b342b` (optional, UUID) - A team ID to only get the frames of this team
+
++ Request without any parameters
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer <Auth0 JWT token>
 
 + Response 200 (application/json)
 
         {
+            "meta": {
+                "page": {
+                    "prev": 1,
+                    "next": 3,
+                    "count": 140,
+                    "limit": 50
+                }
+            },
             "frames": [
                 {
                     "id": "5b37098a-c971-4956-92a3-5a81fc0b342b",
@@ -150,13 +213,89 @@ otherwise the response will be a `401 Unauthorized`.
             "title": "Unauthorized"
         }
 
-+ Response 404 (application/json)
++ Request with `projects`
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer <Auth0 JWT token>
+
++ Response 200 (application/json)
 
         {
-            "detail": "Unknown project",
-            "title": "Not Found"
+            "meta": {
+                "projects": [
+                    {
+                        "id": "26fb1e8c-b559-4d6e-a9a7-e9092ac5fb38",
+                        "name": "project-1"
+                    },
+                    {
+                        "id": "26fb1e8c-b559-aaaa-bbbb-e9092ac5fb38",
+                        "name": "project-3"
+                    }
+                ],
+                "page": {
+                    "prev": 1,
+                    "next": 3,
+                    "count": 140,
+                    "limit": 50
+                }
+            },
+            "frames": [
+                {
+                    "id": "5b37098a-c971-4956-92a3-5a81fc0b342b",
+                    "start_at": "2016-10-21T09:43:36Z",
+                    "end_at": "2016-10-21T12:03:47Z",
+                    "project": "project 1",
+                    "tags": ["tag1", "tag 2"]
+                },
+                {
+                    "id": "5b37098a-c971-4956-92a3-5a81fc0b3aaa",
+                    "start_at": "2016-10-22T09:43:36Z",
+                    "end_at": "2016-10-22T12:03:47Z",
+                    "project": "project 3",
+                    "tags": []
+                }
+            ]
         }
 
++ Request with `projectId`
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer <Auth0 JWT token>
+            
++ Response 200 (application/json)
+
+        {
+            "meta": {
+                "project": {
+                    "id": "26fb1e8c-b559-4d6e-a9a7-e9092ac5fb38",
+                    "name": "project-1"
+                },
+                "page": {
+                    "prev": 1,
+                    "next": 3,
+                    "count": 140,
+                    "limit": 50
+                }
+            },
+            "frames": [
+                {
+                    "id": "5b37098a-c971-4956-92a3-5a81fc0b342b",
+                    "start_at": "2016-10-21T09:43:36Z",
+                    "end_at": "2016-10-21T12:03:47Z",
+                    "project": "project 1",
+                    "tags": ["tag1", "tag 2"]
+                },
+                {
+                    "id": "5b37098a-c971-4956-92a3-5a81fc0b3aaa",
+                    "start_at": "2016-10-22T09:43:36Z",
+                    "end_at": "2016-10-22T12:03:47Z",
+                    "project": "project 1",
+                    "tags": []
+                }
+            ]
+        }
 
 ## Teams [/teams]
 
@@ -282,6 +421,47 @@ otherwise the response will be a `401 Unauthorized`.
                     "yet-another-project"
                 ]
             }
+
+### Delete a team [DELETE /teams/{id}]
+
++ Parameters
+    + id: `26fb1e8c-xxxx-yyyy-a9a7-e9092ac5fb38` (UUID) - ID of the team
+
++ Request
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer <Auth0 JWT token>
+
++ Response 204 (application/json)
+
++ Response 400 (application/json)
+
+        {
+            "detail": "Invalid request",
+            "title": "Bad Request"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "detail": "User not found",
+            "title": "Unauthorized"
+        }
+
++ Response 403 (application/json)
+
+        {
+            "detail": "Not allowed",
+            "title": "Forbidden"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "detail": "Team not found",
+            "title": "Not Found"
+        }
 
 
 # Group Crick API for Watson
