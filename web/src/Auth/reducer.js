@@ -20,6 +20,7 @@ const lock = new Auth0Lock(
   process.env.REACT_APP_AUTH0_CLIENT_ID,
   process.env.REACT_APP_AUTH0_DOMAIN,
   {
+    oidcConformant: true,
     auth: {
       params: {
         scope: 'openid profile',
@@ -33,13 +34,19 @@ const lock = new Auth0Lock(
   }
 );
 
+const getToken = () => {
+  const token = localStorage.getItem('access_token');
+
+  return token ? token : null;
+};
+
 const checkToken = () => {
-  return null !== localStorage.getItem('access_token');
-}
+  return getToken() !== null;
+};
 
 const initialState: State = {
   isAuthenticated: checkToken(),
-  token: localStorage.getItem('access_token'),
+  token: getToken(),
   login: null,
   api_token: null,
   avatar_url: null,
