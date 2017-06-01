@@ -3,6 +3,7 @@ import React from 'react';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
@@ -89,7 +90,9 @@ class Auth extends React.Component {
           <IconMenu
             className="user-menu"
             iconButtonElement={
-              <Avatar src={this.props.avatar_url} />
+              <IconButton style={{ marginTop: '-3px', padding: 0 }}>
+                <Avatar src={this.props.avatar_url} />
+              </IconButton>
             }
             anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
