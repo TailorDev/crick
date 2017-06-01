@@ -11,6 +11,8 @@ import {
 } from 'material-ui/Table';
 import { Link } from 'react-router-dom';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import type { User, Team } from '../types';
 
 class List extends React.Component {
@@ -19,6 +21,10 @@ class List extends React.Component {
     userId: string,
     teams: Array<Team>,
   };
+
+  onDelete(teamId: string) {
+    console.log(`delete ${teamId}`);
+  }
 
   renderUser(user: User) {
     return (
@@ -37,9 +43,14 @@ class List extends React.Component {
     }
 
     return (
-      <Link to={`/teams/${team.id}/edit`}>
-        <EditIcon title="Edit this team" />
-      </Link>
+      <span>
+        <Link to={`/teams/${team.id}/edit`}>
+          <EditIcon title="Edit this team" />
+        </Link>
+        <IconButton onTouchTap={this.onDelete.bind(this, team.id)}>
+          <DeleteIcon title="Delete this team" />
+        </IconButton>
+      </span>
     );
   }
 
