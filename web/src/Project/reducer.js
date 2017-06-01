@@ -2,7 +2,7 @@
 import { CALL_API } from 'redux-api-middleware';
 import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
-import { API_ERROR } from '../Errors/reducer';
+import { API_REQUEST, API_ERROR } from '../Errors/reducer';
 import type {
   Action, Frame, Report,
 } from '../types';
@@ -16,6 +16,7 @@ type State = {
   tags: Array<string>,
   project: string,
   report: Report,
+  workloads: Array<Object>,
 };
 
 const from = moment().subtract(7, 'days');
@@ -32,17 +33,23 @@ const initialState: State = {
     total: 0,
     tagReports: [],
   },
+  workloads: [],
 };
 
 // Actions
-const FETCH_REQUEST = 'crick/frames/FETCH_REQUEST';
 const FETCH_SUCCESS = 'crick/frames/FETCH_SUCCESS';
 const REPORT_COMPILED = 'crick/frames/COMPILE_REPORT';
 const UPDATE_DATE_SPAN = 'crick/frames/UPDATE_DATE_SPAN';
 const UPDATE_TAGS = 'crick/frames/UPDATE_TAGS';
+const FETCH_WORKLOADS_SUCCESS = 'crick/frames/FETCH_WORKLOADS_SUCCESS';
 
-export const fetchFrames = (id: string, from: moment, to: moment, tags: Array<string>, limit: number): Action => {
-
+export const fetchFrames = (
+  id: string,
+  from: moment,
+  to: moment,
+  tags: Array<string>,
+  limit: number
+): Action => {
   const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
 
   let query = [
@@ -58,7 +65,18 @@ export const fetchFrames = (id: string, from: moment, to: moment, tags: Array<st
       endpoint: `${endpoint}?${query.join('&')}`,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-      types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
+      types: [API_REQUEST, FETCH_SUCCESS, API_ERROR],
+    },
+  };
+};
+
+export const fetchWorkloads = (id: string): Action => {
+  return {
+    [CALL_API]: {
+      endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects/${id}/workloads`,
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      types: [API_REQUEST, FETCH_WORKLOADS_SUCCESS, API_ERROR],
     },
   };
 };
@@ -140,6 +158,12 @@ export default function reducer(
         ...state,
         tags: action.tags,
       }
+
+    case FETCH_WORKLOADS_SUCCESS:
+      return {
+        ...state,
+        workloads: action.payload.workloads,
+      };
 
     case LOGOUT:
       return initialState;

@@ -1,10 +1,24 @@
 .Project-details {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.Project-head {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 100%;
+}
+
+.Project-name,
+.Project-workload {
+  flex: 1;
+  width: 50%;
+  display: inline-block;
 }
 
 .Project-name {
-  width: calc(100% - 2rem);
   font-size: 3rem;
   text-transform: uppercase;
 }
@@ -32,4 +46,34 @@
 
 .Project-frame .tags .tags-wrapper .tag {
   margin-right: 0.5rem !important;
+}
+
+.Project-head .react-calendar-heatmap text {
+  font-size: 10px;
+  fill: #aaa;
+}
+
+.Project-head .react-calendar-heatmap rect:hover {
+  stroke: #555;
+  stroke-width: 1px;
+}
+
+.Project-head .react-calendar-heatmap .color-empty {
+  fill: #eeeeee;
+}
+
+.Project-head .react-calendar-heatmap .color-scale-1 {
+  fill: #B7BAC6;
+}
+
+.Project-head .react-calendar-heatmap .color-scale-2 {
+  fill: #585f7b;
+}
+
+.Project-head .react-calendar-heatmap .color-scale-3 {
+  fill: #2e354f;
+}
+
+.Project-head .react-calendar-heatmap .color-scale-4 {
+  fill: #060f27;
 }

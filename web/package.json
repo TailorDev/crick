@@ -8,6 +8,7 @@
     "material-ui-chip-input": "^0.14.0",
     "moment": "^2.18.1",
     "react": "^15.5.4",
+    "react-calendar-heatmap": "^1.1.0",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
