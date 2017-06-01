@@ -20,6 +20,7 @@ const lock = new Auth0Lock(
   process.env.REACT_APP_AUTH0_CLIENT_ID,
   process.env.REACT_APP_AUTH0_DOMAIN,
   {
+    oidcConformant: true,
     auth: {
       params: {
         scope: 'openid profile',
