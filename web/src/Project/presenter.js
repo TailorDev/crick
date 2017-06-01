@@ -12,6 +12,8 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import moment from 'moment';
+import type { RouterHistory, Location, Match } from 'react-router-dom';
+import type { Frame } from '../types';
 import './index.css';
 
 const prettyDiffDate = (d1, d2) => {
@@ -21,6 +23,15 @@ const prettyDiffDate = (d1, d2) => {
 };
 
 class Project extends React.Component {
+  props: {
+    // routing
+    history: RouterHistory,
+    location: Location,
+    match: Match,
+    fetchFrames: Function,
+    frames: Array<Frame>,
+  };
+
   componentDidMount() {
     if (this.props.match.params.id) {
       this.props.fetchFrames(this.props.match.params.id);

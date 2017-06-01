@@ -5,6 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { Link } from 'react-router-dom';
+import type { RouterHistory, Location, Match } from 'react-router-dom';
 import type { User, Team, NewTeam } from '../types';
 import Form from './Form';
 import List from './List';
@@ -26,7 +27,6 @@ class Teams extends React.Component {
   }
 
   props: {
-    isAuthenticated: boolean,
     teams: Array<Team>,
     fetchTeams: Function,
     createTeam: Function,
@@ -35,11 +35,9 @@ class Teams extends React.Component {
     suggestedUsers: Array<User>,
     autoCompleteUsers: Function,
     // routing
-    match: {
-      params: {
-        id: string,
-      },
-    },
+    history: RouterHistory,
+    location: Location,
+    match: Match,
   };
 
   state: {
@@ -48,10 +46,6 @@ class Teams extends React.Component {
   };
 
   componentDidMount() {
-    if (!this.props.isAuthenticated) {
-      return;
-    }
-
     this.props.fetchTeams();
   }
 

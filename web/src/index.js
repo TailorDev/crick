@@ -8,6 +8,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
+import PrivateRoute from './Routing/PrivateRoute';
+import NotFound from './Routing/NotFound';
 import App from './App';
 import Home from './Home';
 import Project from './Project';
@@ -42,9 +44,10 @@ ReactDOM.render(
         <App>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/projects/:id" component={Project} />
-            <Route exact path="/teams" component={Teams} />
-            <Route path="/teams/:id/edit" component={Teams} />
+            <PrivateRoute exact path="/projects/:id" component={Project} store={store} />
+            <PrivateRoute exact path="/teams" component={Teams} store={store} />
+            <PrivateRoute exact path="/teams/:id/edit" component={Teams} store={store} />
+            <Route component={NotFound} />
           </Switch>
         </App>
       </Router>
