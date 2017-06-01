@@ -11,7 +11,10 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import moment from 'moment';
+import Form from './Form';
+import Report from './Report';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
 import type { Frame } from '../types';
 import './index.css';
@@ -38,6 +41,12 @@ class Project extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps: Object) {
+    if(nextProps.frames !== this.props.frames){
+      this.props.compileReport(nextProps.frames);
+    }
+  }
+
   render() {
     if (!this.props.frames) {
       return (
@@ -50,11 +59,21 @@ class Project extends React.Component {
 
     return (
       <div className="Project-details">
-        <h2>Project {this.props.match.params.id}</h2>
 
         <FlatButton
-          label="< back"
+          label="Back to projects"
+          primary={true}
           href="/"
+          icon={<NavigationArrowBack />}
+          className="Project-back"
+        />
+
+        <h2 className="Project-name">{this.props.project}</h2>
+
+        <Form />
+        <Report
+          total={this.props.report.total}
+          tagReports={this.props.report.tagReports}
         />
 
         <Table
@@ -100,8 +119,11 @@ class Project extends React.Component {
         </Table>
 
         <FlatButton
-          label="< back"
+          label="Back to projects"
+          primary={true}
           href="/"
+          icon={<NavigationArrowBack />}
+          className="Project-back"
         />
       </div>
     );

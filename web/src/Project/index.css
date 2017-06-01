@@ -1,4 +1,17 @@
-.Project-details {}
+.Project-details {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Project-name {
+  width: calc(100% - 2rem);
+  font-size: 3rem;
+  text-transform: uppercase;
+}
+
+.Project-back {
+  float: right;
+}
 
 .Project-frames {}
 

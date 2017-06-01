@@ -36,3 +36,15 @@ export type Frame = {
   end_at: Date,
   tags: Array<string>,
 };
+
+export type TagReport = {
+  name: string,
+  count: number,
+};
+
+export type TagReports = Array<TagReport>;
+
+export type Report = {
+  total: number,
+  tagReports: TagReports,
+};

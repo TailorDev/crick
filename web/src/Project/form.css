@@ -1,0 +1,17 @@
+.Frame-filters-form-wrapper {
+  width: 50%;
+}
+
+.Frame-filters-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.Frame-filters-form .filter-wrapper {
+  margin-left: 1rem;
+}
+
+.Frame-filters-form .filter-wrapper.tags {
+  min-width: 100%;
+}
