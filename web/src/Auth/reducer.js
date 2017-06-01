@@ -9,6 +9,7 @@ import type {
 
 // State
 type State = {
+  id: ?string,
   token: ?string,
   login: ?string,
   avatar_url: ?string,
@@ -47,6 +48,7 @@ const checkToken = () => {
 const initialState: State = {
   isAuthenticated: checkToken(),
   token: getToken(),
+  id: null,
   login: null,
   api_token: null,
   avatar_url: null,
@@ -123,6 +125,7 @@ export default function reducer(
     case FETCH_USER_SUCCESS:
       return {
         ...state,
+        id: action.payload.id,
         login: action.payload.login,
         api_token: action.payload.token,
         avatar_url: action.payload.avatar_url,

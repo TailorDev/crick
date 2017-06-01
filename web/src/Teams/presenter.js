@@ -27,6 +27,7 @@ class Teams extends React.Component {
   }
 
   props: {
+    userId: string,
     teams: Array<Team>,
     fetchTeams: Function,
     createTeam: Function,
@@ -96,8 +97,13 @@ class Teams extends React.Component {
         <h2>Teams</h2>
 
         {this.props.teams.length > 0 ? (
-          <List teams={this.props.teams} />
-        ) : <Empty /> }
+          <List
+            userId={this.props.userId}
+            teams={this.props.teams}
+          />
+        ) : (
+          <Empty />
+        )}
 
         <Dialog
           title={editTeam ? `Edit "${editTeam.name}"` : 'Create a new team'}
@@ -111,6 +117,7 @@ class Teams extends React.Component {
             suggestedUsers={this.props.suggestedUsers}
             autoCompleteUsers={this.props.autoCompleteUsers}
             team={editTeam}
+            userId={this.props.userId}
           />
         </Dialog>
 

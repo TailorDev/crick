@@ -13,6 +13,7 @@ export type NewTeam = {
   name: string,
   projects: Array<string>,
   users: Array<User>,
+  owner_id: string,
 };
 
 export type Team = {
@@ -20,6 +21,7 @@ export type Team = {
   name: string,
   projects: Array<string>,
   users: Array<User>,
+  owner_id: string,
 };
 
 export type User = {

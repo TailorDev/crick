@@ -16,6 +16,7 @@ import type { User, Team } from '../types';
 class List extends React.Component {
 
   props: {
+    userId: string,
     teams: Array<Team>,
   };
 
@@ -27,6 +28,18 @@ class List extends React.Component {
         src={user.avatar_url}
         style={{ marginRight: '5px' }}
       />
+    );
+  }
+
+  renderActions(team: Team) {
+    if (team.owner_id !== this.props.userId) {
+      return null;
+    }
+
+    return (
+      <Link to={`/teams/${team.id}/edit`}>
+        <EditIcon title="Edit this team" />
+      </Link>
     );
   }
 
@@ -56,9 +69,7 @@ class List extends React.Component {
               {team.users.map(u => this.renderUser(u))}
             </TableRowColumn>
             <TableRowColumn>
-              <Link to={`/teams/${team.id}/edit`}>
-                <EditIcon title="Edit this team" />
-              </Link>
+              {this.renderActions(team)}
             </TableRowColumn>
           </TableRow>
         ))}

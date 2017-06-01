@@ -10,6 +10,7 @@ const initialState: NewTeam = {
   name: '',
   users: [],
   projects: [],
+  owner_id: '',
 };
 
 class Form extends React.Component {
@@ -20,6 +21,7 @@ class Form extends React.Component {
       name: props.team.name,
       users: props.team.users,
       projects: props.team.projects,
+      owner_id: props.team.owner_id,
     } : initialState;
 
     (this: any).onNameChange = this.onNameChange.bind(this);
@@ -33,6 +35,7 @@ class Form extends React.Component {
   props: {
     onCreate: Function,
     onUpdate: Function,
+    userId: string,
     team: ?Team,
     suggestedUsers: Array<User>,
     autoCompleteUsers: Function,
@@ -42,6 +45,7 @@ class Form extends React.Component {
     name: string,
     users: Array<User>,
     projects: Array<string>,
+    owner_id: string,
   };
 
   componentWillReceiveProps(nextProps: Object) {
@@ -52,6 +56,7 @@ class Form extends React.Component {
         name: t.name,
         users: t.users,
         projects: t.projects,
+        owner_id: t.owner_id,
       });
     }
   }
