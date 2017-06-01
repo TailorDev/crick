@@ -32,6 +32,7 @@ class Teams extends React.Component {
     fetchTeams: Function,
     createTeam: Function,
     updateTeam: Function,
+    deleteTeam: Function,
     // for the form
     suggestedUsers: Array<User>,
     autoCompleteUsers: Function,
@@ -100,6 +101,7 @@ class Teams extends React.Component {
           <List
             userId={this.props.userId}
             teams={this.props.teams}
+            onDelete={this.props.deleteTeam}
           />
         ) : (
           <Empty />

@@ -5,6 +5,7 @@ import {
   fetchTeams,
   createTeam,
   updateTeam,
+  deleteTeam,
   autoCompleteUsers,
 } from './reducer';
 import type { Team, NewTeam } from '../types';
@@ -24,6 +25,7 @@ const mapDispatchToProps = (dispatch: Dispatch<*>) => ({
   createTeam: (team: NewTeam) => dispatch(createTeam(team)),
   autoCompleteUsers: (input) => dispatch(autoCompleteUsers(input)),
   updateTeam: (team: Team) => dispatch(updateTeam(team)),
+  deleteTeam: (team: Team) => dispatch(deleteTeam(team)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Teams);
