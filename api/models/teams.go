@@ -28,7 +28,7 @@ type Team struct {
 	Name     string         `db:"name" json:"name"`
 	Projects pq.StringArray `db:"projects" json:"projects"`
 	UserIDs  []uuid.UUID    `db:"user_ids" json:"-"`
-	OwnerID  uuid.UUID      `db:"owner_id" json:"-"`
+	OwnerID  uuid.UUID      `db:"owner_id" json:"owner_id"`
 	Users    []User         `db:"-" json:"users"`
 }
 
