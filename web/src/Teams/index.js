@@ -10,10 +10,9 @@ import {
 import type { Team, NewTeam } from '../types';
 
 const mapStateToProps = (state) => {
-  const { auth, teams } = state;
+  const { teams } = state;
 
   return {
-    isAuthenticated: auth.isAuthenticated,
     teams: teams.teams,
     suggestedUsers: teams.suggestedUsers,
   };

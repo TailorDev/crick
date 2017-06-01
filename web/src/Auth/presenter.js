@@ -5,7 +5,23 @@ import Dialog from 'material-ui/Dialog';
 import IconMenu from 'material-ui/IconMenu';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
+import type { RouterHistory, Location, Match } from 'react-router-dom';
 import './index.css';
+
+export type Props = {
+  // routing
+  history: RouterHistory,
+  location: Location,
+  match: Match,
+  // user infos
+  token: string,
+  avatar_url: string,
+  isAuthenticated: boolean,
+  // actions
+  onLogout: Function,
+  onLogin: Function,
+  fetchUser: Function,
+};
 
 class Auth extends React.Component {
   constructor(props: Object) {
@@ -19,14 +35,7 @@ class Auth extends React.Component {
     (this: any).handleTokenDialogOpen = this.handleTokenDialogOpen.bind(this);
   }
 
-  props: {
-    token: string,
-    avatar_url: string,
-    isAuthenticated: boolean,
-    onLogout: Function,
-    onLogin: Function,
-    fetchUser: Function,
-  };
+  props: Props;
 
   state: {
     isTokenDialogOpen: boolean,

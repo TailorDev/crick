@@ -27,3 +27,10 @@ export type User = {
   login: string,
   avatar_url: string,
 };
+
+export type Frame = {
+  id: string,
+  start_at: Date,
+  end_at: Date,
+  tags: Array<string>,
+};

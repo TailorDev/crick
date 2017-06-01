@@ -1,6 +1,8 @@
 /* @flow */
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom'
 import Auth from './presenter';
+import type { Props as AuthProps } from './presenter';
 import { login, logout, fetchUser } from './reducer';
 
 const mapStateToProps = (state) => {
@@ -13,10 +15,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<*>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<*>, ownProps: AuthProps) => ({
   onLogin: () => dispatch(login()),
-  onLogout: () => dispatch(logout()),
+  onLogout: () => {
+    dispatch(logout());
+    // redirect to /
+    ownProps.history.replace('/');
+  },
   fetchUser: () => dispatch(fetchUser()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Auth));

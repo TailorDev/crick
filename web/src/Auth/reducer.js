@@ -76,8 +76,11 @@ const loginError = (error): Action => {
   return { type: LOGIN_ERROR, error };
 };
 
-const loginSuccess = (token: string): Action => {
-  return { type: LOGIN_SUCCESS, token };
+const loginSuccess = (token: string): ThunkAction => {
+  return dispatch => {
+    dispatch({ type: LOGIN_SUCCESS, token });
+    dispatch(fetchUser());
+  };
 };
 
 export const logout = (): Action => {
@@ -119,7 +122,10 @@ export default function reducer(
       };
 
     case LOGOUT:
-      return initialState;
+      return {
+        ...initialState,
+        isAuthenticated: false, // force logout, skip localstorage
+      };
 
     default:
       return state;
