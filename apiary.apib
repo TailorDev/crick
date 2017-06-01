@@ -422,6 +422,34 @@ otherwise the response will be a `401 Unauthorized`.
                 ]
             }
 
++ Response 400 (application/json)
+
+        {
+            "detail": "Invalid request",
+            "title": "Bad Request"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "detail": "User not found",
+            "title": "Unauthorized"
+        }
+
++ Response 403 (application/json)
+
+        {
+            "detail": "Not allowed",
+            "title": "Forbidden"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "detail": "Team not found",
+            "title": "Not Found"
+        }
+
 ### Delete a team [DELETE /teams/{id}]
 
 + Parameters
