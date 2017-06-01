@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/TailorDev/crick/api/middlewares"
 	"github.com/TailorDev/crick/api/models"
@@ -21,6 +23,10 @@ var (
 	DetailGetTeamFailed = "Failed to retrieve team"
 	// DetailTeamUpdateFailed is the error message used when updating a team in database has failed.
 	DetailTeamUpdateFailed = "Failed to update the team"
+	// DetailTeamNotFound is the error message used when a team does not exist.
+	DetailTeamNotFound = "Team not found"
+	// DetailTeamDeletionFailed is the error message when deleting a team in database has failed.
+	DetailTeamDeletionFailed = "Failed to delete the team"
 )
 
 // GetTeams returns the user's teams.
@@ -56,6 +62,12 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
+	if strings.TrimSpace(input.Name) == "" {
+		h.logger.Warn("team name is blank", zap.Error(err))
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
+
 	team := models.NewTeamFromInput(input, user.ID)
 
 	if err := h.repository.CreateNewTeam(team); err != nil {
@@ -82,10 +94,15 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	team, err := h.repository.GetTeamByID(teamID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			h.logger.Warn("update team", zap.Error(err))
+			h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
+			return
+		}
+
 		h.logger.Error("update team", zap.Error(err))
 		h.SendError(w, http.StatusInternalServerError, DetailGetTeamFailed)
 		return
-
 	}
 
 	user := middlewares.GetCurrentUser(r.Context())
@@ -114,6 +131,12 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
+	if strings.TrimSpace(input.Name) == "" {
+		h.logger.Warn("team name is blank", zap.Error(err))
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
+
 	team.Name = input.Name
 	team.SetProjects(input.Projects)
 	team.SetUserIDs(append(input.UserIDs, user.ID))
@@ -126,4 +149,41 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(team)
+}
+
+// DeleteTeam allows to delete an existing team.
+func (h Handler) DeleteTeam(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	teamID, err := uuid.FromString(ps.ByName("id"))
+	if err != nil {
+		h.logger.Warn("delete team", zap.Error(err))
+		h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+		return
+	}
+
+	team, err := h.repository.GetTeamByID(teamID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			h.logger.Warn("delete team", zap.Error(err))
+			h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
+			return
+		}
+
+		h.logger.Error("delete team", zap.Error(err))
+		h.SendError(w, http.StatusInternalServerError, DetailGetTeamFailed)
+		return
+	}
+
+	user := middlewares.GetCurrentUser(r.Context())
+	if !user.IsOwnerOfTeam(*team) {
+		h.SendError(w, http.StatusForbidden, DetailUserIsNotAllowedToPerformOperation)
+		return
+	}
+
+	if err := h.repository.DeleteTeam(team); err != nil {
+		h.logger.Warn("delete team", zap.Error(err))
+		h.SendError(w, http.StatusInternalServerError, DetailTeamDeletionFailed)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

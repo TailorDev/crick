@@ -17,6 +17,8 @@ var (
 	selectTeamByID = `SELECT * FROM teams WHERE id=$1;`
 
 	updateTeam = `UPDATE teams SET name=$2, projects=$3, user_ids=$4 WHERE id=$1;`
+
+	deleteTeam = `DELETE FROM teams WHERE id=$1;`
 )
 
 // Team is a structure representing a Crick team, i.e. a set of users and
@@ -28,7 +30,7 @@ type Team struct {
 	Name     string         `db:"name" json:"name"`
 	Projects pq.StringArray `db:"projects" json:"projects"`
 	UserIDs  []uuid.UUID    `db:"user_ids" json:"-"`
-	OwnerID  uuid.UUID      `db:"owner_id" json:"-"`
+	OwnerID  uuid.UUID      `db:"owner_id" json:"owner_id"`
 	Users    []User         `db:"-" json:"users"`
 }
 
@@ -193,6 +195,14 @@ func (r DatabaseRepository) UpdateTeam(team *Team) error {
 
 	// retrieve Users as it is likely needed in the API response
 	err = r.db.Select(&team.Users, selectUsersByID, pq.Array(team.UserIDs))
+
+	return err
+}
+
+// DeleteTeam deletes a team, forever.
+func (r DatabaseRepository) DeleteTeam(team *Team) error {
+	// delete the team
+	_, err := r.db.Exec(deleteTeam, team.ID)
 
 	return err
 }

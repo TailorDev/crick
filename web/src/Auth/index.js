@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch: Dispatch<*>, ownProps: AuthProps) => ({
   onLogout: () => {
     dispatch(logout());
     // redirect to /
-    ownProps.history.replace('/');
+    ownProps.history.push('/');
   },
   fetchUser: () => dispatch(fetchUser()),
 });

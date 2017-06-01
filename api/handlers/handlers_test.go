@@ -96,3 +96,7 @@ func (r *MockRepository) GetFramesWithQueryBuilder(qb models.QueryBuilder) (int,
 	r.QueryBuilder = qb
 	return r.NbFrames, r.Frames, r.Err
 }
+
+func (r *MockRepository) DeleteTeam(team *models.Team) error {
+	return r.Err
+}

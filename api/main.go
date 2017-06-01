@@ -38,6 +38,7 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	router.GET("/teams", m.AuthWithAuth0(h.GetTeams, repository, logger))
 	router.POST("/teams", m.AuthWithAuth0(h.CreateTeam, repository, logger))
 	router.PUT("/teams/:id", m.AuthWithAuth0(h.UpdateTeam, repository, logger))
+	router.DELETE("/teams/:id", m.AuthWithAuth0(h.DeleteTeam, repository, logger))
 
 	// Watson API
 	router.GET("/watson/projects", m.AuthWithToken(h.GetProjects, repository, logger))
@@ -51,7 +52,7 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 func applyGlobalMiddlewares(app http.Handler) http.Handler {
 	cors := cors.New(cors.Options{
 		AllowedOrigins: config.CorsAllowedOrigins(),
-		AllowedMethods: []string{"GET", "POST", "PUT"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders: []string{"Authorization", "Accept", "Content-Type"},
 	})
 
