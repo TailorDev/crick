@@ -25,6 +25,7 @@ const Report = (props: Props) => (
           props.tagReports.map((tagReport) => {
             return (
               <TagReport
+                key={tagReport.tag}
                 total={props.total}
                 tagReport={tagReport}
               />

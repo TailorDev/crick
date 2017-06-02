@@ -12,7 +12,6 @@ type Props = {
 
 const TagReport = (props: Props) => (
   <ListItem
-    key={props.tagReport.tag}
     className="tag"
     primaryText={props.tagReport.tag}
     secondaryText={prettyDuration(props.tagReport.duration)}
