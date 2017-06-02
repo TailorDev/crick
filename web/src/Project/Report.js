@@ -18,7 +18,12 @@ const Report = (props: Props) => (
     <div className="Report">
       <Subheader>Report</Subheader>
       <div className="total">
-        {prettyDuration(props.total)}
+        {
+          props.total ?
+            prettyDuration(props.total)
+            :
+            <span>Nothing has been logged for this period.</span>
+        }
       </div>
       <List className="tags">
         {
