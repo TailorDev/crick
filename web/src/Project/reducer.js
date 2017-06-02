@@ -6,6 +6,7 @@ import { API_ERROR } from '../Errors/reducer';
 import type {
   Action, Frame, Report,
 } from '../types';
+import { sortByDuration } from '../utils';
 
 // State
 type State = {
@@ -87,11 +88,7 @@ export const compileReport = (frames: Array<Frame>): Action => {
   };
 
   // Sort tags by duration
-  report.tagReports.sort((t1, t2) => {
-    if (t1[1] === t2[1])
-      return 0;
-    return t1[1] > t2[1] ? -1 : 1;
-  })
+  report.tagReports.sort(sortByDuration);
 
   return {
     'type': REPORT_COMPILED,
