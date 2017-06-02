@@ -43,6 +43,7 @@ const UPDATE_TAGS = 'crick/frames/UPDATE_TAGS';
 export const fetchFrames = (id: string, from: moment, to: moment, tags: Array<string>, limit: number): Action => {
 
   const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
+
   let query = id ? `?projectId=${id}` : '?';
   query += from ? `&from=${from.format(dateFormat)}` : '';
   query += to ? `&to=${to.format(dateFormat)}` : '';
@@ -68,7 +69,7 @@ export const compileReport = (frames: Array<Frame>): Action => {
       d += duration;
       r.tagReports.set(t, d);
     });
-    return r
+    return r;
   }, {
     'total': 0,
     'tagReports': new Map()
@@ -98,20 +99,16 @@ export const compileReport = (frames: Array<Frame>): Action => {
   };
 }
 
-export const updateDateSpan = (from: moment, to: moment): Action => {
-  return {
-    'type': UPDATE_DATE_SPAN,
-    'from': from,
-    'to': to,
-  };
-}
+export const updateDateSpan = (from: moment, to: moment): Action => ({
+  'type': UPDATE_DATE_SPAN,
+  'from': from,
+  'to': to,
+});
 
-export const updateTags = (tags: Array<string>): Action => {
-  return {
-    'type': UPDATE_TAGS,
-    'tags': tags,
-  };
-}
+export const updateTags = (tags: Array<string>): Action => ({
+  'type': UPDATE_TAGS,
+  'tags': tags,
+});
 
 // Reducer
 export default function reducer(
