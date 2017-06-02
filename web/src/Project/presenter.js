@@ -149,16 +149,20 @@ class Project extends React.Component {
           tagReports={this.props.report.tagReports}
         />
 
-        <FlatButton
-          label={
-            this.state.showFrames
-              ? `Hide ${this.props.frames.length} frames`
-              : `Show ${this.props.frames.length} frames`
-          }
-          onTouchTap={this.onToggleFramesDisplay}
-          secondary={true}
-          fullWidth={true}
-        />
+        {
+          this.props.frames.length > 0 ?
+            <FlatButton
+              label={
+                this.state.showFrames
+                  ? `Hide ${this.props.frames.length} frames`
+                  : `Show ${this.props.frames.length} frames`
+              }
+              onTouchTap={this.onToggleFramesDisplay}
+              secondary={true}
+              fullWidth={true}
+            />
+            : ''
+        }
 
         {this.state.showFrames
           ? <Table className="Project-frames">
