@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 DEFAULT_API_SERVER_DOMAIN = '127.0.0.1'
 DEFAULT_API_SERVER_PORT = 8000
 DEFAULT_FRAMES_PATH = expanduser('~/Library/Application Support/watson/frames')
+DEFAULT_API_ENDPOINT = '/watson/frames/bulk'
 
 
 def parse_cmd_line():
@@ -85,7 +86,7 @@ def load_frames(frames_path, last=100):
 
 
 def push(frames_path, server_domain, server_port, token,
-         endpoint='/watson/frames/bulk'):
+         endpoint=DEFAULT_API_ENDPOINT):
     """Push frames to the API server"""
     logging.info(
         (
