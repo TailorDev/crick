@@ -4,7 +4,7 @@ import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
 import { API_ERROR } from '../Errors/reducer';
 import type {
-  Action, Report,
+  Action, Frame, Report,
 } from '../types';
 
 // State
@@ -39,8 +39,8 @@ export const fetchFrames = (id: string): Action => {
   };
 };
 
-export const compileReport = (frames: Array<Object>): Action => {
-  const report = frames.reduce((r, frame) => {
+export const compileReport = (frames: Array<Frame>): Action => {
+  const tmp = frames.reduce((r, frame) => {
     const duration = moment.utc(
       moment(frame.end_at).diff(moment(frame.start_at))
     );
@@ -55,8 +55,12 @@ export const compileReport = (frames: Array<Object>): Action => {
     'total': 0,
     'tagReports': new Map()
   });
+  
   // An array is easier to manipulate
-  report.tagReports = Array.from(report.tagReports);
+  const report = {
+    'total': tmp.total,
+    'tagReports': Array.from(tmp.tagReports),
+  };
 
   // Sort tags by duration
   report.tagReports.sort((t1, t2) => {
