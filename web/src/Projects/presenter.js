@@ -19,7 +19,7 @@ class Projects extends React.Component {
 
   render() {
     if (!this.props.projects) {
-      return (<Loading message="Loading your projects..." />);
+      return <Loading message="Loading your projects..." />;
     }
 
     if (this.props.projects.length === 0) {

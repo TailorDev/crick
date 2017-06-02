@@ -21,4 +21,4 @@ export const sortByDuration = (t1: TagReport, t2: TagReport): number => {
 export const sortByName = (p1: Project, p2: Project): number => {
   if (p1.name === p2.name) return 0;
   return p1.name > p2.name ? 1 : -1;
-}
+};
