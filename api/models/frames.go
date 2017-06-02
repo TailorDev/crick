@@ -9,7 +9,8 @@ import (
 
 var (
 	createFrame = `INSERT INTO frames (id, start_at, end_at, project_id, tags, synchronized_at)
-	VALUES (:id, :start_at, :end_at, :project_id, :tags, NOW());`
+	VALUES (:id, :start_at, :end_at, :project_id, :tags, NOW())
+	ON CONFLICT DO NOTHING;`
 
 	selectFramesByUserID = `SELECT frames.*, projects.name AS project_name FROM frames
 	INNER JOIN projects ON (frames.project_id = projects.id)
