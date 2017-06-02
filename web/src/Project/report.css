@@ -1,0 +1,31 @@
+.Report-wrapper {
+  width: 50%;
+}
+
+.Report {}
+
+.Report .total {
+  font-size: 4rem;
+  padding: 1rem 0 0 1rem;
+  color: #585f7b;
+}
+
+.Report .total span {
+  font-size: 1rem;
+  color: #333;
+}
+
+.Report .tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Report .tags > * {
+  width: 50%;
+}
+
+.Report .tag-ratio-bar {
+  color: #269272 !important;
+  background-color: #efefef !important;
+  margin-bottom: 1rem !important;
+}
