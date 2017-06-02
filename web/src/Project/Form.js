@@ -10,22 +10,46 @@ import './form.css';
 class Form extends React.Component {
   constructor(props: Object) {
     super(props);
-    const now = moment();
 
+    // NB: DatePicker component manipulates JavaScript Date objects
     this.state = {
-      'from': now.subtract(1, 'week').format('YYYY-MM-DD'),
-      'to': now.format('YYYY-MM-DD'),
-      'tags': [],
-    }
+      from: this.props.from.toDate(),
+      to: this.props.to.toDate(),
+      tags: this.props.tags,
+    };
+
+    (this: any).onFromChange = this.onFromChange.bind(this);
+    (this: any).onToChange = this.onToChange.bind(this);
   }
 
-  props: {};
-
   state: {
-    from: string,
-    to: string,
+    from: Date,
+    to: Date,
     tags: Array<string>,
   };
+
+  props: {
+    from: moment,
+    to: moment,
+    tags: Array<string>,
+    onUpdateDateSpan: Function,
+  }
+
+  onFromChange(e: SyntheticInputEvent, date: Date) {
+    this.setState({ from: date });
+    this.props.onUpdateDateSpan(
+      moment(this.state.from),
+      moment(this.state.to)
+    );
+  }
+
+  onToChange(e: SyntheticInputEvent, date: Date) {
+    this.setState({ to: date });
+    this.props.onUpdateDateSpan(
+      moment(this.state.from),
+      moment(this.state.to)
+    );
+  }
 
   render() {
     return (
@@ -38,6 +62,8 @@ class Form extends React.Component {
               floatingLabelText="From"
               hintText="Pick a start date"
               autoOk={true}
+              onChange={this.onFromChange}
+              value={this.state.from}
             />
           </div>
           <div className="filter-wrapper to">
@@ -45,6 +71,8 @@ class Form extends React.Component {
               floatingLabelText="To"
               hintText="Pick a end date"
               autoOk={true}
+              onChange={this.onToChange}
+              value={this.state.to}
             />
           </div>
           <div className="filter-wrapper tags">

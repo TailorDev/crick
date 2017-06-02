@@ -10,12 +10,22 @@ import type {
 // State
 type State = {
   frames: Array<Object>,
+  from: moment,
+  to: moment,
+  tags: Array<string>,
   project: string,
   report: Report,
 };
 
+const from = moment().subtract(7, 'days');
+const to = moment();  // now
+const dateFormat = 'YYYY-MM-DD';
+
 const initialState: State = {
   frames: [],
+  from: from,
+  to: to,
+  tags: [],
   project: '',
   report: {
     total: 0,
@@ -27,11 +37,19 @@ const initialState: State = {
 const FETCH_REQUEST = 'crick/frames/FETCH_REQUEST';
 const FETCH_SUCCESS = 'crick/frames/FETCH_SUCCESS';
 const REPORT_COMPILED = 'crick/frames/COMPILE_REPORT';
+const UPDATE_DATE_SPAN = 'crick/frames/UPDATE_DATE_SPAN';
 
-export const fetchFrames = (id: string): Action => {
+export const fetchFrames = (id: string, from: moment, to: moment, limit: number): Action => {
+
+  const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
+  let query = id ? `?projectId=${id}` : '?';
+  query += from ? `&from=${from.format(dateFormat)}` : '';
+  query += to ? `&to=${to.format(dateFormat)}` : '';
+  query += limit ? `&limit=${limit}` : '';
+
   return {
     [CALL_API]: {
-      endpoint: `${process.env.REACT_APP_API_HOST || ''}/frames?projectId=${id}`,
+      endpoint: endpoint + query,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
@@ -78,6 +96,14 @@ export const compileReport = (frames: Array<Frame>): Action => {
   };
 }
 
+export const updateDateSpan = (from: moment, to: moment): Action => {
+  return {
+    'type': UPDATE_DATE_SPAN,
+    'from': from,
+    'to': to,
+  };
+}
+
 // Reducer
 export default function reducer(
   state: State = initialState,
@@ -95,6 +121,13 @@ export default function reducer(
       return {
         ...state,
         report: action.report,
+      }
+
+    case UPDATE_DATE_SPAN:
+      return {
+        ...state,
+        from: action.from,
+        to: action.to,
       }
 
     case LOGOUT:

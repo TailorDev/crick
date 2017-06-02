@@ -33,18 +33,36 @@ class Project extends React.Component {
     match: Match,
     compileReport: Function,
     fetchFrames: Function,
+    updateDateSpan: Function,
     frames: Array<Frame>,
+    from: moment,
+    to: moment,
+    tags: Array<string>,
     project: string,
     report: ReportType,
   };
 
   componentDidMount() {
     if (this.props.match.params.id) {
-      this.props.fetchFrames(this.props.match.params.id);
+      this.props.fetchFrames(
+        this.props.match.params.id,
+        this.props.from,
+        this.props.to,
+        10000
+      );
     }
   }
 
   componentWillReceiveProps(nextProps: Object) {
+    if(nextProps.from !== this.props.from || nextProps.to !== this.props.to){
+      this.props.fetchFrames(
+        this.props.match.params.id,
+        nextProps.from,
+        nextProps.to,
+        10000
+      );
+    }
+
     if(nextProps.frames !== this.props.frames){
       this.props.compileReport(nextProps.frames);
     }
@@ -73,7 +91,12 @@ class Project extends React.Component {
 
         <h2 className="Project-name">{this.props.project}</h2>
 
-        <Form />
+        <Form
+          from={this.props.from}
+          to={this.props.to}
+          tags={this.props.tags}
+          onUpdateDateSpan={this.props.updateDateSpan}
+        />
         <Report
           total={this.props.report.total}
           tagReports={this.props.report.tagReports}
