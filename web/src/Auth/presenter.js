@@ -6,6 +6,7 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
 import './index.css';
 
@@ -101,6 +102,7 @@ class Auth extends React.Component {
               primaryText="My API Token"
               onTouchTap={this.handleTokenDialogOpen}
             />
+            <Divider />
             <MenuItem primaryText="Sign out" onTouchTap={this.props.onLogout} />
           </IconMenu>
         </div>
