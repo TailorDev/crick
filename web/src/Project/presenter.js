@@ -21,11 +21,8 @@ import type { Frame, Report as ReportType } from '../types';
 import './index.css';
 
 const prettyDiffDate = (d1, d2) => {
-  return moment.utc(
-    moment(d2).diff(moment(d1))
-  ).format("HH:mm:ss");
+  return moment.utc(moment(d2).diff(moment(d1))).format('HH:mm:ss');
 };
-
 
 class Project extends React.Component {
   constructor(props: Object) {
@@ -40,7 +37,7 @@ class Project extends React.Component {
 
   state: {
     showFrames: boolean,
-  }
+  };
 
   props: {
     // routing
@@ -87,13 +84,13 @@ class Project extends React.Component {
       );
     }
 
-    if(nextProps.frames !== this.props.frames) {
+    if (nextProps.frames !== this.props.frames) {
       this.props.compileReport(nextProps.frames);
     }
   }
 
   onToggleFramesDisplay() {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return { showFrames: !prevState.showFrames };
     });
   }
@@ -154,21 +151,17 @@ class Project extends React.Component {
 
         <FlatButton
           label={
-            this.state.showFrames ?
-              `Hide ${this.props.frames.length} frames`
-              :
-              `Show ${this.props.frames.length} frames`
+            this.state.showFrames
+              ? `Hide ${this.props.frames.length} frames`
+              : `Show ${this.props.frames.length} frames`
           }
           onTouchTap={this.onToggleFramesDisplay}
           secondary={true}
           fullWidth={true}
         />
 
-        {
-          this.state.showFrames ?
-            <Table
-              className="Project-frames"
-            >
+        {this.state.showFrames
+          ? <Table className="Project-frames">
               <TableHeader
                 displaySelectAll={false}
                 enableSelectAll={false}
@@ -181,10 +174,7 @@ class Project extends React.Component {
                   <TableHeaderColumn>Tags</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
-              <TableBody
-                displayRowCheckbox={false}
-                stripedRows={false}
-              >
+              <TableBody displayRowCheckbox={false} stripedRows={false}>
                 {this.props.frames.map(f => (
                   <TableRow key={f.id} className="Project-frame">
                     <TableRowColumn className="start">
@@ -207,8 +197,7 @@ class Project extends React.Component {
                 ))}
               </TableBody>
             </Table>
-          : ''
-        }
+          : ''}
 
         <FlatButton
           label="Back to projects"

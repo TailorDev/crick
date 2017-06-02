@@ -1,11 +1,11 @@
 /* @flow */
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import Auth from './presenter';
 import type { Props as AuthProps } from './presenter';
 import { login, logout, fetchUser } from './reducer';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const auth = state.auth;
 
   return {

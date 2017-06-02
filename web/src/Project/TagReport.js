@@ -18,7 +18,7 @@ const TagReport = (props: Props) => (
   >
     <LinearProgress
       mode="determinate"
-      value={(props.tagReport.duration / props.total) * 100}
+      value={props.tagReport.duration / props.total * 100}
       className="tag-ratio-bar"
     />
   </ListItem>

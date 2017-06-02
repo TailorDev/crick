@@ -4,7 +4,6 @@ import Project from './Project';
 import Empty from './Empty';
 import './index.css';
 
-
 class Projects extends React.Component {
   props: {
     token: string,
@@ -19,7 +18,7 @@ class Projects extends React.Component {
 
   render() {
     if (this.props.projects.length === 0) {
-      return <Empty login={this.props.login} token={this.props.token} />
+      return <Empty login={this.props.login} token={this.props.token} />;
     }
 
     return (

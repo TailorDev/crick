@@ -32,7 +32,8 @@ export default function reducer(
     case API_REQUEST:
       if (action.error === true) {
         return {
-          message: action.payload.message || 'An error has occured, retry later',
+          message: action.payload.message ||
+            'An error has occured, retry later',
         };
       }
 

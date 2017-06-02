@@ -3,7 +3,9 @@ import { CALL_API } from 'redux-api-middleware';
 import type { Middleware } from 'redux';
 import type { Action } from '../types';
 
-export default (store: Store): Middleware<Store, Action> => (next: Dispatch<Action>) => (action: Action) => {
+export default (store: Store): Middleware<Store, Action> => (
+  next: Dispatch<Action>
+) => (action: Action) => {
   const callApi = action[CALL_API];
 
   // Check if this action is a redux-api-middleware action.
