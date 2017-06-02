@@ -30,6 +30,7 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 
 	// projects
 	router.GET("/projects", m.AuthWithAuth0(h.GetProjects, repository, logger))
+	router.GET("/projects/:id/workloads", m.AuthWithAuth0(h.GetProjectWorkloads, repository, logger))
 
 	// frames
 	router.GET("/frames", m.AuthWithAuth0(h.GetFrames, repository, logger))

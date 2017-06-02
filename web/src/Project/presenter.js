@@ -13,6 +13,7 @@ import {
 } from 'material-ui/Table';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import moment from 'moment';
+import CalendarHeatmap from 'react-calendar-heatmap';
 import Form from './Form';
 import Report from './Report';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
@@ -47,7 +48,6 @@ class Project extends React.Component {
     location: Location,
     match: Match,
     compileReport: Function,
-    fetchFrames: Function,
     updateDateSpan: Function,
     updateTags: Function,
     frames: Array<Frame>,
@@ -56,11 +56,13 @@ class Project extends React.Component {
     tags: Array<string>,
     project: string,
     report: ReportType,
+    fetchData: Function,
+    workloads: Array<Object>,
   };
 
   componentDidMount() {
     if (this.props.match.params.id) {
-      this.props.fetchFrames(
+      this.props.fetchData(
         this.props.match.params.id,
         this.props.from,
         this.props.to,
@@ -71,12 +73,12 @@ class Project extends React.Component {
   }
 
   componentWillReceiveProps(nextProps: Object) {
-    if(
-        nextProps.from !== this.props.from ||
-        nextProps.to !== this.props.to ||
-        nextProps.tags !== this.props.tags
-      ){
-      this.props.fetchFrames(
+    if (
+      nextProps.from !== this.props.from ||
+      nextProps.to !== this.props.to ||
+      nextProps.tags !== this.props.tags
+    ) {
+      this.props.fetchData(
         this.props.match.params.id,
         nextProps.from,
         nextProps.to,
@@ -85,13 +87,23 @@ class Project extends React.Component {
       );
     }
 
-    if(nextProps.frames !== this.props.frames){
+    if(nextProps.frames !== this.props.frames) {
       this.props.compileReport(nextProps.frames);
     }
   }
 
   onToggleFramesDisplay() {
-    this.setState({ showFrames: !this.state.showFrames });
+    this.setState((prevState) => {
+      return { showFrames: !prevState.showFrames };
+    });
+  }
+
+  getColor(value: Object) {
+    if (!value) {
+      return 'color-empty';
+    }
+
+    return `color-scale-${value.workload}`;
   }
 
   render() {
@@ -115,7 +127,17 @@ class Project extends React.Component {
           className="Project-back"
         />
 
-        <h2 className="Project-name">{this.props.project}</h2>
+        <div className="Project-head">
+          <h2 className="Project-name">{this.props.project}</h2>
+
+          <div className="Project-workload">
+            <CalendarHeatmap
+              numDays={300}
+              values={this.props.workloads}
+              classForValue={this.getColor}
+            />
+          </div>
+        </div>
 
         <Form
           from={this.props.from}
@@ -124,6 +146,7 @@ class Project extends React.Component {
           onUpdateDateSpan={this.props.updateDateSpan}
           onUpdateTags={this.props.updateTags}
         />
+
         <Report
           total={this.props.report.total}
           tagReports={this.props.report.tagReports}
@@ -134,7 +157,7 @@ class Project extends React.Component {
             this.state.showFrames ?
               `Hide ${this.props.frames.length} frames`
               :
-              `Show ${this.props.frames.length} frames` 
+              `Show ${this.props.frames.length} frames`
           }
           onTouchTap={this.onToggleFramesDisplay}
           secondary={true}
