@@ -3,6 +3,7 @@ import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
 import { API_ERROR } from '../Errors/reducer';
 import type { Action } from '../types';
+import { sortByName } from '../utils';
 
 // State
 type State = {
@@ -35,8 +36,10 @@ export default function reducer(
 ): State {
   switch (action.type) {
     case FETCH_SUCCESS:
+      const projects = action.payload.projects;
+      projects.sort(sortByName);
       return {
-        projects: action.payload.projects,
+        projects: projects,
       };
 
     case LOGOUT:

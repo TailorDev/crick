@@ -30,6 +30,11 @@ export type User = {
   avatar_url: string,
 };
 
+export type Project = {
+  id: string,
+  name: string,
+};
+
 export type Frame = {
   id: string,
   start_at: Date,
