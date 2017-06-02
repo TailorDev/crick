@@ -1,26 +1,17 @@
 /* @flow */
 import React from 'react';
-import {List, ListItem} from 'material-ui/List';
-import LinearProgress from 'material-ui/LinearProgress';
+import { List } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import './report.css';
-import moment from 'moment';
+import TagReport from './TagReport';
+import { prettyDuration } from '../utils';
 import type { TagReports } from '../types';
+import './report.css';
 
 
 type Props = {
   total: number,
   tagReports: TagReports,
 };
-
-const prettyDuration = (duration) => {
-  const d = moment.duration(duration);
-  const hours = Math.floor(d.asHours());
-  const minutes = Math.floor(d.subtract(hours, 'hours').asMinutes());
-  let durationStr = hours > 0 ? `${hours} hours ` : '';
-  durationStr += minutes > 0 ? `${minutes} min` : '';
-  return durationStr
-}
 
 const Report = (props: Props) => (
   <div className="Report-wrapper">
@@ -33,18 +24,10 @@ const Report = (props: Props) => (
         {
           props.tagReports.map((tagReport) => {
             return (
-              <ListItem
-                key={tagReport.tag}
-                className="tag"
-                primaryText={tagReport.tag}
-                secondaryText={prettyDuration(tagReport.duration)}
-              >
-                <LinearProgress
-                  mode="determinate"
-                  value={(tagReport.duration / props.total) * 100}
-                  className="tag-ratio-bar"
-                />
-              </ListItem>
+              <TagReport
+                total={props.total}
+                tagReport={tagReport}
+              />
             );
           })
         }
