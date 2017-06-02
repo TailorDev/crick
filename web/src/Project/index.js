@@ -5,7 +5,8 @@ import Project from './presenter';
 import {
   compileReport,
   fetchFrames,
-  updateDateSpan
+  updateDateSpan,
+  updateTags
 } from './reducer';
 import type { Action, Frame } from '../types';
 
@@ -23,11 +24,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-  fetchFrames: (id: string, from: moment, to: moment, limit: number) => dispatch(
-    fetchFrames(id, from, to, limit)
+  fetchFrames: (id: string, from: moment, to: moment, tags: Array<string>, limit: number) => dispatch(
+    fetchFrames(id, from, to, tags, limit)
   ),
   compileReport: (frames: Array<Frame>) => dispatch(compileReport(frames)),
   updateDateSpan: (from: moment, to: moment) => dispatch(updateDateSpan(from, to)),
+  updateTags: (tags: Array<string>) => dispatch(updateTags(tags)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Project);

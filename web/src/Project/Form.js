@@ -20,6 +20,7 @@ class Form extends React.Component {
 
     (this: any).onFromChange = this.onFromChange.bind(this);
     (this: any).onToChange = this.onToChange.bind(this);
+    (this: any).onTagsChange = this.onTagsChange.bind(this);
   }
 
   state: {
@@ -33,6 +34,7 @@ class Form extends React.Component {
     to: moment,
     tags: Array<string>,
     onUpdateDateSpan: Function,
+    onUpdateTags: Function,
   }
 
   onFromChange(e: SyntheticInputEvent, date: Date) {
@@ -49,6 +51,11 @@ class Form extends React.Component {
       moment(this.state.from),
       moment(this.state.to)
     );
+  }
+
+  onTagsChange(tags: Array<string>) {
+    this.setState({ tags: tags });
+    this.props.onUpdateTags(tags);
   }
 
   render() {
@@ -80,6 +87,7 @@ class Form extends React.Component {
               hintText="e.g. email or meeting"
               floatingLabelText="Tags"
               newChipKeyCodes={[13, 32, 188]}
+              onChange={this.onTagsChange}
             />
           </div>
         </form>

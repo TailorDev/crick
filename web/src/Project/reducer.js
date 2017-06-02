@@ -38,14 +38,16 @@ const FETCH_REQUEST = 'crick/frames/FETCH_REQUEST';
 const FETCH_SUCCESS = 'crick/frames/FETCH_SUCCESS';
 const REPORT_COMPILED = 'crick/frames/COMPILE_REPORT';
 const UPDATE_DATE_SPAN = 'crick/frames/UPDATE_DATE_SPAN';
+const UPDATE_TAGS = 'crick/frames/UPDATE_TAGS';
 
-export const fetchFrames = (id: string, from: moment, to: moment, limit: number): Action => {
+export const fetchFrames = (id: string, from: moment, to: moment, tags: Array<string>, limit: number): Action => {
 
   const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
   let query = id ? `?projectId=${id}` : '?';
   query += from ? `&from=${from.format(dateFormat)}` : '';
   query += to ? `&to=${to.format(dateFormat)}` : '';
   query += limit ? `&limit=${limit}` : '';
+  query += tags ? `&tags=${tags.join(',')}` : '';
 
   return {
     [CALL_API]: {
@@ -104,6 +106,13 @@ export const updateDateSpan = (from: moment, to: moment): Action => {
   };
 }
 
+export const updateTags = (tags: Array<string>): Action => {
+  return {
+    'type': UPDATE_TAGS,
+    'tags': tags,
+  };
+}
+
 // Reducer
 export default function reducer(
   state: State = initialState,
@@ -128,6 +137,12 @@ export default function reducer(
         ...state,
         from: action.from,
         to: action.to,
+      }
+
+    case UPDATE_TAGS:
+      return {
+        ...state,
+        tags: action.tags,
       }
 
     case LOGOUT:

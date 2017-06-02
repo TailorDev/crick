@@ -34,6 +34,7 @@ class Project extends React.Component {
     compileReport: Function,
     fetchFrames: Function,
     updateDateSpan: Function,
+    updateTags: Function,
     frames: Array<Frame>,
     from: moment,
     to: moment,
@@ -48,17 +49,23 @@ class Project extends React.Component {
         this.props.match.params.id,
         this.props.from,
         this.props.to,
+        this.props.tags,
         10000
       );
     }
   }
 
   componentWillReceiveProps(nextProps: Object) {
-    if(nextProps.from !== this.props.from || nextProps.to !== this.props.to){
+    if(
+        nextProps.from !== this.props.from ||
+        nextProps.to !== this.props.to ||
+        nextProps.tags !== this.props.tags
+      ){
       this.props.fetchFrames(
         this.props.match.params.id,
         nextProps.from,
         nextProps.to,
+        nextProps.tags,
         10000
       );
     }
@@ -96,6 +103,7 @@ class Project extends React.Component {
           to={this.props.to}
           tags={this.props.tags}
           onUpdateDateSpan={this.props.updateDateSpan}
+          onUpdateTags={this.props.updateTags}
         />
         <Report
           total={this.props.report.total}
