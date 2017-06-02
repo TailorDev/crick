@@ -13,9 +13,9 @@ class Form extends React.Component {
 
     // NB: DatePicker component manipulates JavaScript Date objects
     this.state = {
-      from: this.props.from.toDate(),
-      to: this.props.to.toDate(),
-      tags: this.props.tags,
+      from: this.props.from ? this.props.from.toDate() : null,
+      to: this.props.to ? this.props.to.toDate() : null,
+      tags: this.props.tags ? this.props.tags : [],
     };
 
     (this: any).onFromChange = this.onFromChange.bind(this);
@@ -24,8 +24,8 @@ class Form extends React.Component {
   }
 
   state: {
-    from: Date,
-    to: Date,
+    from: ?Date,
+    to: ?Date,
     tags: Array<string>,
   };
 
@@ -37,25 +37,28 @@ class Form extends React.Component {
     onUpdateTags: Function,
   }
 
-  onFromChange(e: SyntheticInputEvent, date: Date) {
-    this.setState({ from: date });
-    this.props.onUpdateDateSpan(
-      moment(this.state.from),
-      moment(this.state.to)
-    );
+  onFromChange(e: SyntheticInputEvent, from: Date) {
+    this.setState({ from: from }, () => {
+      this.props.onUpdateDateSpan(
+        moment(this.state.from),
+        moment(this.state.to)
+      );
+    });
   }
 
-  onToChange(e: SyntheticInputEvent, date: Date) {
-    this.setState({ to: date });
-    this.props.onUpdateDateSpan(
-      moment(this.state.from),
-      moment(this.state.to)
-    );
+  onToChange(e: SyntheticInputEvent, to: Date) {
+    this.setState({ to: to }, () => {
+      this.props.onUpdateDateSpan(
+        moment(this.state.from),
+        moment(this.state.to)
+      );
+    });
   }
 
   onTagsChange(tags: Array<string>) {
-    this.setState({ tags: tags });
-    this.props.onUpdateTags(tags);
+    this.setState({ tags: tags }, () => {
+      this.props.onUpdateTags(tags);
+    });
   }
 
   render() {
