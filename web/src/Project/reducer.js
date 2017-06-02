@@ -12,7 +12,7 @@ type State = {
   from: moment,
   to: moment,
   tags: Array<string>,
-  project: string,
+  project: ?string,
   report: Report,
   workloads: Array<Object>,
 };
@@ -26,7 +26,7 @@ const initialState: State = {
   from: from,
   to: to,
   tags: [],
-  project: '',
+  project: null,
   report: {
     total: 0,
     tagReports: [],

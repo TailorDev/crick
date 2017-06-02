@@ -7,11 +7,11 @@ import { sortByName } from '../utils';
 
 // State
 type State = {
-  projects: Array<Object>,
+  projects: ?Array<Object>,
 };
 
 const initialState: State = {
-  projects: [],
+  projects: null,
 };
 
 // Actions
