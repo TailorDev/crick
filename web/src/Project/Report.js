@@ -13,12 +13,21 @@ type Props = {
   tagReports: TagReports,
 };
 
+const prettyDuration = (duration) => {
+  const d = moment.duration(duration);
+  const hours = Math.floor(d.asHours());
+  const minutes = Math.floor(d.subtract(hours, 'hours').asMinutes());
+  let durationStr = hours > 0 ? `${hours} hours ` : '';
+  durationStr += minutes > 0 ? `${minutes} min` : '';
+  return durationStr
+}
+
 const Report = (props: Props) => (
   <div className="Report-wrapper">
     <div className="Report">
       <Subheader>Report</Subheader>
       <div className="total">
-        {`${moment.duration(props.total).humanize()}`}
+        {prettyDuration(props.total)}
       </div>
       <List className="tags">
         {
@@ -28,7 +37,7 @@ const Report = (props: Props) => (
                 key={tagReport.tag}
                 className="tag"
                 primaryText={tagReport.tag}
-                secondaryText={`${moment.duration(tagReport.duration).humanize()}`}
+                secondaryText={prettyDuration(tagReport.duration)}
               >
                 <LinearProgress
                   mode="determinate"
