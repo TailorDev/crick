@@ -2,9 +2,7 @@
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
 import { API_ERROR } from '../Errors/reducer';
-import type {
-  Action,
-} from '../types';
+import type { Action } from '../types';
 
 // State
 type State = {
@@ -24,7 +22,7 @@ export const fetchProjects = (): Action => {
     [CALL_API]: {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects`,
       method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: 'application/json' },
       types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
     },
   };

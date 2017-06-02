@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import Home from './presenter';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { auth } = state;
 
   return {

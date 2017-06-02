@@ -94,17 +94,14 @@ class Auth extends React.Component {
                 <Avatar src={this.props.avatar_url} />
               </IconButton>
             }
-            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
           >
             <MenuItem
               primaryText="My API Token"
               onTouchTap={this.handleTokenDialogOpen}
             />
-            <MenuItem
-              primaryText="Sign out"
-              onTouchTap={this.props.onLogout}
-            />
+            <MenuItem primaryText="Sign out" onTouchTap={this.props.onLogout} />
           </IconMenu>
         </div>
       );

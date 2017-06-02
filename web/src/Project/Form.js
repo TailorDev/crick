@@ -6,7 +6,6 @@ import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
 import './form.css';
 
-
 class Form extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -35,7 +34,7 @@ class Form extends React.Component {
     tags: Array<string>,
     onUpdateDateSpan: Function,
     onUpdateTags: Function,
-  }
+  };
 
   onFromChange(e: SyntheticInputEvent, from: Date) {
     this.setState({ from: from }, () => {

@@ -38,7 +38,7 @@ export const fetchTeams = (): Action => {
     [CALL_API]: {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/teams`,
       method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: 'application/json' },
       types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
     },
   };
@@ -53,7 +53,7 @@ export const createTeam = (team: NewTeam): ThunkAction => {
         endpoint: `${process.env.REACT_APP_API_HOST || ''}/teams`,
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -73,7 +73,7 @@ export const updateTeam = (team: Team): Action => {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/teams/${team.id}`,
       method: 'PUT',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -96,7 +96,7 @@ export const deleteTeam = (team: Team): ThunkAction => {
         endpoint: `${process.env.REACT_APP_API_HOST || ''}/teams/${team.id}`,
         method: 'DELETE',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
         types: [API_REQUEST, DELETE_SUCCESS, API_ERROR],
       },
@@ -110,7 +110,7 @@ export const autoCompleteUsers = (input: string): Action => {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/users?q=${input}`,
       method: 'GET',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
       types: [FETCH_USERS_REQUEST, FETCH_USERS_SUCCESS, API_ERROR],
     },

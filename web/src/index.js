@@ -32,7 +32,7 @@ const crickTheme = getMuiTheme({
     accent2Color: '#91f6d1',
     accent3Color: '#5ec3a0',
     textColor: '#333',
-  }
+  },
 });
 
 const store = configureStore();
@@ -44,9 +44,19 @@ ReactDOM.render(
         <App>
           <Switch>
             <Route exact path="/" component={Home} />
-            <PrivateRoute exact path="/projects/:id" component={Project} store={store} />
+            <PrivateRoute
+              exact
+              path="/projects/:id"
+              component={Project}
+              store={store}
+            />
             <PrivateRoute exact path="/teams" component={Teams} store={store} />
-            <PrivateRoute exact path="/teams/:id/edit" component={Teams} store={store} />
+            <PrivateRoute
+              exact
+              path="/teams/:id/edit"
+              component={Teams}
+              store={store}
+            />
             <Route component={NotFound} />
           </Switch>
         </App>

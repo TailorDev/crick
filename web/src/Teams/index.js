@@ -10,7 +10,7 @@ import {
 } from './reducer';
 import type { Team, NewTeam } from '../types';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { auth, teams } = state;
 
   return {
@@ -23,7 +23,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch: Dispatch<*>) => ({
   fetchTeams: () => dispatch(fetchTeams()),
   createTeam: (team: NewTeam) => dispatch(createTeam(team)),
-  autoCompleteUsers: (input) => dispatch(autoCompleteUsers(input)),
+  autoCompleteUsers: input => dispatch(autoCompleteUsers(input)),
   updateTeam: (team: Team) => dispatch(updateTeam(team)),
   deleteTeam: (team: Team) => dispatch(deleteTeam(team)),
 });

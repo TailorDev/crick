@@ -110,10 +110,7 @@ class List extends React.Component {
         {this.renderConfirmation()}
 
         <Table selectable={false}>
-          <TableHeader
-            adjustForCheckbox={false}
-            displaySelectAll={false}
-          >
+          <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
               <TableHeaderColumn>Projects</TableHeaderColumn>
@@ -121,22 +118,19 @@ class List extends React.Component {
               <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-            stripedRows={false}
-          >
-          {this.props.teams.map(team => (
-            <TableRow key={team.id}>
-              <TableRowColumn>{team.name}</TableRowColumn>
-              <TableRowColumn>{team.projects.join(', ')}</TableRowColumn>
-              <TableRowColumn>
-                {team.users.map(u => this.renderUser(u))}
-              </TableRowColumn>
-              <TableRowColumn>
-                {this.renderActions(team)}
-              </TableRowColumn>
-            </TableRow>
-          ))}
+          <TableBody displayRowCheckbox={false} stripedRows={false}>
+            {this.props.teams.map(team => (
+              <TableRow key={team.id}>
+                <TableRowColumn>{team.name}</TableRowColumn>
+                <TableRowColumn>{team.projects.join(', ')}</TableRowColumn>
+                <TableRowColumn>
+                  {team.users.map(u => this.renderUser(u))}
+                </TableRowColumn>
+                <TableRowColumn>
+                  {this.renderActions(team)}
+                </TableRowColumn>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

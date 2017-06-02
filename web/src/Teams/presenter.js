@@ -85,11 +85,7 @@ class Teams extends React.Component {
   render() {
     const actions = [
       <Link to={`/teams`}>
-        <FlatButton
-          primary
-          label="Cancel"
-          onTouchTap={this.onCloseDialog}
-        />
+        <FlatButton primary label="Cancel" onTouchTap={this.onCloseDialog} />
       </Link>,
     ];
 
@@ -99,15 +95,13 @@ class Teams extends React.Component {
       <div>
         <h2>Teams</h2>
 
-        {this.props.teams.length > 0 ? (
-          <List
-            userId={this.props.userId}
-            teams={this.props.teams}
-            onDelete={this.props.deleteTeam}
-          />
-        ) : (
-          <Empty />
-        )}
+        {this.props.teams.length > 0
+          ? <List
+              userId={this.props.userId}
+              teams={this.props.teams}
+              onDelete={this.props.deleteTeam}
+            />
+          : <Empty />}
 
         <Dialog
           title={editTeam ? `Edit "${editTeam.name}"` : 'Create a new team'}

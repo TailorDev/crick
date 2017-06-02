@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
 
-
 type Props = {
   id: string,
   name: string,

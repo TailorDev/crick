@@ -2,11 +2,9 @@
 import { connect } from 'react-redux';
 import Projects from './presenter';
 import { fetchProjects } from './reducer';
-import type {
-  Action,
-} from '../types';
+import type { Action } from '../types';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { auth, projects } = state;
 
   return {

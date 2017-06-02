@@ -24,7 +24,7 @@ class ChallengeConfirmationDialog extends React.Component {
 
   props: {
     challenge: string,
-    onCancel: Function ,
+    onCancel: Function,
     onConfirm: Function,
     children?: React$Element<*>,
   };
@@ -39,17 +39,14 @@ class ChallengeConfirmationDialog extends React.Component {
   }
 
   renderTitle() {
-    return "Are you ABSOLUTELY sure?";
+    return 'Are you ABSOLUTELY sure?';
   }
 
   render() {
     const { onConfirm, onCancel, children } = this.props;
 
     const actions = [
-      <FlatButton
-        label="Cancel"
-        onTouchTap={onCancel}
-      />,
+      <FlatButton label="Cancel" onTouchTap={onCancel} />,
       <RaisedButton
         primary
         label="Confirm"

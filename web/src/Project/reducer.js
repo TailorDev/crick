@@ -3,9 +3,7 @@ import { CALL_API } from 'redux-api-middleware';
 import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
 import { API_REQUEST, API_ERROR } from '../Errors/reducer';
-import type {
-  Action, Frame, Report,
-} from '../types';
+import type { Action, Frame, Report } from '../types';
 import { sortByDuration } from '../utils';
 
 // State
@@ -20,7 +18,7 @@ type State = {
 };
 
 const from = moment().subtract(7, 'days');
-const to = moment();  // now
+const to = moment(); // now
 const dateFormat = 'YYYY-MM-DD';
 
 const initialState: State = {
@@ -64,7 +62,7 @@ export const fetchFrames = (
     [CALL_API]: {
       endpoint: `${endpoint}?${query.join('&')}`,
       method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: 'application/json' },
       types: [API_REQUEST, FETCH_SUCCESS, API_ERROR],
     },
   };
@@ -75,34 +73,37 @@ export const fetchWorkloads = (id: string): Action => {
     [CALL_API]: {
       endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects/${id}/workloads`,
       method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: 'application/json' },
       types: [API_REQUEST, FETCH_WORKLOADS_SUCCESS, API_ERROR],
     },
   };
 };
 
 export const compileReport = (frames: Array<Frame>): Action => {
-  const tmp = frames.reduce((r, frame) => {
-    const duration = moment(frame.end_at).diff(moment(frame.start_at));
-    r.total += duration;
-    frame.tags.forEach((t) => {
-      let d = r.tagReports.has(t) ? r.tagReports.get(t) : 0;
-      d += duration;
-      r.tagReports.set(t, d);
-    });
-    return r;
-  }, {
-    'total': 0,
-    'tagReports': new Map()
-  });
+  const tmp = frames.reduce(
+    (r, frame) => {
+      const duration = moment(frame.end_at).diff(moment(frame.start_at));
+      r.total += duration;
+      frame.tags.forEach(t => {
+        let d = r.tagReports.has(t) ? r.tagReports.get(t) : 0;
+        d += duration;
+        r.tagReports.set(t, d);
+      });
+      return r;
+    },
+    {
+      total: 0,
+      tagReports: new Map(),
+    }
+  );
 
   // An array is easier to manipulate
   const report = {
-    'total': tmp.total,
-    'tagReports': Array.from(tmp.tagReports).map((tagReport) => {
+    total: tmp.total,
+    tagReports: Array.from(tmp.tagReports).map(tagReport => {
       return {
-        'tag': tagReport[0],
-        'duration': tagReport[1],
+        tag: tagReport[0],
+        duration: tagReport[1],
       };
     }),
   };
@@ -111,20 +112,20 @@ export const compileReport = (frames: Array<Frame>): Action => {
   report.tagReports.sort(sortByDuration);
 
   return {
-    'type': REPORT_COMPILED,
-    'report': report,
+    type: REPORT_COMPILED,
+    report: report,
   };
-}
+};
 
 export const updateDateSpan = (from: moment, to: moment): Action => ({
-  'type': UPDATE_DATE_SPAN,
-  'from': from,
-  'to': to,
+  type: UPDATE_DATE_SPAN,
+  from: from,
+  to: to,
 });
 
 export const updateTags = (tags: Array<string>): Action => ({
-  'type': UPDATE_TAGS,
-  'tags': tags,
+  type: UPDATE_TAGS,
+  tags: tags,
 });
 
 // Reducer
@@ -144,20 +145,20 @@ export default function reducer(
       return {
         ...state,
         report: action.report,
-      }
+      };
 
     case UPDATE_DATE_SPAN:
       return {
         ...state,
         from: action.from,
         to: action.to,
-      }
+      };
 
     case UPDATE_TAGS:
       return {
         ...state,
         tags: action.tags,
-      }
+      };
 
     case FETCH_WORKLOADS_SUCCESS:
       return {

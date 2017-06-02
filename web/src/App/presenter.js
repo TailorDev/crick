@@ -12,10 +12,7 @@ type Props = {
 
 const App = (props: Props) => (
   <div className="App">
-    <AppBar
-      title="Crick.io"
-      iconElementRight={<Auth />}
-    />
+    <AppBar title="Crick.io" iconElementRight={<Auth />} />
     <div className="App-content">
       {props.children}
     </div>

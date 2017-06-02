@@ -17,12 +17,14 @@ class Form extends React.Component {
   constructor(props: Object) {
     super(props);
 
-    this.state = props.team ? {
-      name: props.team.name,
-      users: props.team.users,
-      projects: props.team.projects,
-      owner_id: props.userId,
-    } : initialState;
+    this.state = props.team
+      ? {
+          name: props.team.name,
+          users: props.team.users,
+          projects: props.team.projects,
+          owner_id: props.userId,
+        }
+      : initialState;
 
     (this: any).onNameChange = this.onNameChange.bind(this);
     (this: any).onSubmit = this.onSubmit.bind(this);
