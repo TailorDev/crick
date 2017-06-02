@@ -21,3 +21,13 @@ test:
       && make test | go-junit-report -set-exit-code=true -out=${CIRCLE_TEST_REPORTS}/go-report.xml
     - cd web/ && yarn test -- --watch=false
     - cd web/ && yarn flow
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - cd ${HOME}/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/api/ \
+        && go build -o crick-api-server
+      - rsync -e "ssh -p 2222 -o StrictHostKeyChecking=no" -v -r -z api/migrations/*.sql snorkel@splinter.tailordev.fr:~/crick-api/production/migrations/
+      - rsync -e "ssh -p 2222 -o StrictHostKeyChecking=no" -v -r -z api/crick-api-server snorkel@splinter.tailordev.fr:~/crick-api/production/
+      - ssh -p 2222 -o StrictHostKeyChecking=no snorkel@splinter.tailordev.fr 'sudo /bin/systemctl restart crick-api.service'
