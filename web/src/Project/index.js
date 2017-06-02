@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import Project from './presenter';
 import { compileReport, fetchFrames } from './reducer';
-import type { Action } from '../types';
+import type { Action, Frame } from '../types';
 
 const mapStateToProps = (state) => {
   const { frames } = state;
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   fetchFrames: (id: string) => dispatch(fetchFrames(id)),
-  compileReport: (frames: Array<Object>) => dispatch(compileReport(frames)),
+  compileReport: (frames: Array<Frame>) => dispatch(compileReport(frames)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Project);

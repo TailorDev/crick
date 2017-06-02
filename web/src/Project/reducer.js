@@ -67,7 +67,7 @@ export const compileReport = (frames: Array<Object>): Action => {
 
   return {
     'type': REPORT_COMPILED,
-    'report': report
+    'report': report,
   };
 }
 
