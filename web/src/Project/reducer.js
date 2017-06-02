@@ -45,15 +45,17 @@ export const fetchFrames = (id: string, from: moment, to: moment, tags: Array<st
 
   const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
 
-  let query = id ? `?projectId=${id}` : '?';
-  query += from ? `&from=${from.format(dateFormat)}` : '';
-  query += to ? `&to=${to.format(dateFormat)}` : '';
-  query += limit ? `&limit=${limit}` : '';
-  query += tags ? `&tags=${tags.join(',')}` : '';
+  let query = [
+    `projectId=${id}`,
+    `from=${from.format(dateFormat)}`,
+    `to=${to.format(dateFormat)}`,
+    `limit=${limit}`,
+    `tags=${tags.join(',')}`,
+  ];
 
   return {
     [CALL_API]: {
-      endpoint: endpoint + query,
+      endpoint: `${endpoint}?${query.join('&')}`,
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       types: [FETCH_REQUEST, FETCH_SUCCESS, API_ERROR],
