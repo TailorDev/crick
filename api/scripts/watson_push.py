@@ -15,7 +15,7 @@ import uuid
 from os.path import expanduser
 from datetime import datetime, timezone
 
-DEFAULT_API_SERVER_DOMAIN = '127.0.0.1'
+DEFAULT_API_SERVER_DOMAIN = 'api.crick.dev'
 DEFAULT_API_SERVER_PORT = 8000
 DEFAULT_FRAMES_PATH = expanduser('~/Library/Application Support/watson/frames')
 DEFAULT_API_ENDPOINT = '/watson/frames/bulk'
@@ -39,6 +39,9 @@ def parse_cmd_line():
         help="Crick server port (e.g. 8000)"
     )
     parser.add_argument(
+        '-t', '--token', dest='token', help="Crick API token"
+    )
+    parser.add_argument(
         '-v', '--verbose', dest='logging_level', action='store_const',
         const=logging.INFO, default=logging.WARNING,
         help="Verbose mode"
@@ -51,12 +54,23 @@ def parse_cmd_line():
     return parser.parse_args()
 
 
-def check_environ():
+def validate_cmd_line(args):
+    """Validate command line argument consistency"""
+    logging.debug('Validating command line')
+
+    # API token could be passed as an argument of environment variable
+    if 'token' not in args or not args.token:
+        check_environ(args)
+
+
+def check_environ(args):
     """Check user environment"""
     if 'CRICK_API_TOKEN' not in os.environ:
-        raise EnvironmentError(
-            'CRICK_API_TOKEN environment variable is not defined'
+        message = (
+            'No API token provided, you should either use the --token '
+            'argument or define a CRICK_API_TOKEN environment variable'
         )
+        raise argparse.ArgumentError(args.token, message)
 
 
 def configure_logging(level=logging.WARNING):
@@ -134,12 +148,12 @@ def push(frames_path, server_domain, server_port, token,
 def main():
     args = parse_cmd_line()
     configure_logging(level=args.logging_level)
-    check_environ()
+    validate_cmd_line(args)
     push(
         args.frames_path,
         args.server_domain,
         args.server_port,
-        os.environ.get('CRICK_API_TOKEN')
+        args.token or os.environ.get('CRICK_API_TOKEN')
     )
 
 
