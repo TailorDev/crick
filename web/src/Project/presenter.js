@@ -130,7 +130,12 @@ class Project extends React.Component {
         />
 
         <FlatButton
-          label={this.state.showFrames ? 'Hide frames' : 'Show frames'}
+          label={
+            this.state.showFrames ?
+              `Hide ${this.props.frames.length} frames`
+              :
+              `Show ${this.props.frames.length} frames` 
+          }
           onTouchTap={this.onToggleFramesDisplay}
           secondary={true}
           fullWidth={true}
