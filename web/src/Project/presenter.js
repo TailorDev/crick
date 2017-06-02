@@ -25,7 +25,22 @@ const prettyDiffDate = (d1, d2) => {
   ).format("HH:mm:ss");
 };
 
+
 class Project extends React.Component {
+  constructor(props: Object) {
+    super(props);
+
+    this.state = {
+      showFrames: false,
+    };
+
+    (this: any).onToggleFramesDisplay = this.onToggleFramesDisplay.bind(this);
+  }
+
+  state: {
+    showFrames: boolean,
+  }
+
   props: {
     // routing
     history: RouterHistory,
@@ -75,6 +90,10 @@ class Project extends React.Component {
     }
   }
 
+  onToggleFramesDisplay() {
+    this.setState({ showFrames: !this.state.showFrames });
+  }
+
   render() {
     if (!this.props.frames) {
       return (
@@ -110,47 +129,58 @@ class Project extends React.Component {
           tagReports={this.props.report.tagReports}
         />
 
-        <Table
-          className="Project-frames"
-        >
-          <TableHeader
-            displaySelectAll={false}
-            enableSelectAll={false}
-            adjustForCheckbox={false}
-          >
-            <TableRow>
-              <TableHeaderColumn>Start</TableHeaderColumn>
-              <TableHeaderColumn>End</TableHeaderColumn>
-              <TableHeaderColumn>Duration</TableHeaderColumn>
-              <TableHeaderColumn>Tags</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-            stripedRows={false}
-          >
-            {this.props.frames.map(f => (
-              <TableRow key={f.id} className="Project-frame">
-                <TableRowColumn className="start">
-                  {moment(f.start_at).format('YYYY-MM-DD HH:mm')}
-                </TableRowColumn>
-                <TableRowColumn className="end">
-                  {moment(f.end_at).format('YYYY-MM-DD HH:mm')}
-                </TableRowColumn>
-                <TableRowColumn className="duration">
-                  {prettyDiffDate(f.start_at, f.end_at)}
-                </TableRowColumn>
-                <TableRowColumn className="tags">
-                  <div className="tags-wrapper">
-                    {f.tags.map(t => (
-                      <Chip key={t} className="tag">{t}</Chip>
-                    ))}
-                  </div>
-                </TableRowColumn>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <FlatButton
+          label={this.state.showFrames ? 'Hide frames' : 'Show frames'}
+          onTouchTap={this.onToggleFramesDisplay}
+          secondary={true}
+          fullWidth={true}
+        />
+
+        {
+          this.state.showFrames ?
+            <Table
+              className="Project-frames"
+            >
+              <TableHeader
+                displaySelectAll={false}
+                enableSelectAll={false}
+                adjustForCheckbox={false}
+              >
+                <TableRow>
+                  <TableHeaderColumn>Start</TableHeaderColumn>
+                  <TableHeaderColumn>End</TableHeaderColumn>
+                  <TableHeaderColumn>Duration</TableHeaderColumn>
+                  <TableHeaderColumn>Tags</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody
+                displayRowCheckbox={false}
+                stripedRows={false}
+              >
+                {this.props.frames.map(f => (
+                  <TableRow key={f.id} className="Project-frame">
+                    <TableRowColumn className="start">
+                      {moment(f.start_at).format('YYYY-MM-DD HH:mm')}
+                    </TableRowColumn>
+                    <TableRowColumn className="end">
+                      {moment(f.end_at).format('YYYY-MM-DD HH:mm')}
+                    </TableRowColumn>
+                    <TableRowColumn className="duration">
+                      {prettyDiffDate(f.start_at, f.end_at)}
+                    </TableRowColumn>
+                    <TableRowColumn className="tags">
+                      <div className="tags-wrapper">
+                        {f.tags.map(t => (
+                          <Chip key={t} className="tag">{t}</Chip>
+                        ))}
+                      </div>
+                    </TableRowColumn>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          : ''
+        }
 
         <FlatButton
           label="Back to projects"
