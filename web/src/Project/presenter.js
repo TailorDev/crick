@@ -109,15 +109,6 @@ class Project extends React.Component {
       return <Loading message="Loading..." />;
     }
 
-    if (!this.props.frames) {
-      return (
-        <div>
-          <p>no frames</p>
-          <Link to="/">back</Link>
-        </div>
-      );
-    }
-
     return (
       <div className="Project-details">
 

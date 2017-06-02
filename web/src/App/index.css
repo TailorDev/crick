@@ -5,3 +5,13 @@
 .App-content {
   padding: 1rem;
 }
+
+.App-bar a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.App-bar a:focus,
+.App-bar a:hover {
+  text-decoration: underline;
+}
