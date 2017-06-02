@@ -85,7 +85,7 @@ class Teams extends React.Component {
 
   render() {
     if (!this.props.teams) {
-      return (<Loading message="Loading your teams..." />);
+      return <Loading message="Loading your teams..." />;
     }
 
     const actions = [

@@ -3,7 +3,7 @@ import { CALL_API } from 'redux-api-middleware';
 import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
 import { API_REQUEST, API_ERROR } from '../Errors/reducer';
-import type { Action, Frame, Report } from '../types';
+import type { ThunkAction, Action, Frame, Report } from '../types';
 import { sortByDuration } from '../utils';
 
 // State
@@ -40,6 +40,7 @@ const REPORT_COMPILED = 'crick/frames/COMPILE_REPORT';
 const UPDATE_DATE_SPAN = 'crick/frames/UPDATE_DATE_SPAN';
 const UPDATE_TAGS = 'crick/frames/UPDATE_TAGS';
 const FETCH_WORKLOADS_SUCCESS = 'crick/frames/FETCH_WORKLOADS_SUCCESS';
+const RESET_STATE = 'crick/frames/RESET_STATE';
 
 export const fetchFrames = (
   id: string,
@@ -47,24 +48,28 @@ export const fetchFrames = (
   to: moment,
   tags: Array<string>,
   limit: number
-): Action => {
-  const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
+): ThunkAction => {
+  return dispatch => {
+    dispatch(resetState());
 
-  let query = [
-    `projectId=${id}`,
-    `from=${from.format(dateFormat)}`,
-    `to=${to.format(dateFormat)}`,
-    `limit=${limit}`,
-    `tags=${tags.join(',')}`,
-  ];
+    const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
 
-  return {
-    [CALL_API]: {
-      endpoint: `${endpoint}?${query.join('&')}`,
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      types: [API_REQUEST, FETCH_SUCCESS, API_ERROR],
-    },
+    let query = [
+      `projectId=${id}`,
+      `from=${from.format(dateFormat)}`,
+      `to=${to.format(dateFormat)}`,
+      `limit=${limit}`,
+      `tags=${tags.join(',')}`,
+    ];
+
+    dispatch({
+      [CALL_API]: {
+        endpoint: `${endpoint}?${query.join('&')}`,
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        types: [API_REQUEST, FETCH_SUCCESS, API_ERROR],
+      },
+    });
   };
 };
 
@@ -83,12 +88,15 @@ export const compileReport = (frames: Array<Frame>): Action => {
   const tmp = frames.reduce(
     (r, frame) => {
       const duration = moment(frame.end_at).diff(moment(frame.start_at));
+
       r.total += duration;
       frame.tags.forEach(t => {
         let d = r.tagReports.has(t) ? r.tagReports.get(t) : 0;
+
         d += duration;
         r.tagReports.set(t, d);
       });
+
       return r;
     },
     {
@@ -113,19 +121,23 @@ export const compileReport = (frames: Array<Frame>): Action => {
 
   return {
     type: REPORT_COMPILED,
-    report: report,
+    report,
   };
 };
 
 export const updateDateSpan = (from: moment, to: moment): Action => ({
   type: UPDATE_DATE_SPAN,
-  from: from,
-  to: to,
+  from,
+  to,
 });
 
 export const updateTags = (tags: Array<string>): Action => ({
   type: UPDATE_TAGS,
-  tags: tags,
+  tags,
+});
+
+const resetState = (): Action => ({
+  type: RESET_STATE,
 });
 
 // Reducer
@@ -166,6 +178,7 @@ export default function reducer(
         workloads: action.payload.workloads,
       };
 
+    case RESET_STATE:
     case LOGOUT:
       return initialState;
 

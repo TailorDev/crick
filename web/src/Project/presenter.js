@@ -106,16 +106,7 @@ class Project extends React.Component {
 
   render() {
     if (!this.props.project) {
-      return (<Loading message="Loading..." />);
-    }
-
-    if (!this.props.frames) {
-      return (
-        <div>
-          <p>no frames</p>
-          <Link to="/">back</Link>
-        </div>
-      );
+      return <Loading message="Loading..." />;
     }
 
     return (
@@ -124,9 +115,9 @@ class Project extends React.Component {
         <FlatButton
           label="Back to projects"
           primary={true}
-          href="/"
           icon={<NavigationArrowBack />}
           className="Project-back"
+          containerElement={<Link to="/" />}
         />
 
         <div className="Project-head">
@@ -154,9 +145,8 @@ class Project extends React.Component {
           tagReports={this.props.report.tagReports}
         />
 
-        {
-          this.props.frames.length > 0 ?
-            <FlatButton
+        {this.props.frames.length > 0
+          ? <FlatButton
               label={
                 this.state.showFrames
                   ? `Hide ${this.props.frames.length} frames`
@@ -166,8 +156,7 @@ class Project extends React.Component {
               secondary={true}
               fullWidth={true}
             />
-            : ''
-        }
+          : ''}
 
         {this.state.showFrames
           ? <Table className="Project-frames">
@@ -211,7 +200,7 @@ class Project extends React.Component {
         <FlatButton
           label="Back to projects"
           primary={true}
-          href="/"
+          containerElement={<Link to="/" />}
           icon={<NavigationArrowBack />}
           className="Project-back"
         />
