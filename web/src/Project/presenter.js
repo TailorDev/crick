@@ -16,7 +16,7 @@ import moment from 'moment';
 import Form from './Form';
 import Report from './Report';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
-import type { Frame } from '../types';
+import type { Frame, Report as ReportType } from '../types';
 import './index.css';
 
 const prettyDiffDate = (d1, d2) => {
@@ -31,8 +31,11 @@ class Project extends React.Component {
     history: RouterHistory,
     location: Location,
     match: Match,
+    compileReport: Function,
     fetchFrames: Function,
     frames: Array<Frame>,
+    project: string,
+    report: ReportType,
   };
 
   componentDidMount() {

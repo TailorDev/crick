@@ -25,14 +25,14 @@ const Report = (props: Props) => (
           props.tagReports.map((tagReport) => {
             return (
               <ListItem
-                key={tagReport[0]}
+                key={tagReport.tag}
                 className="tag"
-                primaryText={tagReport[0]}
-                secondaryText={`${moment.duration(tagReport[1]).humanize()}`}
+                primaryText={tagReport.tag}
+                secondaryText={`${moment.duration(tagReport.duration).humanize()}`}
               >
                 <LinearProgress
                   mode="determinate"
-                  value={(tagReport[1] / props.total) * 100}
+                  value={(tagReport.duration / props.total) * 100}
                   className="tag-ratio-bar"
                 />
               </ListItem>

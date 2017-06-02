@@ -41,9 +41,7 @@ export const fetchFrames = (id: string): Action => {
 
 export const compileReport = (frames: Array<Frame>): Action => {
   const tmp = frames.reduce((r, frame) => {
-    const duration = moment.utc(
-      moment(frame.end_at).diff(moment(frame.start_at))
-    );
+    const duration = moment(frame.end_at).diff(moment(frame.start_at));
     r.total += duration;
     frame.tags.forEach((t) => {
       let d = r.tagReports.has(t) ? r.tagReports.get(t) : 0;
@@ -55,11 +53,16 @@ export const compileReport = (frames: Array<Frame>): Action => {
     'total': 0,
     'tagReports': new Map()
   });
-  
+
   // An array is easier to manipulate
   const report = {
     'total': tmp.total,
-    'tagReports': Array.from(tmp.tagReports),
+    'tagReports': Array.from(tmp.tagReports).map((tagReport) => {
+      return {
+        'tag': tagReport[0],
+        'duration': tagReport[1],
+      };
+    }),
   };
 
   // Sort tags by duration
