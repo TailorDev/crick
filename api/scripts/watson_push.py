@@ -15,9 +15,11 @@ import uuid
 from os.path import expanduser
 from datetime import datetime, timezone
 
-DEFAULT_API_SERVER_DOMAIN = '127.0.0.1'
+DEFAULT_API_SERVER_DOMAIN = 'api.crick.dev'
 DEFAULT_API_SERVER_PORT = 8000
 DEFAULT_FRAMES_PATH = expanduser('~/Library/Application Support/watson/frames')
+DEFAULT_N_FRAMES = 100
+DEFAULT_API_ENDPOINT = '/watson/frames/bulk'
 
 
 def parse_cmd_line():
@@ -26,16 +28,32 @@ def parse_cmd_line():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '-f', '--frames', dest='frames_path', default=DEFAULT_FRAMES_PATH,
-        help="Watson frames file path"
+        help="Watson frames file path (default: {})".format(
+            DEFAULT_FRAMES_PATH
+        )
     )
     parser.add_argument(
         '-s', '--server-domain', dest='server_domain',
         default=DEFAULT_API_SERVER_DOMAIN,
-        help="Crick server domain (e.g. localhost)"
+        help="Crick server domain (default: {})".format(
+            DEFAULT_API_SERVER_DOMAIN
+        )
     )
     parser.add_argument(
         '-p', '--port', dest='server_port', default=DEFAULT_API_SERVER_PORT,
-        help="Crick server port (e.g. 8000)"
+        help="Crick server port (default: {})".format(DEFAULT_API_SERVER_PORT)
+    )
+    parser.add_argument(
+        '-t', '--token', dest='token', help="Crick API token"
+    )
+    parser.add_argument(
+        '-n', '--n-frames', dest='n_frames', type=int,
+        default=DEFAULT_N_FRAMES,
+        help=(
+            "The number of latest frames to push (default: {})".format(
+                DEFAULT_N_FRAMES
+            )
+        )
     )
     parser.add_argument(
         '-v', '--verbose', dest='logging_level', action='store_const',
@@ -50,12 +68,23 @@ def parse_cmd_line():
     return parser.parse_args()
 
 
-def check_environ():
+def validate_cmd_line(args):
+    """Validate command line argument consistency"""
+    logging.debug('Validating command line')
+
+    # API token could be passed as an argument of environment variable
+    if 'token' not in args or not args.token:
+        check_environ(args)
+
+
+def check_environ(args):
     """Check user environment"""
     if 'CRICK_API_TOKEN' not in os.environ:
-        raise EnvironmentError(
-            'CRICK_API_TOKEN environment variable is not defined'
+        message = (
+            'No API token provided, you should either use the --token '
+            'argument or define a CRICK_API_TOKEN environment variable'
         )
+        raise argparse.ArgumentError(args.token, message)
 
 
 def configure_logging(level=logging.WARNING):
@@ -75,29 +104,30 @@ def _to_frame(start, stop, project, id, tags, *args):
     }
 
 
-def load_frames(frames_path, last=100):
+def load_frames(frames_path, n_frames=100):
     """Load Watson's frames"""
     logging.debug('Will load frames file: "{}"'.format(frames_path))
 
     with open(frames_path) as frames_file:
         frames = list(json.load(frames_file))
-        return [_to_frame(*f) for f in frames[-last:]]
+        return [_to_frame(*f) for f in frames[-n_frames:]]
 
 
-def push(frames_path, server_domain, server_port, token,
-         endpoint='/watson/frames/bulk'):
+def push(frames_path, server_domain, server_port, token, n_frames,
+         endpoint=DEFAULT_API_ENDPOINT):
     """Push frames to the API server"""
     logging.info(
         (
-            'Will push frames parsed from file "{}" to "http://{}:{}{}" using '
-            'token starting with: {}...'
+            'Will push {} frames parsed from file "{}" to "http://{}:{}{}" '
+            'using token starting with: {}...'
         ).format(
-            frames_path, server_domain, server_port, endpoint, token[:10]
+            n_frames, frames_path, server_domain, server_port, endpoint,
+            token[:10]
         )
     )
 
     # Load user frames
-    frames = load_frames(frames_path)
+    frames = load_frames(frames_path, n_frames=n_frames)
     payload = json.dumps(frames)
     logging.debug('Payload: {}'.format(payload))
 
@@ -133,12 +163,13 @@ def push(frames_path, server_domain, server_port, token,
 def main():
     args = parse_cmd_line()
     configure_logging(level=args.logging_level)
-    check_environ()
+    validate_cmd_line(args)
     push(
         args.frames_path,
         args.server_domain,
         args.server_port,
-        os.environ.get('CRICK_API_TOKEN')
+        args.token or os.environ.get('CRICK_API_TOKEN'),
+        args.n_frames
     )
 
 
