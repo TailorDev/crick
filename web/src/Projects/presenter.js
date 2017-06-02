@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import Loading from '../Common/Loading';
 import Project from './Project';
 import Empty from './Empty';
 import './index.css';
@@ -8,7 +9,7 @@ class Projects extends React.Component {
   props: {
     token: string,
     login: string,
-    projects: Array<Object>,
+    projects: ?Array<Object>,
     fetchProjects: Function,
   };
 
@@ -17,6 +18,10 @@ class Projects extends React.Component {
   }
 
   render() {
+    if (!this.props.projects) {
+      return (<Loading message="Loading your projects..." />);
+    }
+
     if (this.props.projects.length === 0) {
       return <Empty login={this.props.login} token={this.props.token} />;
     }

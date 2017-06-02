@@ -14,6 +14,7 @@ import {
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import moment from 'moment';
 import CalendarHeatmap from 'react-calendar-heatmap';
+import Loading from '../Common/Loading';
 import Form from './Form';
 import Report from './Report';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
@@ -51,7 +52,7 @@ class Project extends React.Component {
     from: moment,
     to: moment,
     tags: Array<string>,
-    project: string,
+    project: ?string,
     report: ReportType,
     fetchData: Function,
     workloads: Array<Object>,
@@ -104,6 +105,10 @@ class Project extends React.Component {
   }
 
   render() {
+    if (!this.props.project) {
+      return (<Loading message="Loading..." />);
+    }
+
     if (!this.props.frames) {
       return (
         <div>

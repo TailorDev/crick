@@ -8,14 +8,14 @@ import type { User, ThunkAction, Action, Team, NewTeam } from '../types';
 type State = {
   newTeam: ?NewTeam,
   teamToDelete: ?Team,
-  teams: Array<Team>,
+  teams: ?Array<Team>,
   suggestedUsers: Array<User>,
 };
 
 const initialState: State = {
   newTeam: null,
   teamToDelete: null,
-  teams: [],
+  teams: null,
   suggestedUsers: [],
 };
 
@@ -148,7 +148,7 @@ export default function reducer(
         return {
           ...state,
           newTeam: null,
-          teams: state.teams.concat({
+          teams: (state.teams || []).concat({
             ...newTeam,
             id: action.payload.id,
           }),
@@ -159,7 +159,7 @@ export default function reducer(
 
     case UPDATE_SUCCESS:
       const editedTeam = action.payload;
-      const updatedTeams = state.teams.map(team => {
+      const updatedTeams = (state.teams || []).map(team => {
         if (team.id === editedTeam.id) {
           return editedTeam;
         }
@@ -181,7 +181,7 @@ export default function reducer(
 
       return {
         ...state,
-        teams: state.teams.filter(team => team.id !== teamToDelete.id),
+        teams: (state.teams || []).filter(team => team.id !== teamToDelete.id),
         teamToDelete: null,
       };
 

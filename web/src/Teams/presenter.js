@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { Link } from 'react-router-dom';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
+import Loading from '../Common/Loading';
 import type { User, Team, NewTeam } from '../types';
 import Form from './Form';
 import List from './List';
@@ -28,7 +29,7 @@ class Teams extends React.Component {
 
   props: {
     userId: string,
-    teams: Array<Team>,
+    teams: ?Array<Team>,
     fetchTeams: Function,
     createTeam: Function,
     updateTeam: Function,
@@ -83,6 +84,10 @@ class Teams extends React.Component {
   }
 
   render() {
+    if (!this.props.teams) {
+      return (<Loading message="Loading your teams..." />);
+    }
+
     const actions = [
       <Link to={`/teams`}>
         <FlatButton primary label="Cancel" onTouchTap={this.onCloseDialog} />
