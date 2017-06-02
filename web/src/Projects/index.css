@@ -17,12 +17,15 @@
 .Project h4 a {
   display: block;
   height: 100%;
+  overflow: hidden;
   padding: 2rem 1rem;
   background-color: #2e354f !important;
   color: #fff;
+  white-space: nowrap;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  text-overflow: ellipsis;
 }
 
 .Project h4 a:hover {
