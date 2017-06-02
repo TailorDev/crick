@@ -5,14 +5,6 @@
   flex-wrap: wrap;
 }
 
-.Project:last-child h4 a {
-  background-color: #269272 !important;
-}
-
-.Project:last-child h4 a:hover {
-  background-color: #5ec3a0 !important;
-}
-
 .Project {
   width: calc(20vw - 1.5rem);
   margin: 1rem 0.5rem;
