@@ -1,13 +1,23 @@
 /* @flow */
+import type { TeamReportState } from './TeamReport/reducer';
 
 // Taken from: https://github.com/fbsamples/f8app
 export type Action = Object;
 export type Dispatch = (
   action: Action | ThunkAction | PromiseAction | Array<Action>
 ) => any;
-export type GetState = () => Object;
+export type GetState = () => State;
 export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
 export type PromiseAction = Promise<Action>;
+
+export type State = {
+  auth: Object,
+  projects: Object,
+  frames: Object,
+  teams: Object,
+  errors: Object,
+  teamReport: TeamReportState,
+};
 
 export type NewTeam = {
   name: string,
