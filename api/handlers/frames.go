@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -23,6 +24,8 @@ var (
 	DetailFrameSelectionFailed = "Frame selection failed"
 	// DetailGetProjectFailed is the error message when the project to retrieve does not exist in database.
 	DetailGetProjectFailed = "Unknown project"
+	// DetailTeamSelectionFailed is the error when fetching a frame from database has failed.
+	DetailTeamSelectionFailed = "Team selection failed"
 )
 
 // BulkInsertFrames handles the bulk insertion of Watson frames.
@@ -113,13 +116,12 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 	qb.AddSelect("frames.*, projects.name AS project_name")
 	qb.AddFrom("frames")
 	qb.AddJoin("INNER JOIN projects ON (frames.project_id = projects.id)")
-	qb.AddWhere("projects.user_id=?", user.ID)
 	qb.OrderBy("frames.start_at DESC")
 
 	// query parameters
 	projectId := r.URL.Query().Get("projectId")
 	projects := getStringSlice(r.URL.Query().Get("projects"))
-	//teamId := r.URL.Query().Get("teamId")
+	teamId := r.URL.Query().Get("teamId")
 
 	// for the meta result
 	meta := map[string]interface{}{}
@@ -153,12 +155,47 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 			return
 		}
 
+		qb.AddWhere("projects.user_id=?", user.ID)
 		qb.AddWhere("frames.project_id=?", projectID)
 		meta["project"] = project
-	} else if len(projects) > 0 {
-		qb.AddWhere("projects.name = ANY(?)", pq.StringArray(projects))
-		// TODO: fetch projects
-		meta["projects"] = map[string]interface{}{}
+	} else {
+		if teamId == "" {
+			qb.AddWhere("projects.user_id=?", user.ID)
+		} else {
+			teamID, err := uuid.FromString(teamId)
+			if err != nil {
+				h.logger.Warn(
+					"failed to parse project ID",
+					zap.Stringer("user_id", user.ID),
+					zap.String("project_id", projectId),
+					zap.Error(err),
+				)
+				h.SendError(w, http.StatusBadRequest, DetailInvalidRequest)
+				return
+			}
+
+			qb.AddJoin("INNER JOIN teams ON (projects.user_id=ANY(teams.user_ids))")
+			qb.AddWhere("projects.name=ANY(teams.projects) AND teams.id=?", teamID)
+			team, err := h.repository.GetTeamByID(teamID)
+			if err != nil {
+				if err == sql.ErrNoRows {
+					h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
+					return
+				}
+
+				h.logger.Error("get team by id", zap.Error(err))
+				h.SendError(w, http.StatusInternalServerError, DetailTeamSelectionFailed)
+				return
+			}
+
+			meta["team"] = team
+		}
+
+		if len(projects) > 0 {
+			qb.AddWhere("projects.name = ANY(?)", pq.StringArray(projects))
+			// TODO: fetch projects
+			meta["projects"] = map[string]interface{}{}
+		}
 	}
 
 	if r.URL.Query().Get("from") != "" {

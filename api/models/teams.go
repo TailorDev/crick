@@ -184,6 +184,12 @@ func (r DatabaseRepository) GetTeamByID(teamID uuid.UUID) (*Team, error) {
 	t := &Team{}
 	row := r.db.QueryRow(selectTeamByID, teamID)
 	err := row.Scan(&t.ID, &t.Name, &t.Projects, pq.Array(&t.UserIDs), &t.OwnerID)
+	if err != nil {
+		return t, err
+	}
+
+	// retrieve Users as it is likely needed in the API response
+	err = r.db.Select(&t.Users, selectUsersByID, pq.Array(t.UserIDs))
 
 	return t, err
 }
