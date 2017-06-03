@@ -3,7 +3,16 @@ import { CALL_API } from 'redux-api-middleware';
 import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
 import { API_REQUEST, API_ERROR } from '../Errors/reducer';
-import type { State, Team, ThunkAction, Action, Frame, Report } from '../types';
+import type {
+  GetState,
+  Dispatch,
+  State,
+  Team,
+  ThunkAction,
+  Action,
+  Frame,
+  Report,
+} from '../types';
 import { sortByDuration } from '../utils';
 
 // State
@@ -43,8 +52,12 @@ export const fetchFrames = (
   tags: Array<string>,
   limit: number
 ): ThunkAction => {
-  return dispatch => {
-    dispatch(resetState());
+  return (dispatch: Dispatch, getState: GetState) => {
+    const previousId = selectTeamId(selectTeamReportState(getState()));
+
+    if (previousId !== id) {
+      dispatch(resetState());
+    }
 
     const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
 
@@ -126,6 +139,14 @@ const resetState = (): Action => ({
 // selectors
 export const selectTeamReportState = (state: State): TeamReportState => {
   return state.teamReport;
+};
+
+export const selectTeamId = (state: TeamReportState): ?string => {
+  if (!state.team) {
+    return null;
+  }
+
+  return state.team.id;
 };
 
 // Reducer

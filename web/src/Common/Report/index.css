@@ -11,14 +11,10 @@
   flex-basis: 100%;
 }
 
-.Report-name,
-.Report-workload {
+.Report-name {
   flex: 1;
   width: 50%;
   display: inline-block;
-}
-
-.Report-name {
   font-size: 3rem;
   text-transform: uppercase;
 }

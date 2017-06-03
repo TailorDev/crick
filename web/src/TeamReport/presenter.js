@@ -2,9 +2,11 @@
 import React from 'react';
 import Avatar from 'material-ui/Avatar';
 import Report from '../Common/Report';
+import Subheader from 'material-ui/Subheader';
 import type { Match } from 'react-router-dom';
 import type moment from 'moment';
 import type { Frame, Team, Report as ReportType } from '../types';
+import './index.css';
 
 type Props = {
   // routing
@@ -30,14 +32,19 @@ const TeamReport = (props: Props) => {
 
   return (
     <Report backURL="/" title={name} {...otherProps}>
-      {users.map(user => (
-        <Avatar
-          key={user.id}
-          title={user.login}
-          src={user.avatar_url}
-          style={{ marginRight: '5px' }}
-        />
-      ))}
+      <div className="Report-users">
+        <Subheader>Members</Subheader>
+        <div className="Report-users-list">
+          {users.map(user => (
+            <Avatar
+              key={user.id}
+              title={user.login}
+              src={user.avatar_url}
+              style={{ marginRight: '5px' }}
+            />
+          ))}
+        </div>
+      </div>
     </Report>
   );
 };

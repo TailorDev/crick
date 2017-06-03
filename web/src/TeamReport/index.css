@@ -1,0 +1,9 @@
+.Report-users {
+  flex: 1;
+  width: 50%;
+  display: inline-block;
+}
+
+.Report-users-list {
+  padding: 1rem 0 0 1rem;
+}
