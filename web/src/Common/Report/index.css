@@ -1,0 +1,49 @@
+.Report-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.Report-head {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 100%;
+}
+
+.Report-name,
+.Report-workload {
+  flex: 1;
+  width: 50%;
+  display: inline-block;
+}
+
+.Report-name {
+  font-size: 3rem;
+  text-transform: uppercase;
+}
+
+.Report-back {
+  float: right;
+}
+
+.Report-frames {}
+
+.Report-frame {}
+
+.Report-frame .start {}
+
+.Report-frame .end {}
+
+.Report-frame .duration {}
+
+.Report-frame .tags {}
+
+.Report-frame .tags .tags-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Report-frame .tags .tags-wrapper .tag {
+  margin-right: 0.5rem !important;
+}

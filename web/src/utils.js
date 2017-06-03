@@ -22,3 +22,7 @@ export const sortByName = (p1: Project, p2: Project): number => {
   if (p1.name === p2.name) return 0;
   return p1.name > p2.name ? 1 : -1;
 };
+
+export const prettyDiffDate = (d1: Date, d2: Date) => {
+  return moment.utc(moment(d2).diff(moment(d1))).format('HH:mm:ss');
+};

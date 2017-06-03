@@ -37,7 +37,7 @@ class Form extends React.Component {
   };
 
   onFromChange(e: SyntheticInputEvent, from: Date) {
-    this.setState({ from: from }, () => {
+    this.setState({ from }, () => {
       this.props.onUpdateDateSpan(
         moment(this.state.from),
         moment(this.state.to)
@@ -46,7 +46,7 @@ class Form extends React.Component {
   }
 
   onToChange(e: SyntheticInputEvent, to: Date) {
-    this.setState({ to: to }, () => {
+    this.setState({ to }, () => {
       this.props.onUpdateDateSpan(
         moment(this.state.from),
         moment(this.state.to)
@@ -55,7 +55,7 @@ class Form extends React.Component {
   }
 
   onTagsChange(tags: Array<string>) {
-    this.setState({ tags: tags }, () => {
+    this.setState({ tags }, () => {
       this.props.onUpdateTags(tags);
     });
   }
@@ -68,18 +68,18 @@ class Form extends React.Component {
         <form className="Frame-filters-form">
           <div className="filter-wrapper form">
             <DatePicker
+              autoOk
               floatingLabelText="From"
               hintText="Pick a start date"
-              autoOk={true}
               onChange={this.onFromChange}
               value={this.state.from}
             />
           </div>
           <div className="filter-wrapper to">
             <DatePicker
+              autoOk
               floatingLabelText="To"
               hintText="Pick a end date"
-              autoOk={true}
               onChange={this.onToChange}
               value={this.state.to}
             />
