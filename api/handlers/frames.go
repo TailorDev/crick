@@ -26,6 +26,8 @@ var (
 	DetailGetProjectFailed = "Unknown project"
 	// DetailTeamSelectionFailed is the error when fetching a frame from database has failed.
 	DetailTeamSelectionFailed = "Team selection failed"
+	// DetailProjectNotFound is the error message when a project does not exist.
+	DetailProjectNotFound = "Project not found"
 )
 
 // BulkInsertFrames handles the bulk insertion of Watson frames.
@@ -150,6 +152,11 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 
 		project, err := h.repository.GetProjectByID(user.ID, projectID)
 		if err != nil {
+			if err == sql.ErrNoRows {
+				h.SendError(w, http.StatusNotFound, DetailProjectNotFound)
+				return
+			}
+
 			h.logger.Error("get project by id", zap.Error(err))
 			h.SendError(w, http.StatusInternalServerError, DetailFrameSelectionFailed)
 			return
