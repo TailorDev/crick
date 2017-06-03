@@ -15,7 +15,7 @@ type Props = {
 const Summary = (props: Props) => (
   <div className="Summary-wrapper">
     <div className="Summary">
-      <Subheader>Summary</Subheader>
+      <Subheader>Report</Subheader>
       <div className="total">
         {props.total
           ? prettyDuration(props.total)
