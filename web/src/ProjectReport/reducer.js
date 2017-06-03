@@ -3,11 +3,18 @@ import { CALL_API } from 'redux-api-middleware';
 import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
 import { API_REQUEST, API_ERROR } from '../Errors/reducer';
-import type { Project, ThunkAction, Action, Frame, Report } from '../types';
+import type {
+  State,
+  Project,
+  ThunkAction,
+  Action,
+  Frame,
+  Report,
+} from '../types';
 import { sortByDuration } from '../utils';
 
 // State
-type State = {
+export type ProjectReportState = {
   frames: Array<Object>,
   from: moment,
   to: moment,
@@ -21,7 +28,7 @@ const from = moment().subtract(7, 'days');
 const to = moment(); // now
 const dateFormat = 'YYYY-MM-DD';
 
-const initialState: State = {
+const initialState: ProjectReportState = {
   frames: [],
   from: from,
   to: to,
@@ -35,12 +42,12 @@ const initialState: State = {
 };
 
 // Actions
-const FETCH_SUCCESS = 'crick/frames/FETCH_SUCCESS';
-const REPORT_COMPILED = 'crick/frames/COMPILE_REPORT';
-const UPDATE_DATE_SPAN = 'crick/frames/UPDATE_DATE_SPAN';
-const UPDATE_TAGS = 'crick/frames/UPDATE_TAGS';
-const FETCH_WORKLOADS_SUCCESS = 'crick/frames/FETCH_WORKLOADS_SUCCESS';
-const RESET_STATE = 'crick/frames/RESET_STATE';
+const FETCH_SUCCESS = 'crick/projectReport/FETCH_SUCCESS';
+const REPORT_COMPILED = 'crick/projectReport/COMPILE_REPORT';
+const UPDATE_DATE_SPAN = 'crick/projectReport/UPDATE_DATE_SPAN';
+const UPDATE_TAGS = 'crick/projectReport/UPDATE_TAGS';
+const FETCH_WORKLOADS_SUCCESS = 'crick/projectReport/FETCH_WORKLOADS_SUCCESS';
+const RESET_STATE = 'crick/projectReport/RESET_STATE';
 
 export const fetchFrames = (
   id: string,
@@ -50,7 +57,7 @@ export const fetchFrames = (
   limit: number
 ): ThunkAction => {
   return (dispatch, getState) => {
-    const previousId = selectProjectId(getState().frames);
+    const previousId = selectProjectId(selectProjectReportState(getState()));
 
     if (previousId !== id) {
       dispatch(resetState());
@@ -145,7 +152,11 @@ const resetState = (): Action => ({
 });
 
 // Selectors
-export const selectProjectId = (state: State): ?string => {
+export const selectProjectReportState = (state: State): ProjectReportState => {
+  return state.projectReport;
+};
+
+export const selectProjectId = (state: ProjectReportState): ?string => {
   if (!state.project) {
     return null;
   }
@@ -153,7 +164,7 @@ export const selectProjectId = (state: State): ?string => {
   return state.project.id;
 };
 
-export const selectProjectName = (state: State): ?string => {
+export const selectProjectName = (state: ProjectReportState): ?string => {
   if (!state.project) {
     return null;
   }
@@ -163,9 +174,9 @@ export const selectProjectName = (state: State): ?string => {
 
 // Reducer
 export default function reducer(
-  state: State = initialState,
+  state: ProjectReportState = initialState,
   action: Action = {}
-): State {
+): ProjectReportState {
   switch (action.type) {
     case FETCH_SUCCESS:
       return {
