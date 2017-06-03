@@ -1,0 +1,29 @@
+.Report-workload .react-calendar-heatmap text {
+  font-size: 10px;
+  fill: #aaa;
+}
+
+.Report-workload .react-calendar-heatmap rect:hover {
+  stroke: #555;
+  stroke-width: 1px;
+}
+
+.Report-workload .react-calendar-heatmap .color-empty {
+  fill: #eeeeee;
+}
+
+.Report-workload .react-calendar-heatmap .color-scale-1 {
+  fill: #91f6d1;
+}
+
+.Report-workload .react-calendar-heatmap .color-scale-2 {
+  fill: #5ec3a0;
+}
+
+.Report-workload .react-calendar-heatmap .color-scale-3 {
+  fill: #269272;
+}
+
+.Report-workload .react-calendar-heatmap .color-scale-4 {
+  fill: #006347;
+}

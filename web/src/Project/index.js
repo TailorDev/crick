@@ -8,6 +8,8 @@ import {
   updateDateSpan,
   updateTags,
   fetchWorkloads,
+  // selectors
+  selectProjectName,
 } from './reducer';
 import type { Action, Frame } from '../types';
 
@@ -15,8 +17,8 @@ const mapStateToProps = state => {
   const { frames } = state;
 
   return {
+    title: selectProjectName(frames),
     frames: frames.frames,
-    project: frames.project,
     report: frames.report,
     from: frames.from,
     to: frames.to,
@@ -37,8 +39,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
     dispatch(fetchWorkloads(id));
   },
   compileReport: (frames: Array<Frame>) => dispatch(compileReport(frames)),
-  updateDateSpan: (from: moment, to: moment) =>
-    dispatch(updateDateSpan(from, to)),
+  updateDateSpan: (from: moment, to: moment) => {
+    dispatch(updateDateSpan(from, to));
+  },
   updateTags: (tags: Array<string>) => dispatch(updateTags(tags)),
 });
 
