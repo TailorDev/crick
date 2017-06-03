@@ -14,6 +14,7 @@ import App from './App';
 import Home from './Home';
 import Project from './Project';
 import Teams from './Teams';
+import TeamReport from './TeamReport';
 import './index.css';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 
@@ -51,6 +52,12 @@ ReactDOM.render(
               store={store}
             />
             <PrivateRoute exact path="/teams" component={Teams} store={store} />
+            <PrivateRoute
+              exact
+              path="/teams/:id"
+              component={TeamReport}
+              store={store}
+            />
             <PrivateRoute
               exact
               path="/teams/:id/edit"
