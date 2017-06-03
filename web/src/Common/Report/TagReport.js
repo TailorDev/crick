@@ -2,8 +2,8 @@
 import React from 'react';
 import { ListItem } from 'material-ui/List';
 import LinearProgress from 'material-ui/LinearProgress';
-import { prettyDuration } from '../utils';
-import type { TagReport as TagReportType } from '../types';
+import { prettyDuration } from '../../utils';
+import type { TagReport as TagReportType } from '../../types';
 
 type Props = {
   total: number,

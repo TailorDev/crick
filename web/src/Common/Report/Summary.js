@@ -3,19 +3,19 @@ import React from 'react';
 import { List } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import TagReport from './TagReport';
-import { prettyDuration } from '../utils';
-import type { TagReports } from '../types';
-import './report.css';
+import { prettyDuration } from '../../utils';
+import type { TagReports } from '../../types';
+import './summary.css';
 
 type Props = {
   total: number,
   tagReports: TagReports,
 };
 
-const Report = (props: Props) => (
-  <div className="Report-wrapper">
-    <div className="Report">
-      <Subheader>Report</Subheader>
+const Summary = (props: Props) => (
+  <div className="Summary-wrapper">
+    <div className="Summary">
+      <Subheader>Summary</Subheader>
       <div className="total">
         {props.total
           ? prettyDuration(props.total)
@@ -36,4 +36,4 @@ const Report = (props: Props) => (
   </div>
 );
 
-export default Report;
+export default Summary;

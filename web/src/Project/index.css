@@ -1,79 +1,29 @@
-.Project-details {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.Project-head {
-  display: flex;
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 100%;
-}
-
-.Project-name,
-.Project-workload {
-  flex: 1;
-  width: 50%;
-  display: inline-block;
-}
-
-.Project-name {
-  font-size: 3rem;
-  text-transform: uppercase;
-}
-
-.Project-back {
-  float: right;
-}
-
-.Project-frames {}
-
-.Project-frame {}
-
-.Project-frame .start {}
-
-.Project-frame .end {}
-
-.Project-frame .duration {}
-
-.Project-frame .tags {}
-
-.Project-frame .tags .tags-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.Project-frame .tags .tags-wrapper .tag {
-  margin-right: 0.5rem !important;
-}
-
-.Project-head .react-calendar-heatmap text {
+.Report-workload .react-calendar-heatmap text {
   font-size: 10px;
   fill: #aaa;
 }
 
-.Project-head .react-calendar-heatmap rect:hover {
+.Report-workload .react-calendar-heatmap rect:hover {
   stroke: #555;
   stroke-width: 1px;
 }
 
-.Project-head .react-calendar-heatmap .color-empty {
+.Report-workload .react-calendar-heatmap .color-empty {
   fill: #eeeeee;
 }
 
-.Project-head .react-calendar-heatmap .color-scale-1 {
+.Report-workload .react-calendar-heatmap .color-scale-1 {
   fill: #91f6d1;
 }
 
-.Project-head .react-calendar-heatmap .color-scale-2 {
+.Report-workload .react-calendar-heatmap .color-scale-2 {
   fill: #5ec3a0;
 }
 
-.Project-head .react-calendar-heatmap .color-scale-3 {
+.Report-workload .react-calendar-heatmap .color-scale-3 {
   fill: #269272;
 }
 
-.Project-head .react-calendar-heatmap .color-scale-4 {
+.Report-workload .react-calendar-heatmap .color-scale-4 {
   fill: #006347;
 }

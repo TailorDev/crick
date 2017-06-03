@@ -3,7 +3,7 @@ import { CALL_API } from 'redux-api-middleware';
 import moment from 'moment';
 import { LOGOUT } from '../Auth/reducer';
 import { API_REQUEST, API_ERROR } from '../Errors/reducer';
-import type { ThunkAction, Action, Frame, Report } from '../types';
+import type { Project, ThunkAction, Action, Frame, Report } from '../types';
 import { sortByDuration } from '../utils';
 
 // State
@@ -12,7 +12,7 @@ type State = {
   from: moment,
   to: moment,
   tags: Array<string>,
-  project: ?string,
+  project: ?Project,
   report: Report,
   workloads: Array<Object>,
 };
@@ -49,8 +49,12 @@ export const fetchFrames = (
   tags: Array<string>,
   limit: number
 ): ThunkAction => {
-  return dispatch => {
-    dispatch(resetState());
+  return (dispatch, getState) => {
+    const previousId = selectProjectId(getState().frames);
+
+    if (previousId !== id) {
+      dispatch(resetState());
+    }
 
     const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
 
@@ -140,6 +144,23 @@ const resetState = (): Action => ({
   type: RESET_STATE,
 });
 
+// Selectors
+export const selectProjectId = (state: State): ?string => {
+  if (!state.project) {
+    return null;
+  }
+
+  return state.project.id;
+};
+
+export const selectProjectName = (state: State): ?string => {
+  if (!state.project) {
+    return null;
+  }
+
+  return state.project.name;
+};
+
 // Reducer
 export default function reducer(
   state: State = initialState,
@@ -150,7 +171,7 @@ export default function reducer(
       return {
         ...state,
         frames: action.payload.frames,
-        project: action.payload.meta.project.name,
+        project: action.payload.meta.project,
       };
 
     case REPORT_COMPILED:
