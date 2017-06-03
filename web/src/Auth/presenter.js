@@ -8,6 +8,7 @@ import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
+import ClipboardInput from '../Common/ClipboardInput';
 import './index.css';
 
 export type Props = {
@@ -97,10 +98,9 @@ class Auth extends React.Component {
             open={this.state.isTokenDialogOpen}
             onRequestClose={this.handleTokenDialogClose}
           >
-            Copy/paste this token to access Crick API:
-            <pre>
-              <code>{this.props.token}</code>
-            </pre>
+            <p>Use this token to access Crick API, for instance with Watson:</p>
+
+            <ClipboardInput value={this.props.token} />
           </Dialog>
 
           <IconMenu

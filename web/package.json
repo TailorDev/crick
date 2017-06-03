@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "auth0-lock": "^10.16.0",
+    "clipboard": "^1.7.1",
     "material-ui": "^0.18.1",
     "material-ui-chip-input": "^0.14.0",
     "moment": "^2.18.1",
