@@ -2,3 +2,23 @@
   margin: 15% auto;
   text-align: center;
 }
+
+.ClipboardInput {
+  display:flex;
+  flex-direction:row;
+  color: #333;
+  background-color: #efefef;
+  padding: 0 6px 0 1rem;
+  margin-bottom: 1rem;
+}
+
+.ClipboardInput > div {
+  flex-grow:2;
+  font-family: monospace!important;
+  font-size: initial!important;
+}
+
+.ClipboardInput button {
+  margin-top: 6px!important;
+  margin-left: 6px!important;
+}

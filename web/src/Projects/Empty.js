@@ -2,6 +2,7 @@
 import React from 'react';
 import ActionBackupIcon from 'material-ui/svg-icons/action/backup';
 import Paper from 'material-ui/Paper';
+import ClipboardInput from '../Common/ClipboardInput';
 import style from '../shared/emptyStyle';
 
 type Props = {
@@ -31,14 +32,17 @@ const Empty = ({ login, token }: Props) =>
       </p>
       <h5>1. Execute the two commands below to configure Watson:</h5>
       <div>
-        <pre>
-          watson config backend.url {process.env.REACT_APP_API_HOST}/watson
-        </pre>
-        <pre>watson config backend.token {token}</pre>
+        <ClipboardInput
+          value={[
+            'watson config backend.url',
+            `${process.env.REACT_APP_API_HOST || ''}/watson`,
+          ].join(' ')}
+        />
+        <ClipboardInput value={`watson config backend.token ${token}`} />
       </div>
       <h5>2. Now you can synchronize your frames with Crick:</h5>
       <div>
-        <pre>watson sync</pre>
+        <ClipboardInput value="watson sync" />
       </div>
     </Paper>
   </div>;

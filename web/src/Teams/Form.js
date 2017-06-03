@@ -13,6 +13,11 @@ const initialState: NewTeam = {
   owner_id: '',
 };
 
+const dataSourceConfig = {
+  text: 'login',
+  value: 'id',
+};
+
 class Form extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -124,7 +129,7 @@ class Form extends React.Component {
             hintText="John Doe"
             floatingLabelText="Team members"
             dataSource={this.props.suggestedUsers}
-            dataSourceConfig={{ text: 'login', value: 'id' }}
+            dataSourceConfig={dataSourceConfig}
             onUpdateInput={this.onAutoCompleteMember}
             defaultValue={this.state.users}
             onChange={this.onMembersChange}

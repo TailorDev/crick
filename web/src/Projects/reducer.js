@@ -2,7 +2,7 @@
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
 import { API_ERROR } from '../Errors/reducer';
-import type { State, Project, Dispatch, Action } from '../types';
+import type { Project, Action } from '../types';
 import { sortByName } from '../utils';
 
 // State
