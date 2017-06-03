@@ -1,5 +1,7 @@
 /* @flow */
 import React from 'react';
+import { Link } from 'react-router-dom';
+import './style.css';
 
 type Props = {
   location: {
@@ -7,13 +9,12 @@ type Props = {
   },
 };
 
-const style = {
-  textAlign: 'center',
-};
-
 const NotFound = (props: Props) =>
-  <div style={style}>
+  <div className="NotFound">
     <h1>404 - No page found for <code>{props.location.pathname}</code></h1>
+    <p>
+      <Link to="/">Back to Home</Link>
+    </p>
   </div>;
 
 export default NotFound;
