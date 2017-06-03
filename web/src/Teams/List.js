@@ -16,6 +16,10 @@ import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import ChallengeConfirmationDialog from '../Common/ChallengeConfirmationDialog';
 import type { User, Team } from '../types';
 
+const avatarStyle = {
+  marginRight: '5px',
+};
+
 class List extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -60,7 +64,7 @@ class List extends React.Component {
         key={user.id}
         title={user.login}
         src={user.avatar_url}
-        style={{ marginRight: '5px' }}
+        style={avatarStyle}
       />
     );
   }

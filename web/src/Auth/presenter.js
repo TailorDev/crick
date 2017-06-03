@@ -25,6 +25,21 @@ export type Props = {
   fetchUser: Function,
 };
 
+const iconButtonStyle = {
+  marginTop: '-3px',
+  padding: 0,
+};
+
+const anchorOrigin = {
+  horizontal: 'right',
+  vertical: 'bottom',
+};
+
+const targetOrigin = {
+  horizontal: 'right',
+  vertical: 'top',
+};
+
 class Auth extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -91,12 +106,12 @@ class Auth extends React.Component {
           <IconMenu
             className="user-menu"
             iconButtonElement={
-              <IconButton style={{ marginTop: '-3px', padding: 0 }}>
+              <IconButton style={iconButtonStyle}>
                 <Avatar src={this.props.avatar_url} />
               </IconButton>
             }
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={anchorOrigin}
+            targetOrigin={targetOrigin}
           >
             <MenuItem
               primaryText="My API Token"

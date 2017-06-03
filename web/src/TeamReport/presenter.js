@@ -24,6 +24,10 @@ type Props = {
   updateTags: Function,
 };
 
+const avatarStyle = {
+  marginRight: '5px',
+};
+
 const TeamReport = (props: Props) => {
   const { team, ...otherProps } = props;
 
@@ -40,7 +44,7 @@ const TeamReport = (props: Props) => {
               key={user.id}
               title={user.login}
               src={user.avatar_url}
-              style={{ marginRight: '5px' }}
+              style={avatarStyle}
             />
           )}
         </div>

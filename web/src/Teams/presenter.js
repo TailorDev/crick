@@ -12,6 +12,12 @@ import Form from './Form';
 import List from './List';
 import Empty from './Empty';
 
+const addButtonStyle = {
+  position: 'fixed',
+  bottom: 20,
+  right: 20,
+};
+
 class Teams extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -125,7 +131,7 @@ class Teams extends React.Component {
         </Dialog>
 
         <FloatingActionButton
-          style={{ position: 'fixed', bottom: 20, right: 20 }}
+          style={addButtonStyle}
           onTouchTap={this.onOpenDialog}
         >
           <ContentAdd />
