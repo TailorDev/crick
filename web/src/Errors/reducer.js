@@ -10,6 +10,8 @@ const initialState: ErrorsState = {
   message: '',
 };
 
+export const DEFAULT_MESSAGE = 'An error has occured, retry later';
+
 // Actions
 export const API_REQUEST = 'crick/errors/API_REQUEST';
 export const API_ERROR = 'crick/errors/API_ERROR';
@@ -32,17 +34,22 @@ export default function reducer(
     case API_REQUEST:
       if (action.error === true) {
         return {
-          message:
-            action.payload.message || 'An error has occured, retry later',
+          message: action.payload.message || DEFAULT_MESSAGE,
         };
       }
 
       return state;
 
     case API_ERROR:
-      return {
-        message: action.payload.response.detail || action.payload.message,
-      };
+      if (!action.payload) {
+        return { message: DEFAULT_MESSAGE };
+      }
+
+      if (action.payload.response) {
+        return { message: action.payload.response.detail || DEFAULT_MESSAGE };
+      }
+
+      return { message: action.payload.message || DEFAULT_MESSAGE };
 
     default:
       return state;
