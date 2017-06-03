@@ -3,14 +3,23 @@ import moment from 'moment';
 import type { Project, TagReport } from './types';
 
 export const prettyDuration = (duration: number): string => {
-  const d = moment.duration(duration);
+  const d = moment.duration(duration, 'milliseconds');
   const hours = Math.floor(d.asHours());
   const minutes = Math.floor(d.subtract(hours, 'hours').asMinutes());
 
-  let durationStr = hours > 0 ? `${hours} hours ` : '';
-  durationStr += minutes > 0 ? `${minutes} min` : '';
+  const result = [];
 
-  return durationStr;
+  if (hours > 1) {
+    result.push(`${hours} hours`);
+  } else if (hours > 0) {
+    result.push(`${hours} hour`);
+  }
+
+  if (minutes > 0) {
+    result.push(`${minutes} min`);
+  }
+
+  return result.join(' ');
 };
 
 export const sortByDuration = (t1: TagReport, t2: TagReport): number => {
