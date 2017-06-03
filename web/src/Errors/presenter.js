@@ -7,7 +7,7 @@ type Props = {
   discard: Function,
 };
 
-const Errors = (props: Props) => (
+const Errors = (props: Props) =>
   <Snackbar
     open={props.message !== ''}
     message={props.message}
@@ -15,7 +15,6 @@ const Errors = (props: Props) => (
     action="discard"
     onActionTouchTap={props.discard}
     onRequestClose={props.discard}
-  />
-);
+  />;
 
 export default Errors;

@@ -2,17 +2,17 @@
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
 import { API_REQUEST, API_ERROR } from '../Errors/reducer';
-import type { User, ThunkAction, Action, Team, NewTeam } from '../types';
+import type { State, User, ThunkAction, Action, Team, NewTeam } from '../types';
 
 // State
-type State = {
+export type TeamsState = {
   newTeam: ?NewTeam,
   teamToDelete: ?Team,
   teams: ?Array<Team>,
   suggestedUsers: Array<User>,
 };
 
-const initialState: State = {
+const initialState: TeamsState = {
   newTeam: null,
   teamToDelete: null,
   teams: null,
@@ -117,11 +117,16 @@ export const autoCompleteUsers = (input: string): Action => {
   };
 };
 
+// selectors
+export const selectTeamsState = (state: State): TeamsState => {
+  return state.teams;
+};
+
 // Reducer
 export default function reducer(
-  state: State = initialState,
+  state: TeamsState = initialState,
   action: Action = {}
-): State {
+): TeamsState {
   switch (action.type) {
     case FETCH_SUCCESS:
       return {

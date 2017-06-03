@@ -7,10 +7,9 @@ type Props = {
   },
 };
 
-const NotFound = (props: Props) => (
+const NotFound = (props: Props) =>
   <div style={{ textAlign: 'center' }}>
     <h1>404 - No page found for <code>{props.location.pathname}</code></h1>
-  </div>
-);
+  </div>;
 
 export default NotFound;

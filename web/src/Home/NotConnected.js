@@ -1,10 +1,9 @@
 /* @flow */
 import React from 'react';
 
-const NotConnected = () => (
+const NotConnected = () =>
   <div>
     Login to continue.
-  </div>
-);
+  </div>;
 
 export default NotConnected;

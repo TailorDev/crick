@@ -8,12 +8,11 @@ type Props = {
   name: string,
 };
 
-const Project = (props: Props) => (
+const Project = (props: Props) =>
   <Paper className="Project">
     <h4>
       <Link to={`/projects/${props.id}`}>{props.name}</Link>
     </h4>
-  </Paper>
-);
+  </Paper>;
 
 export default Project;

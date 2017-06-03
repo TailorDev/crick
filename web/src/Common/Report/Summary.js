@@ -12,7 +12,7 @@ type Props = {
   tagReports: TagReports,
 };
 
-const Summary = (props: Props) => (
+const Summary = (props: Props) =>
   <div className="Summary-wrapper">
     <div className="Summary">
       <Subheader>Report</Subheader>
@@ -33,7 +33,6 @@ const Summary = (props: Props) => (
         })}
       </List>
     </div>
-  </div>
-);
+  </div>;
 
 export default Summary;

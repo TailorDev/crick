@@ -156,7 +156,7 @@ class Report extends React.Component {
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false} stripedRows={false}>
-                {this.props.frames.map(f => (
+                {this.props.frames.map(f =>
                   <TableRow key={f.id} className="Report-frame">
                     <TableRowColumn className="start">
                       {moment(f.start_at).format('YYYY-MM-DD HH:mm')}
@@ -169,13 +169,13 @@ class Report extends React.Component {
                     </TableRowColumn>
                     <TableRowColumn className="tags">
                       <div className="tags-wrapper">
-                        {f.tags.map(t => (
+                        {f.tags.map(t =>
                           <Chip key={t} className="tag">{t}</Chip>
-                        ))}
+                        )}
                       </div>
                     </TableRowColumn>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           : ''}

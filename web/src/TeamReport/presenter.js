@@ -35,14 +35,14 @@ const TeamReport = (props: Props) => {
       <div className="Report-users">
         <Subheader>Members</Subheader>
         <div className="Report-users-list">
-          {users.map(user => (
+          {users.map(user =>
             <Avatar
               key={user.id}
               title={user.login}
               src={user.avatar_url}
               style={{ marginRight: '5px' }}
             />
-          ))}
+          )}
         </div>
       </div>
     </Report>

@@ -9,7 +9,7 @@ type Props = {
   login: string,
 };
 
-const Empty = ({ login, token }: Props) => (
+const Empty = ({ login, token }: Props) =>
   <div className="Empty">
     <Paper style={style.paper} zDepth={1}>
       <ActionBackupIcon style={style.icon} color="#5ec3a0" />
@@ -24,7 +24,8 @@ const Empty = ({ login, token }: Props) => (
         <a href="https://github.com/TailorDev/Watson">Watson</a>
         {' '}
         to your Crick account,
-        which will allow you to synchronize both and get insights on your different activities.
+        which will allow you to synchronize both and get insights on your
+        different activities.
         <br />
         <br />
       </p>
@@ -40,7 +41,6 @@ const Empty = ({ login, token }: Props) => (
         <pre>watson sync</pre>
       </div>
     </Paper>
-  </div>
-);
+  </div>;
 
 export default Empty;

@@ -10,7 +10,7 @@ type Props = {
   children: React$Element<*>,
 };
 
-const App = (props: Props) => (
+const App = (props: Props) =>
   <div className="App">
     <AppBar
       className="App-bar"
@@ -23,7 +23,6 @@ const App = (props: Props) => (
     </div>
 
     <Errors />
-  </div>
-);
+  </div>;
 
 export default App;

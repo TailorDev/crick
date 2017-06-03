@@ -10,7 +10,7 @@ type Props = {
   tagReport: TagReportType,
 };
 
-const TagReport = (props: Props) => (
+const TagReport = (props: Props) =>
   <ListItem
     className="tag"
     primaryText={props.tagReport.tag}
@@ -21,7 +21,6 @@ const TagReport = (props: Props) => (
       value={props.tagReport.duration / props.total * 100}
       className="tag-ratio-bar"
     />
-  </ListItem>
-);
+  </ListItem>;
 
 export default TagReport;

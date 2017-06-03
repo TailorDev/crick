@@ -1,17 +1,20 @@
 /* @flow */
 import { connect } from 'react-redux';
 import Teams from './presenter';
+import { selectAuthState } from '../Auth/reducer';
 import {
   fetchTeams,
   createTeam,
   updateTeam,
   deleteTeam,
   autoCompleteUsers,
+  selectTeamsState,
 } from './reducer';
 import type { Team, NewTeam } from '../types';
 
 const mapStateToProps = state => {
-  const { auth, teams } = state;
+  const teams = selectTeamsState(state);
+  const auth = selectAuthState(state);
 
   return {
     userId: auth.id,

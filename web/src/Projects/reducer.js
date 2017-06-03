@@ -2,15 +2,15 @@
 import { CALL_API } from 'redux-api-middleware';
 import { LOGOUT } from '../Auth/reducer';
 import { API_ERROR } from '../Errors/reducer';
-import type { Action } from '../types';
+import type { State, Project, Dispatch, Action } from '../types';
 import { sortByName } from '../utils';
 
 // State
-type State = {
-  projects: ?Array<Object>,
+export type ProjectsState = {
+  projects: ?Array<Project>,
 };
 
-const initialState: State = {
+const initialState: ProjectsState = {
   projects: null,
 };
 
@@ -31,9 +31,9 @@ export const fetchProjects = (): Action => {
 
 // Reducer
 export default function reducer(
-  state: State = initialState,
+  state: ProjectsState = initialState,
   action: Action = {}
-): State {
+): ProjectsState {
   switch (action.type) {
     case FETCH_SUCCESS:
       const projects = action.payload.projects;

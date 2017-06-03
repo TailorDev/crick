@@ -9,10 +9,9 @@ type Props = {
   isAuthenticated: boolean,
 };
 
-const Home = ({ isAuthenticated }: Props) => (
+const Home = ({ isAuthenticated }: Props) =>
   <div className="Home">
     {isAuthenticated ? <Projects /> : <NotConnected />}
-  </div>
-);
+  </div>;
 
 export default Home;

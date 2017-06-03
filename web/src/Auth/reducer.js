@@ -2,10 +2,10 @@
 import Auth0Lock from 'auth0-lock';
 import { CALL_API } from 'redux-api-middleware';
 import { API_ERROR } from '../Errors/reducer';
-import type { ThunkAction, Action } from '../types';
+import type { State, Dispatch, GetState, ThunkAction, Action } from '../types';
 
 // State
-type State = {
+export type AuthState = {
   id: ?string,
   token: ?string,
   login: ?string,
@@ -42,7 +42,7 @@ const checkToken = () => {
   return getToken() !== null;
 };
 
-const initialState: State = {
+const initialState: AuthState = {
   isAuthenticated: checkToken(),
   token: getToken(),
   id: null,
@@ -59,7 +59,7 @@ const FETCH_USER_REQUEST = 'crick/auth/FETCH_USER_REQUEST';
 const FETCH_USER_SUCCESS = 'crick/auth/FETCH_USER_SUCCESS';
 
 // Listeners
-export const addAuth0Listeners = (dispatch: Function, getState: Function) => {
+export const addAuth0Listeners = (dispatch: Dispatch, getState: GetState) => {
   lock.on('authorization_error', error => {
     dispatch(loginError(error));
   });
@@ -106,11 +106,16 @@ export const fetchUser = (): Action => {
   };
 };
 
+// selectors
+export const selectAuthState = (state: State): AuthState => {
+  return state.auth;
+};
+
 // Reducer
 export default function reducer(
-  state: State = initialState,
+  state: AuthState = initialState,
   action: Action = {}
-): State {
+): AuthState {
   switch (action.type) {
     case LOGIN_SUCCESS:
       return {

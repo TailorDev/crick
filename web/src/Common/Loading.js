@@ -7,11 +7,10 @@ type Props = {
   message: string,
 };
 
-const Loading = (props: Props) => (
+const Loading = (props: Props) =>
   <div className="Loading">
     <CircularProgress size={80} thickness={5} />
     <h3>{props.message}</h3>
-  </div>
-);
+  </div>;
 
 export default Loading;

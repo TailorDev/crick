@@ -87,7 +87,8 @@ export const fetchFrames = (
 export const fetchWorkloads = (id: string): Action => {
   return {
     [CALL_API]: {
-      endpoint: `${process.env.REACT_APP_API_HOST || ''}/projects/${id}/workloads`,
+      endpoint: `${process.env.REACT_APP_API_HOST ||
+        ''}/projects/${id}/workloads`,
       method: 'GET',
       headers: { Accept: 'application/json' },
       types: [API_REQUEST, FETCH_WORKLOADS_SUCCESS, API_ERROR],

@@ -1,6 +1,10 @@
 /* @flow */
 import type { TeamReportState } from './TeamReport/reducer';
 import type { ProjectReportState } from './ProjectReport/reducer';
+import type { AuthState } from './Auth/reducer';
+import type { ProjectsState } from './Projects/reducer';
+import type { TeamsState } from './Teams/reducer';
+import type { ErrorsState } from './Errors/reducer';
 
 // Taken from: https://github.com/fbsamples/f8app
 export type Action = Object;
@@ -12,11 +16,11 @@ export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
 export type PromiseAction = Promise<Action>;
 
 export type State = {
-  auth: Object,
-  projects: Object,
+  auth: AuthState,
+  projects: ProjectsState,
   projectReport: ProjectReportState,
-  teams: Object,
-  errors: Object,
+  teams: TeamsState,
+  errors: ErrorsState,
   teamReport: TeamReportState,
 };
 

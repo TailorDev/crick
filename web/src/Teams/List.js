@@ -119,7 +119,7 @@ class List extends React.Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false} stripedRows={false}>
-            {this.props.teams.map(team => (
+            {this.props.teams.map(team =>
               <TableRow key={team.id}>
                 <TableRowColumn>{team.name}</TableRowColumn>
                 <TableRowColumn>{team.projects.join(', ')}</TableRowColumn>
@@ -130,7 +130,7 @@ class List extends React.Component {
                   {this.renderActions(team)}
                 </TableRowColumn>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>

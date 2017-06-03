@@ -2,11 +2,11 @@
 import type { Action } from '../types';
 
 // State
-type State = {
+export type ErrorsState = {
   message: string,
 };
 
-const initialState: State = {
+const initialState: ErrorsState = {
   message: '',
 };
 
@@ -22,9 +22,9 @@ export const discard = (): Action => {
 
 // Reducer
 export default function reducer(
-  state: State = initialState,
+  state: ErrorsState = initialState,
   action: Action = {}
-): State {
+): ErrorsState {
   switch (action.type) {
     case DISCARD:
       return initialState;
@@ -32,8 +32,8 @@ export default function reducer(
     case API_REQUEST:
       if (action.error === true) {
         return {
-          message: action.payload.message ||
-            'An error has occured, retry later',
+          message:
+            action.payload.message || 'An error has occured, retry later',
         };
       }
 
