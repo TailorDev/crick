@@ -1,7 +1,7 @@
 /* @flow */
 import { connect } from 'react-redux';
 import moment from 'moment';
-import Project from './presenter';
+import ProjectReport from './presenter';
 import {
   compileReport,
   fetchFrames,
@@ -10,20 +10,21 @@ import {
   fetchWorkloads,
   // selectors
   selectProjectName,
+  selectProjectReportState,
 } from './reducer';
 import type { Action, Frame } from '../types';
 
 const mapStateToProps = state => {
-  const { frames } = state;
+  const projectReport = selectProjectReportState(state);
 
   return {
-    title: selectProjectName(frames),
-    frames: frames.frames,
-    report: frames.report,
-    from: frames.from,
-    to: frames.to,
-    tags: frames.tags,
-    workloads: frames.workloads,
+    title: selectProjectName(projectReport),
+    frames: projectReport.frames,
+    report: projectReport.report,
+    from: projectReport.from,
+    to: projectReport.to,
+    tags: projectReport.tags,
+    workloads: projectReport.workloads,
   };
 };
 
@@ -45,4 +46,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
   updateTags: (tags: Array<string>) => dispatch(updateTags(tags)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Project);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectReport);

@@ -1,5 +1,6 @@
 /* @flow */
 import type { TeamReportState } from './TeamReport/reducer';
+import type { ProjectReportState } from './ProjectReport/reducer';
 
 // Taken from: https://github.com/fbsamples/f8app
 export type Action = Object;
@@ -13,7 +14,7 @@ export type PromiseAction = Promise<Action>;
 export type State = {
   auth: Object,
   projects: Object,
-  frames: Object,
+  projectReport: ProjectReportState,
   teams: Object,
   errors: Object,
   teamReport: TeamReportState,

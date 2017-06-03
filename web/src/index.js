@@ -12,7 +12,7 @@ import PrivateRoute from './Routing/PrivateRoute';
 import NotFound from './Routing/NotFound';
 import App from './App';
 import Home from './Home';
-import Project from './Project';
+import ProjectReport from './ProjectReport';
 import Teams from './Teams';
 import TeamReport from './TeamReport';
 import './index.css';
@@ -48,7 +48,7 @@ ReactDOM.render(
             <PrivateRoute
               exact
               path="/projects/:id"
-              component={Project}
+              component={ProjectReport}
               store={store}
             />
             <PrivateRoute exact path="/teams" component={Teams} store={store} />
