@@ -31,3 +31,5 @@ deployment:
       - rsync -e "ssh -p 2222 -o StrictHostKeyChecking=no" -v -r -z api/migrations/*.sql snorkel@splinter.tailordev.fr:~/crick-api/production/migrations/
       - rsync -e "ssh -p 2222 -o StrictHostKeyChecking=no" -v -r -z api/crick-api-server snorkel@splinter.tailordev.fr:~/crick-api/production/
       - ssh -p 2222 -o StrictHostKeyChecking=no snorkel@splinter.tailordev.fr 'sudo /bin/systemctl restart crick-api.service'
+      - cd web/ && yarn run build
+      - rsync -e "ssh -p 2222 -o StrictHostKeyChecking=no" --checksum --delete -v -r -z web/build/* snorkel@splinter.tailordev.fr:~/crick-web/production/
