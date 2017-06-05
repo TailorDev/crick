@@ -5,7 +5,7 @@ import Project from './Project';
 import Empty from './Empty';
 import './index.css';
 
-class Projects extends React.Component {
+class ProjectsList extends React.Component {
   props: {
     token: string,
     login: string,
@@ -30,7 +30,7 @@ class Projects extends React.Component {
       <div className="Projects">
         <h2>Projects</h2>
 
-        <div className="Project-list">
+        <div className="Projects-list">
           {this.props.projects.map(p => <Project key={p.id} {...p} />)}
         </div>
       </div>
@@ -38,4 +38,4 @@ class Projects extends React.Component {
   }
 }
 
-export default Projects;
+export default ProjectsList;

@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react';
 
-import Projects from '../Projects';
+import ProjectsList from '../ProjectsList';
 import TeamsList from '../TeamsList';
 import NotConnected from './NotConnected';
 import './index.css';
@@ -14,7 +14,7 @@ const Home = ({ isAuthenticated }: Props) =>
   <div className="Home">
     {isAuthenticated
       ? <div>
-          <Projects />
+          <ProjectsList />
           <TeamsList />
         </div>
       : <NotConnected />}
