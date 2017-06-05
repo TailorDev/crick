@@ -1,0 +1,41 @@
+.Teams {}
+
+.Teams-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Team {
+  width: calc(20vw - 1.5rem);
+  margin: 1rem 0.5rem;
+}
+
+.Team h4 {
+  margin: 0;
+}
+
+.Team h4 a {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  padding: 2rem 1rem;
+  background-color: #2e354f !important;
+  color: #fff;
+  white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+}
+
+.Team h4 a:hover {
+  background-color: #585f7b !important;
+}
+
+.Manage h4 a {
+  background-color: #269272 !important;
+}
+
+.Manage h4 a:hover {
+  background-color: #5ec3a0 !important;
+}
