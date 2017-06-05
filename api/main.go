@@ -11,6 +11,7 @@ import (
 	"github.com/TailorDev/crick/api/handlers"
 	m "github.com/TailorDev/crick/api/middlewares"
 	"github.com/TailorDev/crick/api/models"
+	"github.com/coreos/go-systemd/activation"
 	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
@@ -74,8 +75,25 @@ func main() {
 	defer db.Close()
 
 	app := App(models.NewDatabaseRepository(db), logger)
-	log.Fatal(http.ListenAndServe(
-		fmt.Sprintf(":%s", config.Port()),
-		applyGlobalMiddlewares(app),
-	))
+	handler := applyGlobalMiddlewares(app)
+
+	if port := config.Port(); port != "" {
+		// create a socket and listen to it
+		log.Fatal(http.ListenAndServe(
+			fmt.Sprintf(":%s", config.Port()),
+			handler,
+		))
+	} else {
+		// try to get a socket from systemd
+		listeners, err := activation.Listeners(true)
+		if err != nil {
+			logger.Fatal("failed to get a socket", zap.Error(err))
+		}
+
+		if len(listeners) != 1 {
+			logger.Fatal("Unexpected number of socket activation fds")
+		}
+
+		log.Fatal(http.Serve(listeners[0], handler))
+	}
 }

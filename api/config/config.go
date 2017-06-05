@@ -13,14 +13,9 @@ type Auth0Config struct {
 	Audience []string
 }
 
-// Port returns the PORT value from environment or it defaults to 3000.
+// Port returns the PORT value from environment.
 func Port() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
-
-	return port
+	return os.Getenv("PORT")
 }
 
 // DSN returns the CRICK_DSN value from environment.
