@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { Link } from 'react-router-dom';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
 import Loading from '../Common/Loading';
@@ -11,6 +12,7 @@ import type { User, Team, NewTeam } from '../types';
 import Form from './Form';
 import List from './List';
 import Empty from './Empty';
+import './index.css';
 
 const addButtonStyle = {
   position: 'fixed',
@@ -103,8 +105,15 @@ class Teams extends React.Component {
     const { editTeam, dialogIsOpen } = this.state;
 
     return (
-      <div>
-        <h2>Teams</h2>
+      <div className="Teams">
+        <FlatButton
+          primary
+          label="Back"
+          icon={<NavigationArrowBack />}
+          containerElement={<Link to="/" />}
+        />
+
+        <h2>Teams management</h2>
 
         {this.props.teams.length > 0
           ? <List
