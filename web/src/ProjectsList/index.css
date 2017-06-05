@@ -1,6 +1,6 @@
 .Projects {}
 
-.Project-list {
+.Projects-list {
   display: flex;
   flex-wrap: wrap;
 }

@@ -1,7 +1,8 @@
 /* @flow */
 import React from 'react';
 
-import Projects from '../Projects';
+import ProjectsList from '../ProjectsList';
+import TeamsList from '../TeamsList';
 import NotConnected from './NotConnected';
 import './index.css';
 
@@ -11,7 +12,12 @@ type Props = {
 
 const Home = ({ isAuthenticated }: Props) =>
   <div className="Home">
-    {isAuthenticated ? <Projects /> : <NotConnected />}
+    {isAuthenticated
+      ? <div>
+          <ProjectsList />
+          <TeamsList />
+        </div>
+      : <NotConnected />}
   </div>;
 
 export default Home;
