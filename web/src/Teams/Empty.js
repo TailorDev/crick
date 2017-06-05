@@ -4,7 +4,11 @@ import ActionSupervisorIcon from 'material-ui/svg-icons/action/supervisor-accoun
 import Paper from 'material-ui/Paper';
 import style from '../shared/emptyStyle';
 
-const Empty = () =>
+type Props = {
+  createButton: React$Element<*>,
+};
+
+const Empty = ({ createButton }: Props) =>
   <div>
     <Paper style={style.paper} zDepth={1}>
       <ActionSupervisorIcon style={style.icon} color="#5ec3a0" />
@@ -12,8 +16,9 @@ const Empty = () =>
       <p>
         A team allows you to aggregate frames with other users.
         <br />
-        Add a new team now by clicking the + button in the bottom right corner.
+        Add a new team now by clicking the button below:
       </p>
+      {createButton}
     </Paper>
   </div>;
 
