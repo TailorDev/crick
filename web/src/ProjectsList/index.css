@@ -35,3 +35,14 @@
 .Empty pre {
   text-align: left;
 }
+
+@media all and (max-width: 700px) {
+  .Projects-list {
+    flex-direction: column;
+  }
+
+  .Project {
+    width: auto;
+    margin-bottom: 0;
+  }
+}

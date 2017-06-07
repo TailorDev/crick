@@ -29,3 +29,15 @@
   background-color: #efefef !important;
   margin-bottom: 1rem !important;
 }
+
+@media all and (max-width: 700px) {
+  .Summary-wrapper,
+  .Summary .tags > * {
+    width: 100%;
+  }
+
+  .Summary .total {
+    padding: 0;
+    text-align: center;
+  }
+}

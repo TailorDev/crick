@@ -43,3 +43,18 @@
 .Report-frame .tags .tags-wrapper .tag {
   margin-right: 0.5rem !important;
 }
+
+@media all and (max-width: 700px) {
+  .Report-details,
+  .Report-head {
+    flex-direction: column;
+  }
+
+  .Report-head {
+    margin-bottom: 2rem;
+  }
+
+  .Report-name {
+    width: auto;
+  }
+}

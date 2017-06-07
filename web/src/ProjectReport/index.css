@@ -33,3 +33,9 @@
 .Report-workload .react-calendar-heatmap .color-scale-4 {
   fill: #006347;
 }
+
+@media all and (max-width: 700px) {
+  .Report-workload {
+    width: auto;
+  }
+}
