@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/TailorDev/crick/api/middlewares"
+	"github.com/TailorDev/crick/api/middleware"
 	"github.com/julienschmidt/httprouter"
 	uuid "github.com/satori/go.uuid"
 )
@@ -22,7 +22,7 @@ var (
 
 // GetProjects returns the user's projects.
 func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	projects, err := h.repository.GetProjects(user.ID)
 	if err != nil {
@@ -37,7 +37,7 @@ func (h Handler) GetProjects(w http.ResponseWriter, r *http.Request, ps httprout
 
 // GetProjectWorkloads returns the workloads for a given project.
 func (h Handler) GetProjectWorkloads(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	projectID, err := uuid.FromString(ps.ByName("id"))
 	if err != nil {

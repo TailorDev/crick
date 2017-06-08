@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/TailorDev/crick/api/middlewares"
+	"github.com/TailorDev/crick/api/middleware"
 	"github.com/TailorDev/crick/api/models"
 	uuid "github.com/satori/go.uuid"
 )
@@ -14,7 +14,7 @@ func GetFakeUser() *models.User {
 }
 
 func AddUserToContext(c context.Context, u *models.User) context.Context {
-	return context.WithValue(c, middlewares.ContextCurrentUser, u)
+	return context.WithValue(c, middleware.ContextCurrentUser, u)
 }
 
 // MockRepository implements the models.Repository interface for unit testing

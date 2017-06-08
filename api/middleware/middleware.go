@@ -1,5 +1,5 @@
-// Package middlewares contains the HTTP middlewares.
-package middlewares
+// Package middleware contains the HTTP middleware.
+package middleware
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 type contextKey string
 
 func (c contextKey) String() string {
-	return "io.crick.api.middlewares." + string(c)
+	return "io.crick.api.middleware." + string(c)
 }
 
 var (
@@ -24,7 +24,7 @@ var (
 // GetCurrentUser returns the current logged user from the Context.
 //
 // This function is usually called by the different handlers enhanced with one
-// of the authentication middlewares. NOTE: handlers expect a valid User to be
+// of the authentication middleware. NOTE: handlers expect a valid User to be
 // returned.
 func GetCurrentUser(ctx context.Context) *models.User {
 	return ctx.Value(ContextCurrentUser).(*models.User)

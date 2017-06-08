@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/TailorDev/crick/api/middlewares"
+	"github.com/TailorDev/crick/api/middleware"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -18,7 +18,7 @@ var (
 
 // UsersGetMe returns information related to the current logged user.
 func (h Handler) UsersGetMe(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	w.Header().Set("Content-Type", DefaultContentType)
 	json.NewEncoder(w).Encode(map[string]interface{}{

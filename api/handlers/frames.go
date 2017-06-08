@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/TailorDev/crick/api/middlewares"
+	"github.com/TailorDev/crick/api/middleware"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
 	"github.com/lib/pq"
@@ -32,7 +32,7 @@ var (
 
 // BulkInsertFrames handles the bulk insertion of Watson frames.
 func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -78,7 +78,7 @@ func (h Handler) BulkInsertFrames(w http.ResponseWriter, r *http.Request, ps htt
 
 // GetFramesSince returns the user's frames, optionally since `last_sync` date.
 func (h Handler) GetFramesSince(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 	var frames []models.Frame
 
 	ls := r.URL.Query().Get("last_sync")
@@ -111,7 +111,7 @@ func (h Handler) GetFramesSince(w http.ResponseWriter, r *http.Request, ps httpr
 
 // GetFrames returns the user's frames for the given project.
 func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	// create query builder
 	qb := models.NewQueryBuilder()

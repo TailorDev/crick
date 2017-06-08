@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/TailorDev/crick/api/middlewares"
+	"github.com/TailorDev/crick/api/middleware"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
 	uuid "github.com/satori/go.uuid"
@@ -31,7 +31,7 @@ var (
 
 // GetTeams returns the user's teams.
 func (h Handler) GetTeams(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	teams, err := h.repository.GetTeamsWithUsers(user.ID)
 	if err != nil {
@@ -46,7 +46,7 @@ func (h Handler) GetTeams(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 // CreateTeam creates a new team and returns its id.
 func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -105,7 +105,7 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 	if !user.IsOwnerOfTeam(*team) {
 		h.SendError(w, http.StatusForbidden, DetailUserIsNotAllowedToPerformOperation)
 		return
@@ -173,7 +173,7 @@ func (h Handler) DeleteTeam(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	user := middlewares.GetCurrentUser(r.Context())
+	user := middleware.GetCurrentUser(r.Context())
 	if !user.IsOwnerOfTeam(*team) {
 		h.SendError(w, http.StatusForbidden, DetailUserIsNotAllowedToPerformOperation)
 		return

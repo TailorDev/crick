@@ -9,7 +9,7 @@ import (
 	"github.com/NYTimes/gziphandler"
 	"github.com/TailorDev/crick/api/config"
 	"github.com/TailorDev/crick/api/handlers"
-	m "github.com/TailorDev/crick/api/middlewares"
+	m "github.com/TailorDev/crick/api/middleware"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/coreos/go-systemd/activation"
 	"github.com/jmoiron/sqlx"
@@ -50,8 +50,8 @@ func App(repository models.Repository, logger *zap.Logger) *httprouter.Router {
 	return router
 }
 
-// applyGlobalMiddlewares applies the common middlewares to the whole app
-func applyGlobalMiddlewares(app http.Handler) http.Handler {
+// applyGlobalMiddleware applies the common middleware to the whole app
+func applyGlobalMiddleware(app http.Handler) http.Handler {
 	cors := cors.New(cors.Options{
 		AllowedOrigins: config.CorsAllowedOrigins(),
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
@@ -75,7 +75,7 @@ func main() {
 	defer db.Close()
 
 	app := App(models.NewDatabaseRepository(db), logger)
-	handler := applyGlobalMiddlewares(app)
+	handler := applyGlobalMiddleware(app)
 
 	if port := config.Port(); port != "" {
 		// create a socket and listen to it
