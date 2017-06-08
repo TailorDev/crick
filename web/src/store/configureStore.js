@@ -3,12 +3,12 @@ import thunk from 'redux-thunk';
 import { apiMiddleware } from 'redux-api-middleware';
 
 import rootReducer from './rootReducer';
-import apiAuthToken from '../middlewares/apiAuthToken';
+import apiAuthToken from '../middleware/apiAuthToken';
 import { addAuth0Listeners } from '../Auth/reducer';
 
-const middlewares = [thunk, apiAuthToken, apiMiddleware];
+const middleware = [thunk, apiAuthToken, apiMiddleware];
 
-const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
+const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
 export default function configureStore(initialState) {
   const store = createStoreWithMiddleware(
