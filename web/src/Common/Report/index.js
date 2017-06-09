@@ -37,6 +37,7 @@ class Report extends React.Component {
     };
 
     (this: any).onToggleFramesDisplay = this.onToggleFramesDisplay.bind(this);
+    (this: any).onSelectTag = this.onSelectTag.bind(this);
   }
 
   state: {
@@ -119,6 +120,10 @@ class Report extends React.Component {
     });
   }
 
+  onSelectTag(tag: string) {
+    this.props.updateTags(this.props.tags.concat(tag));
+  }
+
   render() {
     if (!this.props.title) {
       return <Loading message="Loading..." />;
@@ -151,6 +156,7 @@ class Report extends React.Component {
         <Summary
           total={this.props.report.total}
           tagReports={this.props.report.tagReports}
+          onSelectTag={this.onSelectTag}
         />
 
         {this.props.frames.length > 0

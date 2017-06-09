@@ -23,7 +23,8 @@ class Form extends React.Component {
 
     (this: any).onFromChange = this.onFromChange.bind(this);
     (this: any).onToChange = this.onToChange.bind(this);
-    (this: any).onTagsChange = this.onTagsChange.bind(this);
+    (this: any).onTagsAdd = this.onTagsAdd.bind(this);
+    (this: any).onTagsRemove = this.onTagsRemove.bind(this);
   }
 
   state: {
@@ -58,7 +59,17 @@ class Form extends React.Component {
     });
   }
 
-  onTagsChange(tags: Array<string>) {
+  onTagsAdd(tag: string) {
+    const tags = this.props.tags.concat(tag);
+
+    this.setState({ tags }, () => {
+      this.props.onUpdateTags(tags);
+    });
+  }
+
+  onTagsRemove(tag: string, index: number) {
+    const tags = this.props.tags.filter(t => t !== tag)
+
     this.setState({ tags }, () => {
       this.props.onUpdateTags(tags);
     });
@@ -93,8 +104,9 @@ class Form extends React.Component {
               hintText="e.g. email or meeting"
               floatingLabelText="Tags"
               newChipKeyCodes={[KEY_RETURN, KEY_SPACE, KEY_COMMA]}
-              onChange={this.onTagsChange}
-              defaultValue={this.props.tags}
+              value={this.props.tags}
+              onRequestAdd={this.onTagsAdd}
+              onRequestDelete={this.onTagsRemove}
             />
           </div>
         </form>

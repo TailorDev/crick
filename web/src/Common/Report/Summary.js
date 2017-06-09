@@ -10,6 +10,7 @@ import './summary.css';
 type Props = {
   total: number,
   tagReports: TagReports,
+  onSelectTag: Function,
 };
 
 const Summary = (props: Props) =>
@@ -28,6 +29,7 @@ const Summary = (props: Props) =>
               key={tagReport.tag}
               total={props.total}
               tagReport={tagReport}
+              onClick={props.onSelectTag}
             />
           );
         })}

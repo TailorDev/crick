@@ -8,6 +8,7 @@ import type { TagReport as TagReportType } from '../../types';
 type Props = {
   total: number,
   tagReport: TagReportType,
+  onClick: Function,
 };
 
 const TagReport = (props: Props) =>
@@ -15,6 +16,7 @@ const TagReport = (props: Props) =>
     className="tag"
     primaryText={props.tagReport.tag}
     secondaryText={prettyDuration(props.tagReport.duration)}
+    onTouchTap={() => props.onClick(props.tagReport.tag)}
   >
     <LinearProgress
       mode="determinate"
