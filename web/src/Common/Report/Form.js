@@ -6,6 +6,10 @@ import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
 import './form.css';
 
+const KEY_RETURN = 13;
+const KEY_SPACE = 32;
+const KEY_COMMA = 188;
+
 class Form extends React.Component {
   constructor(props: Object) {
     super(props);
@@ -88,7 +92,7 @@ class Form extends React.Component {
             <ChipInput
               hintText="e.g. email or meeting"
               floatingLabelText="Tags"
-              newChipKeyCodes={[13, 32, 188]}
+              newChipKeyCodes={[KEY_RETURN, KEY_SPACE, KEY_COMMA]}
               onChange={this.onTagsChange}
               defaultValue={this.props.tags}
             />
