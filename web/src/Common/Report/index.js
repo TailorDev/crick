@@ -17,9 +17,16 @@ import Loading from '../Loading';
 import Form from './Form';
 import Summary from './Summary';
 import { prettyDiffDate } from '../../utils';
-import type { Match } from 'react-router-dom';
+import {
+  getFromDateFromQueryParams,
+  getToDateFromQueryParams,
+  getTagsFromQueryParams,
+} from './utils';
+import type { Match, RouterHistory } from 'react-router-dom';
 import type { Frame, Report as ReportType } from '../../types';
 import './index.css';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
 
 class Report extends React.Component {
   constructor(props: Object) {
@@ -39,11 +46,13 @@ class Report extends React.Component {
   props: {
     // routing
     match: Match,
+    history: RouterHistory,
     // actions
     compileReport: Function,
     updateDateSpan: Function,
     updateTags: Function,
     fetchData: Function,
+    setData: Function,
     // data
     frames: Array<Frame>,
     from: moment,
@@ -58,12 +67,10 @@ class Report extends React.Component {
 
   componentDidMount() {
     if (this.props.match.params.id) {
-      this.props.fetchData(
-        this.props.match.params.id,
-        this.props.from,
-        this.props.to,
-        this.props.tags,
-        10000
+      this.props.setData(
+        getFromDateFromQueryParams(),
+        getToDateFromQueryParams(),
+        getTagsFromQueryParams()
       );
     }
   }
@@ -85,6 +92,24 @@ class Report extends React.Component {
 
     if (nextProps.frames !== this.props.frames) {
       this.props.compileReport(nextProps.frames);
+    }
+  }
+
+  componentDidUpdate() {
+    const params = [
+      `from=${this.props.from.format(DATE_FORMAT)}`,
+      `to=${this.props.to.format(DATE_FORMAT)}`,
+    ];
+
+    if (this.props.tags.length > 0) {
+      params.push(`tags=${this.props.tags.join(',')}`);
+    }
+
+    const newSearch = `?${params.join('&')}`;
+    const oldSearch = this.props.history.location.search;
+
+    if (oldSearch !== newSearch) {
+      this.props.history.push(`${this.props.match.url}${newSearch}`);
     }
   }
 

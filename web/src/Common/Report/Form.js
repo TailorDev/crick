@@ -90,6 +90,7 @@ class Form extends React.Component {
               floatingLabelText="Tags"
               newChipKeyCodes={[13, 32, 188]}
               onChange={this.onTagsChange}
+              defaultValue={this.props.tags}
             />
           </div>
         </form>

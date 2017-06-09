@@ -7,6 +7,7 @@ import {
   fetchFrames,
   updateDateSpan,
   updateTags,
+  updateTeamData,
   // selectors
   selectTeamReportState,
 } from './reducer';
@@ -40,6 +41,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
     dispatch(updateDateSpan(from, to));
   },
   updateTags: (tags: Array<string>) => dispatch(updateTags(tags)),
+  setData: (from: moment, to: moment, tags: Array<string>) => {
+    dispatch(updateTeamData(from, to, tags));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamReport);
