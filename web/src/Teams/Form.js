@@ -6,6 +6,9 @@ import ChipInput from 'material-ui-chip-input';
 import { Link } from 'react-router-dom';
 import type { User, Team, NewTeam } from '../types';
 
+const KEY_RETURN = 13;
+const KEY_COMMA = 188;
+
 const initialState: NewTeam = {
   name: '',
   users: [],
@@ -143,6 +146,7 @@ class Form extends React.Component {
             floatingLabelText="Team projects"
             onRequestAdd={this.onProjectAdd}
             onRequestDelete={this.onProjectRemove}
+            newChipKeyCodes={[KEY_RETURN, KEY_COMMA]}
           />
         </div>
         <div>
