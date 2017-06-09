@@ -218,7 +218,7 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 			return
 		}
 
-		qb.AddWhere("frames.start_at > ?", from)
+		qb.AddWhere("frames.start_at::date >= ?", from)
 	}
 
 	if r.URL.Query().Get("to") != "" {
@@ -234,7 +234,7 @@ func (h Handler) GetFrames(w http.ResponseWriter, r *http.Request, ps httprouter
 			return
 		}
 
-		qb.AddWhere("frames.end_at < ?", to)
+		qb.AddWhere("frames.end_at::date <= ?", to)
 	}
 
 	tags := getStringSlice(r.URL.Query().Get("tags"))
