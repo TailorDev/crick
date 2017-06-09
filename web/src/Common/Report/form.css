@@ -15,3 +15,9 @@
 .Frame-filters-form .filter-wrapper.tags {
   min-width: 100%;
 }
+
+@media all and (max-width: 700px) {
+  .Frame-filters-form-wrapper {
+    width: auto;
+  }
+}
