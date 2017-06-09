@@ -3,6 +3,11 @@ crick
 
 [![CircleCI](https://circleci.com/gh/TailorDev/crick/tree/master.svg?style=svg&circle-token=af802009a9119df1eb1869418316b2d742d65dda)](https://circleci.com/gh/TailorDev/crick/tree/master)
 
+Crick is a backend for the [Watson](https://github.com/TailorDev/Watson) time-tracker, built during a "Le lab" session:
+
+* https://tailordev.fr/blog/2017/06/07/le-lab-5-crick-a-backend-for-watson-time-tracker/
+
+
 Installation
 ------------
 
