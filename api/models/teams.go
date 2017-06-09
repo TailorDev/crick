@@ -198,6 +198,9 @@ func (r DatabaseRepository) GetTeamByID(teamID uuid.UUID) (*Team, error) {
 func (r DatabaseRepository) UpdateTeam(team *Team) error {
 	// update the team
 	_, err := r.db.Exec(updateTeam, team.ID, team.Name, team.Projects, pq.Array(team.UserIDs))
+	if err != nil {
+		return err
+	}
 
 	// retrieve Users as it is likely needed in the API response
 	err = r.db.Select(&team.Users, selectUsersByID, pq.Array(team.UserIDs))

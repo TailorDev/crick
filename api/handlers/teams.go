@@ -10,6 +10,7 @@ import (
 	"github.com/TailorDev/crick/api/middleware"
 	"github.com/TailorDev/crick/api/models"
 	"github.com/julienschmidt/httprouter"
+	"github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
@@ -27,6 +28,9 @@ var (
 	DetailTeamNotFound = "Team not found"
 	// DetailTeamDeletionFailed is the error message when deleting a team in database has failed.
 	DetailTeamDeletionFailed = "Failed to delete the team"
+	// DetailTeamAlreadyExists is the error message when the unique constraint
+	// on (team name/owner_id) is violated
+	DetailTeamAlreadyExists = "A team with this name already exists"
 )
 
 // GetTeams returns the user's teams.
@@ -71,7 +75,17 @@ func (h Handler) CreateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 	team := models.NewTeamFromInput(input, user.ID)
 
 	if err := h.repository.CreateNewTeam(team); err != nil {
-		h.logger.Error("create new team", zap.Error(err))
+		if err, ok := err.(*pq.Error); ok {
+			if err.Code.Name() == "unique_violation" {
+				h.SendError(w, http.StatusConflict, DetailTeamAlreadyExists)
+				return
+			}
+
+			h.logger.Error("create new team", zap.Error(err), zap.String("code_name", err.Code.Name()))
+		} else {
+			h.logger.Error("create new team", zap.Error(err))
+		}
+
 		h.SendError(w, http.StatusInternalServerError, DetailTeamCreationFailed)
 		return
 	}
@@ -142,7 +156,17 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 	team.SetUserIDs(append(input.UserIDs, user.ID))
 
 	if err := h.repository.UpdateTeam(team); err != nil {
-		h.logger.Warn("update team", zap.Error(err))
+		if err, ok := err.(*pq.Error); ok {
+			if err.Code.Name() == "unique_violation" {
+				h.SendError(w, http.StatusConflict, DetailTeamAlreadyExists)
+				return
+			}
+
+			h.logger.Error("update team", zap.Error(err), zap.String("code_name", err.Code.Name()))
+		} else {
+			h.logger.Error("update team", zap.Error(err))
+		}
+
 		h.SendError(w, http.StatusInternalServerError, DetailTeamUpdateFailed)
 		return
 	}
