@@ -24,14 +24,12 @@ export type ProjectReportState = {
   workloads: Array<Object>,
 };
 
-const from = moment().subtract(7, 'days');
-const to = moment(); // now
-const dateFormat = 'YYYY-MM-DD';
+const DATE_FORMAT = 'YYYY-MM-DD';
 
 const initialState: ProjectReportState = {
   frames: [],
-  from: from,
-  to: to,
+  from: moment().subtract(7, 'days'),
+  to: moment(),
   tags: [],
   project: null,
   report: {
@@ -47,7 +45,7 @@ const REPORT_COMPILED = 'crick/projectReport/COMPILE_REPORT';
 const UPDATE_DATE_SPAN = 'crick/projectReport/UPDATE_DATE_SPAN';
 const UPDATE_TAGS = 'crick/projectReport/UPDATE_TAGS';
 const FETCH_WORKLOADS_SUCCESS = 'crick/projectReport/FETCH_WORKLOADS_SUCCESS';
-const RESET_STATE = 'crick/projectReport/RESET_STATE';
+const UPDATE_PROJECT_DATA = 'crick/projectReport/UPDATE_PROJECT_DATA';
 
 export const fetchFrames = (
   id: string,
@@ -57,21 +55,17 @@ export const fetchFrames = (
   limit: number
 ): ThunkAction => {
   return (dispatch, getState) => {
-    const previousId = selectProjectId(selectProjectReportState(getState()));
-
-    if (previousId !== id) {
-      dispatch(resetState());
-    }
-
     const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
-
-    let query = [
+    const query = [
       `projectId=${id}`,
-      `from=${from.format(dateFormat)}`,
-      `to=${to.format(dateFormat)}`,
+      `from=${from.format(DATE_FORMAT)}`,
+      `to=${to.format(DATE_FORMAT)}`,
       `limit=${limit}`,
-      `tags=${tags.join(',')}`,
     ];
+
+    if (tags.length > 0) {
+      query.push(`tags=${tags.join(',')}`);
+    }
 
     dispatch({
       [CALL_API]: {
@@ -148,8 +142,8 @@ export const updateTags = (tags: Array<string>): Action => ({
   tags,
 });
 
-const resetState = (): Action => ({
-  type: RESET_STATE,
+export const updateProjectData = (from: moment, to: moment, tags: Array<string>): Action => ({
+  type: UPDATE_PROJECT_DATA, from, to, tags,
 });
 
 // Selectors
@@ -211,7 +205,14 @@ export default function reducer(
         workloads: action.payload.workloads,
       };
 
-    case RESET_STATE:
+    case UPDATE_PROJECT_DATA:
+      return {
+        ...state,
+        from: action.from,
+        to: action.to,
+        tags: action.tags,
+      };
+
     case LOGOUT:
       return initialState;
 

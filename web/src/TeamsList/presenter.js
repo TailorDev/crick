@@ -22,6 +22,10 @@ class TeamsList extends React.Component {
       return <Loading message="Loading your teams..." />;
     }
 
+    if (this.props.teams.length === 0) {
+      return null;
+    }
+
     return (
       <div className="Teams">
         <h2>Teams</h2>

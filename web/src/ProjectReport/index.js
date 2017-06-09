@@ -8,6 +8,7 @@ import {
   updateDateSpan,
   updateTags,
   fetchWorkloads,
+  updateProjectData,
   // selectors
   selectProjectName,
   selectProjectReportState,
@@ -44,6 +45,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
     dispatch(updateDateSpan(from, to));
   },
   updateTags: (tags: Array<string>) => dispatch(updateTags(tags)),
+  setData: (from: moment, to: moment, tags: Array<string>) => {
+    dispatch(updateProjectData(from, to, tags));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectReport);

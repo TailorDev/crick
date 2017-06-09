@@ -29,7 +29,7 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 const initialState: TeamReportState = {
   frames: [],
   from: moment().subtract(7, 'days'),
-  to: moment(), // now
+  to: moment(),
   tags: [],
   team: null,
   report: {
@@ -43,7 +43,7 @@ const FETCH_SUCCESS = 'crick/teamReport/FETCH_SUCCESS';
 const REPORT_COMPILED = 'crick/teamReport/COMPILE_REPORT';
 const UPDATE_DATE_SPAN = 'crick/teamReport/UPDATE_DATE_SPAN';
 const UPDATE_TAGS = 'crick/teamReport/UPDATE_TAGS';
-const RESET_STATE = 'crick/teamReport/RESET_STATE';
+const UPDATE_TEAM_DATA = 'crick/teamReport/UPDATE_TEAM_DATA';
 
 export const fetchFrames = (
   id: string,
@@ -53,21 +53,17 @@ export const fetchFrames = (
   limit: number
 ): ThunkAction => {
   return (dispatch: Dispatch, getState: GetState) => {
-    const previousId = selectTeamId(selectTeamReportState(getState()));
-
-    if (previousId !== id) {
-      dispatch(resetState());
-    }
-
     const endpoint = `${process.env.REACT_APP_API_HOST || ''}/frames`;
-
-    let query = [
+    const query = [
       `teamId=${id}`,
       `from=${from.format(DATE_FORMAT)}`,
       `to=${to.format(DATE_FORMAT)}`,
       `limit=${limit}`,
-      `tags=${tags.join(',')}`,
     ];
+
+    if (tags.length > 0) {
+      query.push(`tags=${tags.join(',')}`);
+    }
 
     dispatch({
       [CALL_API]: {
@@ -132,8 +128,8 @@ export const updateTags = (tags: Array<string>): Action => ({
   tags,
 });
 
-const resetState = (): Action => ({
-  type: RESET_STATE,
+export const updateTeamData = (from: moment, to: moment, tags: Array<string>): Action => ({
+  type: UPDATE_TEAM_DATA, from, to, tags,
 });
 
 // selectors
@@ -181,7 +177,14 @@ export default function reducer(
         tags: action.tags,
       };
 
-    case RESET_STATE:
+    case UPDATE_TEAM_DATA:
+      return {
+        ...state,
+        from: action.from,
+        to: action.to,
+        tags: action.tags,
+      };
+
     case LOGOUT:
       return initialState;
 

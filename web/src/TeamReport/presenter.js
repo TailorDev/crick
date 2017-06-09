@@ -3,7 +3,7 @@ import React from 'react';
 import Avatar from 'material-ui/Avatar';
 import Report from '../Common/Report';
 import Subheader from 'material-ui/Subheader';
-import type { Match } from 'react-router-dom';
+import type { Match, RouterHistory } from 'react-router-dom';
 import type moment from 'moment';
 import type { Frame, Team, Report as ReportType } from '../types';
 import './index.css';
@@ -11,6 +11,7 @@ import './index.css';
 type Props = {
   // routing
   match: Match,
+  history: RouterHistory,
   // report
   frames: Array<Frame>,
   team: ?Team,
@@ -19,6 +20,7 @@ type Props = {
   to: moment,
   tags: Array<string>,
   fetchData: Function,
+  setData: Function,
   compileReport: Function,
   updateDateSpan: Function,
   updateTags: Function,
