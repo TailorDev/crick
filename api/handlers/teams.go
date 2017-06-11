@@ -108,14 +108,7 @@ func (h Handler) UpdateTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	team, err := h.repository.GetTeamByID(teamID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			h.logger.Warn("update team", zap.Error(err))
-			h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
-			return
-		}
-
-		h.logger.Error("update team", zap.Error(err))
-		h.SendError(w, http.StatusInternalServerError, DetailGetTeamFailed)
+		h.handleTeamError(w, "update team", err)
 		return
 	}
 
@@ -186,14 +179,7 @@ func (h Handler) DeleteTeam(w http.ResponseWriter, r *http.Request, ps httproute
 
 	team, err := h.repository.GetTeamByID(teamID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			h.logger.Warn("delete team", zap.Error(err))
-			h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
-			return
-		}
-
-		h.logger.Error("delete team", zap.Error(err))
-		h.SendError(w, http.StatusInternalServerError, DetailGetTeamFailed)
+		h.handleTeamError(w, "delete team", err)
 		return
 	}
 
@@ -210,4 +196,14 @@ func (h Handler) DeleteTeam(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (h Handler) handleTeamError(w http.ResponseWriter, cause string, err error) {
+	if err == sql.ErrNoRows {
+		h.logger.Warn(cause, zap.Error(err))
+		h.SendError(w, http.StatusNotFound, DetailTeamNotFound)
+	} else {
+		h.logger.Error(cause, zap.Error(err))
+		h.SendError(w, http.StatusInternalServerError, DetailGetTeamFailed)
+	}
 }
