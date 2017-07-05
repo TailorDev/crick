@@ -1,6 +1,7 @@
 /* @flow */
 import Auth0Lock from 'auth0-lock';
 import { CALL_API } from 'redux-api-middleware';
+import { push } from 'react-router-redux';
 import { API_ERROR } from '../Errors/reducer';
 import type { State, Dispatch, GetState, ThunkAction, Action } from '../types';
 
@@ -89,10 +90,12 @@ const loginSuccess = (token: string): ThunkAction => {
   };
 };
 
-export const logout = (): Action => {
-  localStorage.removeItem('access_token');
-
-  return { type: LOGOUT };
+export const logout = (): ThunkAction => {
+  return dispatch => {
+    localStorage.removeItem('access_token');
+    dispatch(push('/'));
+    dispatch({ type: LOGOUT });
+  };
 };
 
 export const fetchUser = (): Action => {

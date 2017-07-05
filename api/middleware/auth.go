@@ -38,9 +38,9 @@ var (
 	// DetailUserSelectionFailed is the error message when fetching a user in
 	// database has failed.
 	DetailUserSelectionFailed = "User selection failed"
-	// DetailUserProfileRetrialFailed is the error message when getting the
+	// DetailUserProfileRetrievalFailed is the error message when getting the
 	// user's profile from Auth0 API has failed.
-	DetailUserProfileRetrialFailed = "User profile retrieval failed"
+	DetailUserProfileRetrievalFailed = "User profile retrieval failed"
 )
 
 // AuthWithAuth0 returns the Auth0 authentication middleware.
@@ -92,8 +92,8 @@ func AuthWithAuth0(h httprouter.Handle, repo models.Repository, logger *zap.Logg
 			if err == sql.ErrNoRows {
 				profile, err := getUserProfile(c.Domain, r.Header.Get("Authorization"))
 				if err != nil {
-					logger.Error("cannot retrieve user profile", zap.Error(err))
-					SendError(w, http.StatusInternalServerError, DetailUserProfileRetrialFailed)
+					logger.Warn("cannot retrieve user profile", zap.Error(err))
+					SendError(w, http.StatusUnauthorized, DetailUserProfileRetrievalFailed)
 					return
 				}
 
