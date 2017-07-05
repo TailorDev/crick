@@ -24,10 +24,10 @@ export default function configureStore(history, initialState) {
     rootReducer,
     initialState,
     'production' !== process.env.NODE_ENV &&
-    'undefined' !== typeof window &&
-    window.devToolsExtension
-    ? window.devToolsExtension()
-    : f => f
+      'undefined' !== typeof window &&
+      window.devToolsExtension
+      ? window.devToolsExtension()
+      : f => f
   );
 
   addAuth0Listeners(store.dispatch, store.getState);

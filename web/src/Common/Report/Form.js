@@ -68,7 +68,7 @@ class Form extends React.Component {
   }
 
   onTagsRemove(tag: string, index: number) {
-    const tags = this.props.tags.filter(t => t !== tag)
+    const tags = this.props.tags.filter(t => t !== tag);
 
     this.setState({ tags }, () => {
       this.props.onUpdateTags(tags);

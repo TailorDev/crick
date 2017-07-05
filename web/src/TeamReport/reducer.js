@@ -128,8 +128,15 @@ export const updateTags = (tags: Array<string>): Action => ({
   tags,
 });
 
-export const updateTeamData = (from: moment, to: moment, tags: Array<string>): Action => ({
-  type: UPDATE_TEAM_DATA, from, to, tags,
+export const updateTeamData = (
+  from: moment,
+  to: moment,
+  tags: Array<string>
+): Action => ({
+  type: UPDATE_TEAM_DATA,
+  from,
+  to,
+  tags,
 });
 
 // selectors
