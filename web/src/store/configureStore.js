@@ -9,17 +9,18 @@ import apiAuthToken from '../middleware/apiAuthToken';
 import apiError from '../middleware/apiError';
 import { addAuth0Listeners } from '../Auth/reducer';
 
+const history = createHistory();
 const middleware = [
   thunk,
   apiAuthToken,
   apiMiddleware,
   apiError,
-  routerMiddleware(createHistory()),
+  routerMiddleware(history),
 ];
 
 const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
-export default function configureStore(history, initialState) {
+export default function configureStore(initialState) {
   const store = createStoreWithMiddleware(
     rootReducer,
     initialState,
@@ -32,5 +33,5 @@ export default function configureStore(history, initialState) {
 
   addAuth0Listeners(store.dispatch, store.getState);
 
-  return store;
+  return { store, history };
 }
