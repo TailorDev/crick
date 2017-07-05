@@ -5,6 +5,7 @@
   "dependencies": {
     "auth0-lock": "^10.16.0",
     "clipboard": "^1.7.1",
+    "history": "^4.6.3",
     "material-ui": "^0.18.1",
     "material-ui-chip-input": "^0.14.0",
     "moment": "^2.18.1",
@@ -14,6 +15,7 @@
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-router-redux": "next",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-api-middleware": "dev",

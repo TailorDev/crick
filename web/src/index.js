@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter as Router } from 'react-router-redux';
 
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
@@ -36,12 +38,13 @@ const crickTheme = getMuiTheme({
   },
 });
 
+const history = createHistory();
 const store = configureStore();
 
 ReactDOM.render(
   <MuiThemeProvider muiTheme={crickTheme}>
     <Provider store={store}>
-      <Router>
+      <Router history={history}>
         <App>
           <Switch>
             <Route exact path="/" component={Home} />
