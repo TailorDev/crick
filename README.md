@@ -47,6 +47,17 @@ Load Watson's frames to your local server (python 3.4+ is required):
 Browse: http://crick.dev:3000/.
 
 
+## Contributing
+
+Please, see the [CONTRIBUTING](CONTRIBUTING.md) file.
+
+
+## Running the test suite
+
+    $ cd api/ && make test
+    $ cd web/ && yarn test -- --watch=false
+
+
 ## Contributor Code of Conduct
 
 Please note that this project is released with a [Contributor Code of
