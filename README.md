@@ -8,8 +8,7 @@ Crick is a backend for the [Watson](https://github.com/TailorDev/Watson) time-tr
 * https://tailordev.fr/blog/2017/06/07/le-lab-5-crick-a-backend-for-watson-time-tracker/
 
 
-Installation
-------------
+## Installation
 
 ### API
 
@@ -39,10 +38,23 @@ Load Watson's frames to your local server (python 3.4+ is required):
 
     $ CRICK_API_TOKEN='mytoken' python3 api/scripts/watson_push.py (-h)
 
-### Web App
+### Web app
 
     $ cd web/
     $ yarn install
     $ make dev
 
-Browse: http://crick.dev:3000/
+Browse: http://crick.dev:3000/.
+
+
+## Contributor Code of Conduct
+
+Please note that this project is released with a [Contributor Code of
+Conduct](http://contributor-covenant.org/). By participating in this project you
+agree to abide by its terms. See [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) file.
+
+
+## License
+
+Crick is released under the MIT License. See the bundled [LICENSE](LICENSE)
+file for details.
