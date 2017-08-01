@@ -1,1 +1,45 @@
-.Home {}
+.Home .wrapper {
+  min-height: calc(100vh - 2rem - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.Home .brand {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Home .brand > * {
+  width: 100%;
+  text-align: center;
+}
+
+.Home .brand .logo {}
+
+.Home .brand .title {}
+
+.Home .brand .title h1 a {
+  text-decoration: none;
+}
+
+.Home .brand .title h1 a span {
+  color: #ccc;
+}
+
+.Home .brand .title .baseline {
+  font-size: 1.2rem;
+}
+
+.Home .content {
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: rgba(46, 53, 79, 0.1);
+}
+
+.Home .copyright {
+  padding-top: 1rem;
+  border-top: 1px solid #efefef;
+  color: #999;
+}
