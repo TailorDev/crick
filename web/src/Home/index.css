@@ -1,1 +1,55 @@
-.Home {}
+.Home {
+  background: url('./img/crick_bg.jpg') no-repeat center center;
+  background-size: cover;
+  text-align: center;
+}
+
+.Home .wrapper {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.Home .wrapper > * {
+  padding: 0 1rem;
+}
+
+.Home .brand {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Home .brand > * {
+  width: 100%;
+}
+
+.Home .brand .logo {}
+
+.Home .brand .title {}
+
+.Home .brand .title h1 a {
+  text-decoration: none;
+}
+
+.Home .brand .title h1 a span {
+  color: #ccc;
+}
+
+.Home .brand .title .baseline {
+  font-size: 1.2rem;
+}
+
+.Home .content {
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 0 1rem 1rem;
+  background-color: rgba(46, 53, 79, 0.1);
+}
+
+.Home .copyright {
+  padding: 1rem;
+  border-top: 1px solid #efefef;
+  color: #999;
+}
