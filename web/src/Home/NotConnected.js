@@ -18,7 +18,7 @@ const NotConnected = () =>
           </Link>
         </h1>
         <div className="baseline">
-          An <a href="https://github.com/TailorDev/crick">open-source</a> backend
+          The <a href="https://github.com/TailorDev/crick">open-source</a> backend
           for <a href="https://github.com/TailorDev/Watson">Watson</a>, the CLI
           to track your time.
         </div>
@@ -26,7 +26,15 @@ const NotConnected = () =>
     </header>
 
     <div className="content">
-      Login now to start using Crick!
+      <h4>
+        You need to log in to start using Crick!
+      </h4>
+      <small>
+
+        Click the upper-right "Login" button to get connected via Bitbucket or
+        GitHub.
+
+      </small>
     </div>
 
     <footer className="copyright">
