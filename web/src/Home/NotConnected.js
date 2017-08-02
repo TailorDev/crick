@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import CrickLogoImg from './img/logo-crick.png';
 
 const NotConnected = () =>
-  <div className="wrapper">
+  <div className="wrapper not-connected">
     <header className="brand">
       <div className="logo">
         <img src={CrickLogoImg} alt="Crick Logo" />
