@@ -38,6 +38,13 @@ Load Watson's frames to your local server (python 3.4+ is required):
 
     $ CRICK_API_TOKEN='mytoken' python3 api/scripts/watson_push.py (-h)
 
+#### About
+
+The API documentation can be found in the `apiary.apib` file or online at:
+http://docs.crickapi.apiary.io/. This HTTP API is written in Go and serves
+two purposes: providing a endpoint for Watson synchronization and allowing
+the web app to access data.
+
 ### Web app
 
     $ cd web/
@@ -45,6 +52,11 @@ Load Watson's frames to your local server (python 3.4+ is required):
     $ make dev
 
 Browse: http://crick.dev:3000/.
+
+#### About
+
+The Web application is a [create-react-app](https://github.com/facebookincubator/create-react-app)
+client side application. Authentication with the HTTP API relies on [Auth0](https://auth0.com/).
 
 
 ## Contributing
