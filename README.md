@@ -7,6 +7,9 @@ Crick is a backend for the [Watson](https://github.com/TailorDev/Watson) time-tr
 
 * https://tailordev.fr/blog/2017/06/07/le-lab-5-crick-a-backend-for-watson-time-tracker/
 
+<p align="center">
+  <img src="doc/project-report.gif">
+<p>
 
 ## Installation
 
