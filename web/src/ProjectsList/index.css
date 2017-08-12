@@ -45,4 +45,11 @@
     width: auto;
     margin-bottom: 0;
   }
+
+  .Empty > div:first-child {
+    width: 100%!important;
+    margin-left: 0!important;
+    margin-right: 0!important;
+    box-shadow: none!important;
+  }
 }
