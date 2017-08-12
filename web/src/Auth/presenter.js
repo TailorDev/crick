@@ -117,7 +117,7 @@ class Auth extends React.Component {
             targetOrigin={targetOrigin}
           >
             <MenuItem
-              primaryText="My Teams"
+              primaryText="Teams Management"
               leftIcon={<ActionSupervisorIcon />}
               onTouchTap={this.props.onTeams}
             />
