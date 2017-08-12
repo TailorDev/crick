@@ -2,7 +2,7 @@
   flex: 1 1 100%;
 }
 
-.App-content > *:not(.Home) {
+.App-content > *:not(.is-not-authenticated) {
   padding: 1rem;
 }
 

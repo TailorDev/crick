@@ -11,7 +11,7 @@ type Props = {
 };
 
 const Home = ({ isAuthenticated }: Props) =>
-  <div className="Home">
+  <div className={`Home is-${isAuthenticated ? '' : 'not-'}authenticated`}>
     {isAuthenticated
       ? <div>
           <ProjectsList />
