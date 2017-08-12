@@ -7,6 +7,8 @@ import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
+import ActionSupervisorIcon from 'material-ui/svg-icons/action/supervisor-account';
+import ActionLockIcon from 'material-ui/svg-icons/action/lock';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
 import ClipboardInput from '../Common/ClipboardInput';
 import './index.css';
@@ -24,6 +26,7 @@ export type Props = {
   onLogout: Function,
   onLogin: Function,
   fetchUser: Function,
+  onTeams: Function,
 };
 
 const iconButtonStyle = {
@@ -114,7 +117,13 @@ class Auth extends React.Component {
             targetOrigin={targetOrigin}
           >
             <MenuItem
+              primaryText="My Teams"
+              leftIcon={<ActionSupervisorIcon />}
+              onTouchTap={this.props.onTeams}
+            />
+            <MenuItem
               primaryText="My API Token"
+              leftIcon={<ActionLockIcon />}
               onTouchTap={this.handleTokenDialogOpen}
             />
             <Divider />

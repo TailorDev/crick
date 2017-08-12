@@ -2,8 +2,6 @@
 import React from 'react';
 import Team from './Team';
 import Loading from '../Common/Loading';
-import { Link } from 'react-router-dom';
-import Paper from 'material-ui/Paper';
 import type { Team as TeamType } from '../types';
 import './index.css';
 
@@ -32,12 +30,6 @@ class TeamsList extends React.Component {
 
         <div className="Teams-list">
           {this.props.teams.map(p => <Team key={p.id} {...p} />)}
-
-          <Paper className="Team Manage">
-            <h4>
-              <Link to="/teams">Manage</Link>
-            </h4>
-          </Paper>
         </div>
       </div>
     );

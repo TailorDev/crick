@@ -22,6 +22,9 @@ const mapDispatchToProps = (dispatch: Dispatch<*>, ownProps: AuthProps) => ({
     // redirect to /
     ownProps.history.push('/');
   },
+  onTeams: () => {
+    ownProps.history.push('/teams');
+  },
   fetchUser: () => dispatch(fetchUser()),
 });
 

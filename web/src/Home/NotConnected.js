@@ -18,7 +18,8 @@ const NotConnected = () =>
           </Link>
         </h1>
         <div className="baseline">
-          The <a href="https://github.com/TailorDev/crick">open-source</a> backend
+          The <a href="https://github.com/TailorDev/crick">open-source</a>
+          {' '}backend
           for <a href="https://github.com/TailorDev/Watson">Watson</a>, the CLI
           to track your time.
         </div>
