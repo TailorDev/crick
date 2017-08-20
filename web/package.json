@@ -20,7 +20,8 @@
     "redux": "^3.6.0",
     "redux-api-middleware": "dev",
     "redux-thunk": "^2.2.0",
-    "roboto-fontface": "^0.7.0"
+    "roboto-fontface": "^0.7.0",
+    "url-search-params-polyfill": "^2.0.0"
   },
   "devDependencies": {
     "enzyme": "^2.8.2",

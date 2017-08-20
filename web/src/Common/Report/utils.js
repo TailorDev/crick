@@ -1,4 +1,5 @@
 /* @flow */
+import 'url-search-params-polyfill';
 import moment from 'moment';
 
 export const getFromDateFromQueryParams = (): moment => {
