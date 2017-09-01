@@ -15,6 +15,10 @@ export type AuthState = {
   isAuthenticated: boolean,
 };
 
+const redirectUrl = process.env.SCHEME && process.env.HOST
+  ? `${process.env.SCHEME}://${process.env.HOST}/`
+  : '';
+
 const lock = new Auth0Lock(
   process.env.REACT_APP_AUTH0_CLIENT_ID,
   process.env.REACT_APP_AUTH0_DOMAIN,
@@ -24,6 +28,7 @@ const lock = new Auth0Lock(
       params: {
         scope: 'openid profile',
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+        redirectUrl,
         responseType: 'token',
       },
     },
