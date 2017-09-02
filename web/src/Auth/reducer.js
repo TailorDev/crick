@@ -25,6 +25,8 @@ const lock = new Auth0Lock(
         scope: 'openid profile',
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
         redirectUrl: process.env.REACT_APP_AUTH0_REDIRECT_URL || '',
+        // It looks like this one is actually used so let's configure it too.
+        redirectUri: process.env.REACT_APP_AUTH0_REDIRECT_URL || '',
         responseType: 'token',
       },
     },
