@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "auth0-lock": "^10.16.0",
+    "auth0-lock": "^11.3.0",
     "clipboard": "^1.7.1",
     "history": "^4.6.3",
     "material-ui": "^0.18.1",
